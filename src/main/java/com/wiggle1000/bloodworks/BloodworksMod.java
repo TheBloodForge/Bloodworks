@@ -1,6 +1,7 @@
 package com.wiggle1000.bloodworks;
 
 import com.wiggle1000.bloodworks.Config.BloodworksCommonConfig;
+import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
 import com.wiggle1000.bloodworks.Registry.BlockRegistry;
 import com.wiggle1000.bloodworks.Registry.ItemRegistry;
 import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
@@ -24,10 +25,11 @@ public class BloodworksMod
         modEventBus.addListener(CommonProxy::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
 
-        // -------- Register Blocks and Items --------
+        // -------- Register DeferredRegistries --------
         BlockRegistry.BLOCKS.register(modEventBus);
         ItemRegistry.ITEMS.register(modEventBus);
         ParticleRegistry.PARTICLES.register(modEventBus);
+        BlockEntityRegistry.BLOCK_ENTITIES.register(modEventBus);
 
         // -------- Register Configs --------
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BloodworksCommonConfig.CONFIG_SPEC);

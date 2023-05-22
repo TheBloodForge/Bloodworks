@@ -19,4 +19,8 @@ public class Globals
     {
         LOGGER.info("[" + MODID + "] " + toLog);
     }
+    public static void LogError(String toLog)
+    {
+        LOGGER.error("[" + MODID + "] " + toLog);
+    }
 }
