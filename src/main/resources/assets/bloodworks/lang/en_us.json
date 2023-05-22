@@ -1,3 +1,5 @@
 {
-  "block.bloodworks.block_coagulated_blood": "Coagulated Blood"
+  "block.bloodworks.block_coagulated_blood": "Coagulated Blood",
+  "block.bloodworks.block_coagulated_blood_stairs": "Coagulated Blood Stairs",
+  "block.bloodworks.block_coagulated_blood_slab": "Coagulated Blood Slab"
 }

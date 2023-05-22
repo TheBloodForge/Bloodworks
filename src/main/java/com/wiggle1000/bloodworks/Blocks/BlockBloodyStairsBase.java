@@ -5,21 +5,23 @@ import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 
 @SuppressWarnings({"NullableProblems", "Unused"})
-public class BlockBloodyBase extends Block
+public class BlockBloodyStairsBase extends StairBlock
 {
-    public BlockBloodyBase() {
+    public BlockBloodyStairsBase()
+    {
         super(
-            BlockBehaviour.Properties
-                .of(Material.STONE)
-                .strength(4f, 1200f)
-                .sound(SoundType.SLIME_BLOCK)
+                Blocks.COBBLESTONE_STAIRS::defaultBlockState,
+                Properties
+                        .of(Material.STONE)
+                        .strength(4f, 1200f)
+                        .sound(SoundType.SLIME_BLOCK)
         );
     }
 

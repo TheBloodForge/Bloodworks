@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "bloodworks:blocks/block_coagulated_blood",
+    "top": "bloodworks:blocks/block_coagulated_blood",
+    "side": "bloodworks:blocks/block_coagulated_blood"
+  }
+}

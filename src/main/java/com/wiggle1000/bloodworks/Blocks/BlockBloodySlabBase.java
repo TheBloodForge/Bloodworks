@@ -5,24 +5,24 @@ import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 
 @SuppressWarnings({"NullableProblems", "Unused"})
-public class BlockBloodyBase extends Block
+public class BlockBloodySlabBase extends SlabBlock
 {
-    public BlockBloodyBase() {
+    public BlockBloodySlabBase()
+    {
         super(
-            BlockBehaviour.Properties
-                .of(Material.STONE)
-                .strength(4f, 1200f)
-                .sound(SoundType.SLIME_BLOCK)
+                BlockBehaviour.Properties
+                        .of(Material.STONE)
+                        .strength(4f, 1200f)
+                        .sound(SoundType.SLIME_BLOCK)
         );
     }
-
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState blockState, Entity stepperOnner)
     {

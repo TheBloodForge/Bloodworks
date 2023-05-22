@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "bloodworks:block/block_coagulated_blood_slab"
+    },
+    "type=double": {
+      "model": "bloodworks:block/block_coagulated_blood"
+    },
+    "type=top": {
+      "model": "bloodworks:block/block_coagulated_blood_slab_top"
+    }
+  }
+}
