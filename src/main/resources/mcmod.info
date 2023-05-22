@@ -1,0 +1,16 @@
+[
+{
+  "modid": "bloodworks",
+  "name": "Bloodworks",
+  "description": "That blood do be working, though.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/TheBloodForge/Bloodworks",
+  "updateUrl": "",
+  "authorList": ["wiggle1000", "KeldonSlayer"],
+  "credits": "",
+  "logoFile": "BloodworksIcon.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]

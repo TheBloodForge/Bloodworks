@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "bloodworks:block/block_coagulated_blood"
+    }
+  }
+}
