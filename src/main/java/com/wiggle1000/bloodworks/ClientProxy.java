@@ -1,6 +1,5 @@
 package com.wiggle1000.bloodworks;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,8 +14,7 @@ public class ClientProxy {
         public static void onClientSetup(FMLClientSetupEvent event)
         {
             // Some client setup code
-            Globals.LOGGER.info("HELLO FROM CLIENT SETUP");
-            Globals.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+            Globals.LogInfo("Initializing Client.");
         }
     }
 }

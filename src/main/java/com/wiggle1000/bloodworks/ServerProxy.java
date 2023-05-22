@@ -10,6 +10,6 @@ public class ServerProxy {
     public void onServerStarting(ServerStartingEvent event)
     {
         // Do something when the server starts
-        Globals.LOGGER.info("HELLO from server starting");
+        Globals.LogInfo("Initializing Server.");
     }
 }
