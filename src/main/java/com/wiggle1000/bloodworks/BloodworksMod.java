@@ -11,6 +11,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 // The value here should match an entry in the META-INF/mods.toml file
+@SuppressWarnings("unused")
 @Mod(Globals.MODID)
 public class BloodworksMod
 {

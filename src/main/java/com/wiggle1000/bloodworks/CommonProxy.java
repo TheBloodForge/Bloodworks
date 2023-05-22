@@ -2,6 +2,7 @@ package com.wiggle1000.bloodworks;
 
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
+@SuppressWarnings("unused")
 public class CommonProxy
 {
 

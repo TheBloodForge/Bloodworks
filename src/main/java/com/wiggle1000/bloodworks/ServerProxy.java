@@ -3,6 +3,7 @@ package com.wiggle1000.bloodworks;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@SuppressWarnings("unused")
 public class ServerProxy {
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
