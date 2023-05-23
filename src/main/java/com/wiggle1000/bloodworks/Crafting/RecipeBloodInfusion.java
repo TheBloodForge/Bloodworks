@@ -6,6 +6,8 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 public class RecipeBloodInfusion implements Recipe<SimpleContainer>
@@ -25,5 +27,35 @@ public class RecipeBloodInfusion implements Recipe<SimpleContainer>
         if(level.isClientSide()) return false;
 
         return recipeItems.get(0).test(container.getItem(0));
+    }
+
+    @Override
+    public ItemStack assemble(SimpleContainer p_44001_) {
+        return null;
+    }
+
+    @Override
+    public boolean canCraftInDimensions(int p_43999_, int p_44000_) {
+        return true;
+    }
+
+    @Override
+    public ItemStack getResultItem() {
+        return null;
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return null;
+    }
+
+    @Override
+    public RecipeSerializer<?> getSerializer() {
+        return null;
+    }
+
+    @Override
+    public RecipeType<?> getType() {
+        return null;
     }
 }
