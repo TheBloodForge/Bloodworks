@@ -1,69 +1,54 @@
 package com.wiggle1000.bloodworks.Crafting;
 
-import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
+import com.wiggle1000.bloodworks.Blocks.BlockEntities.BlockEntityMachineInfusionChamber;
+import com.wiggle1000.bloodworks.Blocks.BlockEntities.Containers.MachineInfusionContainer;
+import com.wiggle1000.bloodworks.Registry.ItemRegistry;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
-public class RecipeBloodInfusion implements Recipe<SimpleContainer>
+public class RecipeBloodInfusion
 {
-    private final ResourceLocation id;
-    private final ItemStack output;
-    private final NonNullList<Ingredient> recipeItems;
+    @NotNull private final Ingredient ingredient;
+    @NotNull private final ItemStack output;
+    @NotNull private final int bloodRequired, requiredTicks;
+    @NotNull private final boolean coagulatedBlood;
 
-    public RecipeBloodInfusion(ResourceLocation id, ItemStack output, NonNullList<Ingredient> recipeItems)
+    public RecipeBloodInfusion(int bloodVolumeRequired, Ingredient ingredient, ItemStack output, boolean isCoagulated, int requiredTicks)
     {
-        this.id = id;
+        this.bloodRequired = bloodVolumeRequired;
         this.output = output;
-        this.recipeItems = recipeItems;
+        this.ingredient = ingredient;
+        this.coagulatedBlood = isCoagulated;
+        this.requiredTicks = requiredTicks;
     }
 
-    @Override
-    public boolean matches(SimpleContainer container, Level level)
+    public boolean matches(BlockEntityMachineInfusionChamber container, Level level)
     {
-        if (level.isClientSide()) return false;
+        if (level != null && level.isClientSide()) return false;
 
-        return recipeItems.get(0).test(container.getItem(0));
+        return ingredient.test(container.getItem(0)) && (!coagulatedBlood && container.getStackInSlot(1).is(ItemRegistry.BLOCK_INTESTINE.get()));
     }
 
-    @Override
     public ItemStack assemble(SimpleContainer container)
     {
         return null;
     }
 
-    @Override
     public boolean canCraftInDimensions(int posX, int posY)
-    {
-        return true;
-    }
+    { return true; }
 
-    @Override
     public ItemStack getResultItem()
-    {
-        return null;
-    }
+    { return output; }
 
-    @Override
-    public ResourceLocation getId()
-    {
-        return null;
-    }
+    public int getBloodRequired()
+    { return bloodRequired; }
 
-    @Override
-    public RecipeSerializer<?> getSerializer()
-    {
-        return null;
-    }
+    public boolean isCoagulatedBlood()
+    { return coagulatedBlood; }
 
-    @Override
-    public RecipeType<?> getType()
-    {
-        return null;
-    }
+    public int getTicksRequired()
+    { return requiredTicks; }
 }

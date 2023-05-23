@@ -1,7 +1,10 @@
 package com.wiggle1000.bloodworks.Blocks.BlockEntities;
 
+import com.wiggle1000.bloodworks.Crafting.RecipeBloodInfusion;
 import com.wiggle1000.bloodworks.Globals;
 import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
+import com.wiggle1000.bloodworks.Registry.FluidRegistry;
+import com.wiggle1000.bloodworks.Registry.RecipeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -20,13 +23,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public class BlockEntityMachineInfusionChamber extends BlockEntity implements MenuProvider
+public class BlockEntityMachineInfusionChamber extends BlockEntity implements MenuProvider, IItemHandler, IFluidHandler
 {
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(3)
@@ -41,13 +46,14 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
+    public static final int COAGULATOR_SLOT_INDEX = 0;
     public static final int INPUT_SLOT_INDEX = 1;
     public static final int OUTPUT_SLOT_INDEX = 2;
 
 
     protected final ContainerData data;
     private int progress = 0;
-    private int processingTicks = 40;
+    private RecipeBloodInfusion activeRecipe;
 
 
     public BlockEntityMachineInfusionChamber(BlockPos pos, BlockState state)
@@ -151,42 +157,26 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
         Containers.dropContents(this.level, this.worldPosition, inv);
     }
 
+
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BlockEntityMachineInfusionChamber entity)
     {
         if (level.isClientSide()) return;
+        if (!entity.isCrafting()) return;
 
-        if (entity.isCrafting())
+        entity.progress++;
+        setChanged(level, blockPos, blockState);
+
+        if (entity.progress >= entity.activeRecipe.getTicksRequired())
         {
-            entity.progress++;
-            setChanged(level, blockPos, blockState);
-
-            if (entity.progress >= entity.processingTicks)
-            {
-                entity.doCraftItem();
-            }
-        } else {
+            entity.doCraftItem();
             if (entity.resetProgress()) setChanged(level, blockPos, blockState);
         }
     }
 
     private boolean isCrafting()
     {
-        SimpleContainer inv = new SimpleContainer(itemHandler.getSlots());
-        for (int i = 0; i < itemHandler.getSlots(); i++)
-        {
-            inv.setItem(i, itemHandler.getStackInSlot(i));
-        }
-      /*  if(canPutIntoOutput(inv, ItemStack stack))
-        {
-
-        }*/
-        return false;
-    }
-
-    private boolean canPutIntoOutput(SimpleContainer inv, ItemStack stack)
-    {
-//        if(inv.getItem(OUTPUT_SLOT_INDEX).getMaxStackSize() > invent)
-        return false;
+        activeRecipe = activeRecipe != null ? activeRecipe : RecipeRegistry.getInfusionRecipeFromInputs(this);
+        return activeRecipe != null;
     }
 
     private void doCraftItem()
@@ -199,5 +189,105 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
         boolean wasChanged = this.progress != 0;
         this.progress = 0;
         return wasChanged;
+    }
+
+    private final FluidStack storedFluid = new FluidStack(FluidRegistry.FLUID_BLOOD_SOURCE.get(), 0);
+
+    public int getFluidAmount()
+    { return storedFluid.getAmount(); }
+
+    @Override
+    public int getTanks()
+    {
+        return 1;
+    }
+
+    @Override
+    public @NotNull FluidStack getFluidInTank(int tank)
+    {
+        return storedFluid;
+    }
+
+    @Override
+    public int getTankCapacity(int tank)
+    {
+        return 6000;
+    }
+
+    @Override
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack)
+    {
+        return stack.containsFluid(new FluidStack(FluidRegistry.FLUID_BLOOD_SOURCE.get(), 1));
+    }
+
+    @Override
+    public int fill(FluidStack resource, IFluidHandler.FluidAction action)
+    {
+        if (!isFluidValid(1, resource) || resource.getAmount() <= 0)
+        {
+            return 0;
+        }
+        int sourceVolume = resource.getAmount();
+        int currentVolume = getFluidAmount();
+        if (currentVolume + sourceVolume <= getTankCapacity(0))
+        {
+            storedFluid.grow(sourceVolume);
+            return sourceVolume;
+        } else {
+            int remainder = getTankCapacity(0) - currentVolume;
+            int drainedVolume = sourceVolume - remainder;
+            storedFluid.grow(drainedVolume);
+            return drainedVolume;
+        }
+    }
+
+    @Override
+    public @NotNull FluidStack drain(int maxDrain, IFluidHandler.FluidAction action)
+    {
+        int amount = storedFluid.getAmount();
+        storedFluid.shrink(Math.min(maxDrain, amount));
+        return new FluidStack(storedFluid.getFluid(), amount);
+    }
+
+    @Override
+    public @NotNull FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action)
+    {
+        return drain(resource.getAmount(), action);
+    }
+
+    @Override
+    public int getSlots()
+    {
+        return 0;
+    }
+
+    @Override
+    public @NotNull ItemStack getStackInSlot(int slot)
+    {
+        return null;
+    }
+
+    @Override
+    public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
+    {
+        return null;
+    }
+
+    @Override
+    public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
+    {
+        return null;
+    }
+
+    @Override
+    public int getSlotLimit(int slot)
+    {
+        return 0;
+    }
+
+    @Override
+    public boolean isItemValid(int slot, @NotNull ItemStack stack)
+    {
+        return false;
     }
 }
