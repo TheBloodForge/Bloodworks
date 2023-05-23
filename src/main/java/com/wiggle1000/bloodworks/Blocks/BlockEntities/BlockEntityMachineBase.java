@@ -30,7 +30,8 @@ public class BlockEntityMachineBase extends BaseContainerBlockEntity
     private final ItemStackHandler itemHandler = new ItemStackHandler(3)
     {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot)
+        {
             super.onContentsChanged(slot);
             setChanged();
         }
@@ -60,11 +61,13 @@ public class BlockEntityMachineBase extends BaseContainerBlockEntity
             }
 
             @Override
-            public void set(int index, int value) {
+            public void set(int index, int value)
+            {
             }
 
             @Override
-            public int getCount() {
+            public int getCount()
+            {
                 return 2;
             }
         };
@@ -91,7 +94,7 @@ public class BlockEntityMachineBase extends BaseContainerBlockEntity
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side)
     {
-        if(cap == ForgeCapabilities.ITEM_HANDLER)
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
         {
             return lazyItemHandler.cast();
         }
@@ -128,7 +131,7 @@ public class BlockEntityMachineBase extends BaseContainerBlockEntity
 
     public void dropInventoryContents()
     {
-        if(this.level == null) return;
+        if (this.level == null) return;
 
         SimpleContainer inv = new SimpleContainer(itemHandler.getSlots());
         for (int i = 0; i < itemHandler.getSlots(); i++)
@@ -140,8 +143,9 @@ public class BlockEntityMachineBase extends BaseContainerBlockEntity
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BlockEntityMachineBase entity)
     {
-        if(level.isClientSide()) return;
-        if (entity.getTickFunction() != null) {
+        if (level.isClientSide()) return;
+        if (entity.getTickFunction() != null)
+        {
             entity.getTickFunction().run();
         }
     }

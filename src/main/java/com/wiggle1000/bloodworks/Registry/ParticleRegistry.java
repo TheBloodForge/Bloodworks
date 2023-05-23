@@ -9,7 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ParticleRegistry
 {
-        public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Globals.MODID);
+    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Globals.MODID);
 
-        public static final RegistryObject<SimpleParticleType> PARTICLE_FLESH_STEP = PARTICLES.register("particle_flesh_step", () -> new SimpleParticleType(true));
+    public static final RegistryObject<SimpleParticleType> PARTICLE_FLESH_STEP = PARTICLES.register("particle_flesh_step", () -> new SimpleParticleType(true));
 }

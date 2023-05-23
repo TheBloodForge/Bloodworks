@@ -32,7 +32,8 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
     private final ItemStackHandler itemHandler = new ItemStackHandler(3)
     {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot)
+        {
             super.onContentsChanged(slot);
             setChanged();
         }
@@ -76,11 +77,18 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
     }
 
     public int getContainerData(int index)
-    { return 0; }
+    {
+        return 0;
+    }
+
     public void setContainerData(int index, int value)
-    {}
+    {
+    }
+
     public int getContainerCount()
-    { return 0; }
+    {
+        return 0;
+    }
 
     @Override
     public Component getDisplayName()
@@ -97,7 +105,7 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side)
     {
-        if(cap == ForgeCapabilities.ITEM_HANDLER)
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
         {
             return lazyItemHandler.cast();
         }
@@ -134,7 +142,7 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
 
     public void dropInventoryContents()
     {
-        if(this.level == null) return;
+        if (this.level == null) return;
 
         SimpleContainer inv = new SimpleContainer(itemHandler.getSlots());
         for (int i = 0; i < itemHandler.getSlots(); i++)
@@ -146,21 +154,20 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BlockEntityMachineInfusionChamber entity)
     {
-        if(level.isClientSide()) return;
+        if (level.isClientSide()) return;
 
-        if(entity.isCrafting())
+        if (entity.isCrafting())
         {
             entity.progress++;
             setChanged(level, blockPos, blockState);
 
-            if(entity.progress >= entity.processingTicks)
+            if (entity.progress >= entity.processingTicks)
             {
                 entity.doCraftItem();
             }
-        }
-        else
+        } else
         {
-            if(entity.resetProgress()) setChanged(level, blockPos, blockState);
+            if (entity.resetProgress()) setChanged(level, blockPos, blockState);
         }
     }
 

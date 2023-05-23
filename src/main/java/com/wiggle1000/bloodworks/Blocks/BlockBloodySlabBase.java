@@ -23,6 +23,7 @@ public class BlockBloodySlabBase extends SlabBlock
                         .sound(SoundType.SLIME_BLOCK)
         );
     }
+
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState blockState, Entity stepperOnner)
     {

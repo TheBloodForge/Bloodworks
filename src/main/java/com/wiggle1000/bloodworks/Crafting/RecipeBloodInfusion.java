@@ -16,46 +16,54 @@ public class RecipeBloodInfusion implements Recipe<SimpleContainer>
     private final ItemStack output;
     private final NonNullList<Ingredient> recipeItems;
 
-    public RecipeBloodInfusion(ResourceLocation id, ItemStack output, NonNullList<Ingredient> recipeItems) {
+    public RecipeBloodInfusion(ResourceLocation id, ItemStack output, NonNullList<Ingredient> recipeItems)
+    {
         this.id = id;
         this.output = output;
         this.recipeItems = recipeItems;
     }
 
     @Override
-    public boolean matches(SimpleContainer container, Level level) {
-        if(level.isClientSide()) return false;
+    public boolean matches(SimpleContainer container, Level level)
+    {
+        if (level.isClientSide()) return false;
 
         return recipeItems.get(0).test(container.getItem(0));
     }
 
     @Override
-    public ItemStack assemble(SimpleContainer p_44001_) {
+    public ItemStack assemble(SimpleContainer p_44001_)
+    {
         return null;
     }
 
     @Override
-    public boolean canCraftInDimensions(int p_43999_, int p_44000_) {
+    public boolean canCraftInDimensions(int p_43999_, int p_44000_)
+    {
         return true;
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem()
+    {
         return null;
     }
 
     @Override
-    public ResourceLocation getId() {
+    public ResourceLocation getId()
+    {
         return null;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer()
+    {
         return null;
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<?> getType()
+    {
         return null;
     }
 }

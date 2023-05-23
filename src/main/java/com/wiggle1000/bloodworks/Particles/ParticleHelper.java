@@ -22,8 +22,9 @@ public class ParticleHelper
             posRand = posRand.add(footPos);
 
             double speedMult = stepperOnner.isSprinting() ? 4.0 : 1.0;
-            if (BloodworksCommonConfig.PARTICLE_ENABLED_STEP.get() && Globals.RAND.nextFloat() > BloodworksCommonConfig.PARTICLE_DENSITY.get()) return;
-            level.addParticle(stepParticle, posRand.x, posRand.y, posRand.z, speedMult, 0,  0);
+            if (BloodworksCommonConfig.PARTICLE_ENABLED_STEP.get() && Globals.RAND.nextFloat() > BloodworksCommonConfig.PARTICLE_DENSITY.get())
+                return;
+            level.addParticle(stepParticle, posRand.x, posRand.y, posRand.z, speedMult, 0, 0);
         }
     }
 }

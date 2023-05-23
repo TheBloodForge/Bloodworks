@@ -24,7 +24,7 @@ public class FleshStepParticle extends TextureSheetParticle
         this.lifetime = 60; //in ticks
         this.alpha = 0;
 
-        this.setBoundingBox(AABB.ofSize(new Vec3(x, y, z), .03,.03,.03));
+        this.setBoundingBox(AABB.ofSize(new Vec3(x, y, z), .03, .03, .03));
 
 
         this.setSpriteFromAge(spriteSet);
@@ -34,16 +34,16 @@ public class FleshStepParticle extends TextureSheetParticle
     }
 
     @Override
-    public void tick() {
+    public void tick()
+    {
         super.tick();
-        float lifeScaled = age / (float)lifetime; //0 to 1
-        if(lifeScaled < 0.1f)
+        float lifeScaled = age / (float) lifetime; //0 to 1
+        if (lifeScaled < 0.1f)
         {
             this.alpha = Util.Lerp(0, 1, lifeScaled / 0.1f);
-        }
-        else if(lifeScaled > 0.8f)
+        } else if (lifeScaled > 0.8f)
         {
-            this.alpha = Util.Lerp(1, 0, (lifeScaled - 0.8f) /  0.2f);
+            this.alpha = Util.Lerp(1, 0, (lifeScaled - 0.8f) / 0.2f);
         }
 
         this.yd /= 1.5f;
@@ -52,7 +52,8 @@ public class FleshStepParticle extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
+    public ParticleRenderType getRenderType()
+    {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
@@ -65,9 +66,11 @@ public class FleshStepParticle extends TextureSheetParticle
         {
             this.sprites = spriteSet;
         }
+
         @Nullable
         @Override
-        public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
+        public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double dx, double dy, double dz)
+        {
             return new FleshStepParticle(level, sprites, x, y, z, dx, dy, dz);
         }
     }

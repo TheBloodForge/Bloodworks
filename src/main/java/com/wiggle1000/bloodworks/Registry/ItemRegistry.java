@@ -12,7 +12,7 @@ public class ItemRegistry
 {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Globals.MODID);
 
-    public static final RegistryObject<Item> BLOCK_COAGULATED_BLOOD         = ITEMS.register("block_coagulated_blood", () -> new BlockItem(BlockRegistry.BLOCK_COAGULATED_BLOOD.get(), new Item.Properties().tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> BLOCK_COAGULATED_BLOOD_SLAB    = ITEMS.register("block_coagulated_blood_slab", () -> new BlockItem(BlockRegistry.BLOCK_COAGULATED_BLOOD_SLAB.get(), new Item.Properties().tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> BLOCK_COAGULATED_BLOOD_STAIRS  = ITEMS.register("block_coagulated_blood_stairs", () -> new BlockItem(BlockRegistry.BLOCK_COAGULATED_BLOOD_STAIRS.get(), new Item.Properties().tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> BLOCK_COAGULATED_BLOOD = ITEMS.register("block_coagulated_blood", () -> new BlockItem(BlockRegistry.BLOCK_COAGULATED_BLOOD.get(), new Item.Properties().tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> BLOCK_COAGULATED_BLOOD_SLAB = ITEMS.register("block_coagulated_blood_slab", () -> new BlockItem(BlockRegistry.BLOCK_COAGULATED_BLOOD_SLAB.get(), new Item.Properties().tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> BLOCK_COAGULATED_BLOOD_STAIRS = ITEMS.register("block_coagulated_blood_stairs", () -> new BlockItem(BlockRegistry.BLOCK_COAGULATED_BLOOD_STAIRS.get(), new Item.Properties().tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
 }

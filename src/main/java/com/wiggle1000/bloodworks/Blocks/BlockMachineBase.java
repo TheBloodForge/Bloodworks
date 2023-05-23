@@ -14,24 +14,28 @@ public class BlockMachineBase extends BaseEntityBlock
 {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public BlockMachineBase(Properties properties) {
+    public BlockMachineBase(Properties properties)
+    {
         super(properties);
     }
 
     // -------- Block entity stuff --------
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public BlockState getStateForPlacement(BlockPlaceContext pContext)
+    {
         return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState blockState) {
+    public RenderShape getRenderShape(BlockState blockState)
+    {
         return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
+    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_)
+    {
         return null;
     }
 }
