@@ -56,11 +56,7 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
             @Override
             public int get(int index)
             {
-                return switch (index) {
-                    case 0 -> BlockEntityMachineInfusionChamber.this.progress;
-                    case 1 -> BlockEntityMachineInfusionChamber.this.processingTicks;
-                    default -> 0;
-                };
+                return getContainerData(index);
             }
 
             @Override
@@ -72,11 +68,19 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
             }
 
             @Override
-            public int getCount() {
-                return 2;
+            public int getCount()
+            {
+                return getContainerCount();
             }
         };
     }
+
+    public int getContainerData(int index)
+    { return 0; }
+    public void setContainerData(int index, int value)
+    {}
+    public int getContainerCount()
+    { return 0; }
 
     @Override
     public Component getDisplayName()
