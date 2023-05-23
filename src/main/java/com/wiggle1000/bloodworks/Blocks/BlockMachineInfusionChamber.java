@@ -20,9 +20,9 @@ import org.jetbrains.annotations.Nullable;
 public class BlockMachineInfusionChamber extends BlockMachineBase
 {
 
-    public BlockMachineInfusionChamber(Properties properties)
+    public BlockMachineInfusionChamber()
     {
-        super(properties);
+        super();
     }
 
     // -------- Block entity stuff --------

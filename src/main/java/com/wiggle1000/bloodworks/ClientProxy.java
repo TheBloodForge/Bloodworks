@@ -3,6 +3,7 @@ package com.wiggle1000.bloodworks;
 import com.wiggle1000.bloodworks.Particles.FleshStepParticle;
 import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,5 +23,11 @@ public class ClientProxy
     public static void registerParticleFactories(final RegisterParticleProvidersEvent event)
     {
         event.register(ParticleRegistry.PARTICLE_FLESH_STEP.get(), FleshStepParticle.Provider::new);
+    }
+
+    @SubscribeEvent
+    public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers registerRenderers)
+    {
+        //registerRenderers.registerBlockEntityRenderer();
     }
 }

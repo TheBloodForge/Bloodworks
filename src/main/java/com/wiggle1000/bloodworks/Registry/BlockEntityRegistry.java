@@ -1,5 +1,6 @@
 package com.wiggle1000.bloodworks.Registry;
 
+import com.wiggle1000.bloodworks.Blocks.BlockEntities.BlockEntityIntestine;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BlockEntityMachineInfusionChamber;
 import com.wiggle1000.bloodworks.Globals;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -15,6 +16,12 @@ public class BlockEntityRegistry
             () -> BlockEntityType.Builder.of(
                     BlockEntityMachineInfusionChamber::new,
                     BlockRegistry.BLOCK_INFUSION_CHAMBER.get()
-            ).build());
+            ).build(null));
+
+    public static final RegistryObject<BlockEntityType<BlockEntityIntestine>> BLOCK_ENTITY_INTESTINE = BLOCK_ENTITIES.register("be_intestine",
+            () -> BlockEntityType.Builder.of(
+                    BlockEntityIntestine::new,
+                    BlockRegistry.BLOCK_INTESTINE.get()
+            ).build(null));
 
 }
