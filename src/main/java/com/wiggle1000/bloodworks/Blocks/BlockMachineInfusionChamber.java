@@ -36,7 +36,8 @@ public class BlockMachineInfusionChamber extends BlockMachineBase
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212level, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212level, BlockState state, BlockEntityType<T> type)
+    {
         return createTickerHelper(type, BlockEntityRegistry.BLOCK_ENTITY_INFUSION_CHAMBER.get(), BlockEntityMachineInfusionChamber::tick);
     }
 
@@ -47,9 +48,9 @@ public class BlockMachineInfusionChamber extends BlockMachineBase
         if (cState.getBlock() != newState.getBlock())
         {
             BlockEntity ent = level.getBlockEntity(blockPos);
-            if(ent instanceof BlockEntityMachineInfusionChamber)
+            if (ent instanceof BlockEntityMachineInfusionChamber)
             {
-                ((BlockEntityMachineInfusionChamber)ent).dropInventoryContents();
+                ((BlockEntityMachineInfusionChamber) ent).dropInventoryContents();
             }
         }
         super.onRemove(cState, level, blockPos, newState, isMoving);
@@ -59,10 +60,10 @@ public class BlockMachineInfusionChamber extends BlockMachineBase
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState cState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
-        if(level.isClientSide()) return InteractionResult.sidedSuccess(level.isClientSide());
+        if (level.isClientSide()) return InteractionResult.sidedSuccess(level.isClientSide());
 
         BlockEntity entity = level.getBlockEntity(blockPos);
-        if(!(entity instanceof BlockEntityMachineInfusionChamber))
+        if (!(entity instanceof BlockEntityMachineInfusionChamber))
         {
             Globals.LogError("Uh oh, a " + this.getName().getString() + " had the wrong tileEntity at " + blockPos);
             return InteractionResult.FAIL;

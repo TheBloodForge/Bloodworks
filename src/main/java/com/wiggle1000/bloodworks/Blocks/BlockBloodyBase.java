@@ -23,24 +23,24 @@ import java.util.List;
 @SuppressWarnings({"NullableProblems", "Unused"})
 public class BlockBloodyBase extends Block
 {
-    public BlockBloodyBase() {
+    public BlockBloodyBase()
+    {
         super(
-            BlockBehaviour.Properties
-                .of(Material.STONE)
-                .strength(4f, 1200f)
-                .sound(SoundType.SLIME_BLOCK)
+                BlockBehaviour.Properties
+                        .of(Material.STONE)
+                        .strength(4f, 1200f)
+                        .sound(SoundType.SLIME_BLOCK)
         );
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
-        if(Screen.hasShiftDown())
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
+    {
+        if (Screen.hasShiftDown())
         {
             components.add(Component.literal("\"Clotted blood. Still a bit mushy...\"").withStyle(ChatFormatting.DARK_RED));
             components.add(Component.literal("Used for decoration!").withStyle(ChatFormatting.DARK_RED));
-        }
-        else
-        {
+        } else {
             components.add(Component.literal("Press SHIFT for more info").withStyle(ChatFormatting.DARK_AQUA));
         }
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);

@@ -32,13 +32,13 @@ public class RecipeBloodInfusion implements Recipe<SimpleContainer>
     }
 
     @Override
-    public ItemStack assemble(SimpleContainer p_44001_)
+    public ItemStack assemble(SimpleContainer container)
     {
         return null;
     }
 
     @Override
-    public boolean canCraftInDimensions(int p_43999_, int p_44000_)
+    public boolean canCraftInDimensions(int posX, int posY)
     {
         return true;
     }

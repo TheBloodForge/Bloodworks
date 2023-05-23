@@ -38,6 +38,7 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
             setChanged();
         }
     };
+
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public static final int INPUT_SLOT_INDEX = 1;
@@ -61,11 +62,9 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
             }
 
             @Override
-            public void set(int index, int value) {
-                switch (index) {
-                    case 0 -> BlockEntityMachineInfusionChamber.this.progress = value;
-                    case 1 -> BlockEntityMachineInfusionChamber.this.processingTicks = value;
-                }
+            public void set(int index, int value)
+            {
+                setContainerData(index, value);
             }
 
             @Override
@@ -165,8 +164,7 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
             {
                 entity.doCraftItem();
             }
-        } else
-        {
+        } else {
             if (entity.resetProgress()) setChanged(level, blockPos, blockState);
         }
     }

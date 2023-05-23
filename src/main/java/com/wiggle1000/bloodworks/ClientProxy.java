@@ -19,6 +19,7 @@ public class ClientProxy
         // Some client setup code
         Globals.LogInfo("Initializing Client.");
     }
+
     @SubscribeEvent
     public static void registerParticleFactories(final RegisterParticleProvidersEvent event)
     {
