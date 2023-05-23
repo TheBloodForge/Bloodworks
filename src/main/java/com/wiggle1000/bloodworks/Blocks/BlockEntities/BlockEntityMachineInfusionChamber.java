@@ -1,6 +1,5 @@
 package com.wiggle1000.bloodworks.Blocks.BlockEntities;
 
-import com.wiggle1000.bloodworks.Blocks.BlockMachineInfusionChamber;
 import com.wiggle1000.bloodworks.Globals;
 import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
 import net.minecraft.core.BlockPos;
@@ -17,11 +16,8 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -29,6 +25,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public class BlockEntityMachineInfusionChamber extends BlockEntity implements MenuProvider
 {
 
@@ -71,7 +68,7 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
                 switch (index) {
                     case 0 -> BlockEntityMachineInfusionChamber.this.progress = value;
                     case 1 -> BlockEntityMachineInfusionChamber.this.processingTicks = value;
-                };
+                }
             }
 
             @Override
@@ -87,11 +84,10 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
         return Component.translatable(Globals.MODID + ".block_entity.infusion_chamber");
     }
 
-    @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
     {
-        return
+        return null;
     }
 
     @Override
@@ -171,15 +167,16 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
         {
             inv.setItem(i, itemHandler.getStackInSlot(i));
         }
-        if(canPutIntoOutput(inv, ItemStack stack))
+      /*  if(canPutIntoOutput(inv, ItemStack stack))
         {
 
-        }
+        }*/
+        return false;
     }
 
     private boolean canPutIntoOutput(SimpleContainer inv, ItemStack stack)
     {
-        if(inv.getItem(OUTPUT_SLOT_INDEX).getMaxStackSize() > invent)
+//        if(inv.getItem(OUTPUT_SLOT_INDEX).getMaxStackSize() > invent)
         return false;
     }
 

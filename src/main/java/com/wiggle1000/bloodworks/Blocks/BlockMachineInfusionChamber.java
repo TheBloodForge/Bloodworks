@@ -56,15 +56,15 @@ public class BlockMachineInfusionChamber extends BlockMachineBase
     }
 
     @Override
-    public InteractionResult use(BlockState cState, Level level, BlockPos blockPos, Player player,
-                                 InteractionHand interactionHand, BlockHitResult blockHitResult)
+    @SuppressWarnings("deprecation")
+    public InteractionResult use(BlockState cState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
         if(level.isClientSide()) return InteractionResult.sidedSuccess(level.isClientSide());
 
         BlockEntity entity = level.getBlockEntity(blockPos);
         if(!(entity instanceof BlockEntityMachineInfusionChamber))
         {
-            Globals.LogError("Uhoh, a " + this.getName().getString() + " had the wrong tileEntity at "+blockPos.toString());
+            Globals.LogError("Uh oh, a " + this.getName().getString() + " had the wrong tileEntity at " + blockPos);
             return InteractionResult.FAIL;
         }
 
