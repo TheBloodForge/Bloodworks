@@ -1,6 +1,8 @@
 package com.wiggle1000.bloodworks;
 
+import com.wiggle1000.bloodworks.Client.BlockRenderers.BlockEntityRendererIntestine;
 import com.wiggle1000.bloodworks.Particles.FleshStepParticle;
+import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
 import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -29,6 +31,6 @@ public class ClientProxy
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers registerRenderers)
     {
-        //registerRenderers.registerBlockEntityRenderer();
+        registerRenderers.registerBlockEntityRenderer(BlockEntityRegistry.BLOCK_ENTITY_INTESTINE.get(), context -> new BlockEntityRendererIntestine(context));
     }
 }

@@ -7,9 +7,9 @@ public class Util
     {
         return a + interpolation * (b - a);
     }
-
     public static double Lerp(double a, double b, double interpolation)
     {
         return a + interpolation * (b - a);
     }
+
 }

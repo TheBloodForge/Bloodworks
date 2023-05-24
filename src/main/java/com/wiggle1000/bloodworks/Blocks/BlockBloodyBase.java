@@ -1,9 +1,8 @@
 package com.wiggle1000.bloodworks.Blocks;
 
+import com.wiggle1000.bloodworks.ClientUtils;
 import com.wiggle1000.bloodworks.Particles.ParticleHelper;
 import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -36,13 +35,7 @@ public class BlockBloodyBase extends Block
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
     {
-        if (Screen.hasShiftDown())
-        {
-            components.add(Component.literal("\"Clotted blood. Still a bit mushy...\"").withStyle(ChatFormatting.DARK_RED));
-            components.add(Component.literal("Used for decoration!").withStyle(ChatFormatting.DARK_RED));
-        } else {
-            components.add(Component.literal("Press SHIFT for more info").withStyle(ChatFormatting.DARK_AQUA));
-        }
+        ClientUtils.AddChatComponents(components, "Clotted blood. Still a bit mushy..", "Used for decoration.");
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }
 

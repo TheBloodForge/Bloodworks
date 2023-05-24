@@ -4,6 +4,8 @@ import com.mojang.logging.LogUtils;
 import com.wiggle1000.bloodworks.Registry.ItemRegistry;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.levelgen.synth.SimplexNoise;
 import org.slf4j.Logger;
 
 import java.util.Random;
@@ -17,6 +19,7 @@ public class Globals
 
     //TODO: on world load, reseed this to world seed?
     public static final Random RAND = new Random(System.nanoTime());
+    public static final SimplexNoise SIMPLEX_NOISE = new SimplexNoise(RandomSource.create());
     public static final CreativeModeTab CREATIVE_TAB = new CreativeModeTab("Bloodworks")
     {
         @Override

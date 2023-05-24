@@ -1,9 +1,9 @@
 package com.wiggle1000.bloodworks.Blocks;
 
+import com.wiggle1000.bloodworks.ClientUtils;
 import com.wiggle1000.bloodworks.Particles.ParticleHelper;
+import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
 import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -38,13 +38,7 @@ public class BlockIntestine extends BaseEntityBlock
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
     {
-        if (Screen.hasShiftDown())
-        {
-            components.add(Component.literal("\"Clotted blood. Still a bit mushy...\"").withStyle(ChatFormatting.DARK_RED));
-            components.add(Component.literal("Used for decoration!").withStyle(ChatFormatting.DARK_RED));
-        } else {
-            components.add(Component.literal("Press SHIFT for more info").withStyle(ChatFormatting.DARK_AQUA));
-        }
+        ClientUtils.AddChatComponents(components, "Some ..Intestines? Smells funny.", "Function: Processes mashed foods to produce blood nutrients.");
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }
 
@@ -57,9 +51,9 @@ public class BlockIntestine extends BaseEntityBlock
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_)
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return null;
+        return BlockEntityRegistry.BLOCK_ENTITY_INTESTINE.get().create(pos, state);
     }
 
     @Override
