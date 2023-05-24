@@ -194,7 +194,7 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
         return wasChanged;
     }
 
-    private final FluidStack storedFluid = new FluidStack(FluidRegistry.BLOOD_FLUID.source.get(), 0);
+    private final FluidStack storedFluid = new FluidStack(FluidRegistry.FLUID_BLOOD.source.get(), 0);
 
     public int getFluidAmount()
     { return storedFluid.getAmount(); }
@@ -220,7 +220,7 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
     @Override
     public boolean isFluidValid(int tank, @NotNull FluidStack stack)
     {
-        return stack.containsFluid(new FluidStack(FluidRegistry.BLOOD_FLUID.source.get(), 1));
+        return stack.containsFluid(new FluidStack(FluidRegistry.FLUID_BLOOD.source.get(), 1));
     }
 
     @Override

@@ -15,7 +15,7 @@ public class FluidRegistry
 
     public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, Globals.MODID);
     public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, Globals.MODID);
-    public static final FluidRegistryContainer BLOOD_FLUID = new FluidRegistryContainer(
+    public static final FluidRegistryContainer FLUID_BLOOD = new FluidRegistryContainer(
             "fluid_blood",
             FluidType.Properties.create().canSwim(true).canDrown(true).canPushEntity(true).supportsBoating(true),
             () -> FluidRegistryContainer.createExtension(

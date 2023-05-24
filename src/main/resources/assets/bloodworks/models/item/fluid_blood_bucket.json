@@ -5,5 +5,5 @@
     "base": "item/bucket",
     "fluid": "bloodworks:items/drip_bucket"
   },
-  "fluid": "bloodworks:blood_fluid"
+  "fluid": "bloodworks:fluid_blood"
 }
