@@ -12,7 +12,7 @@ import java.util.List;
 public class RecipeRegistry
 {
     public static final List<RecipeBloodInfusion> BLOOD_INFUSION_RECIPES = new ArrayList<>();
-    static
+    public static void init()
     {
         addInfusionRecipe(200, Ingredient.of(Items.ANDESITE), new ItemStack(ItemRegistry.BLOCK_COAGULATED_BLOOD.get(), 1), true);
     }

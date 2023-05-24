@@ -1,9 +1,6 @@
 package com.wiggle1000.bloodworks;
 
-import com.wiggle1000.bloodworks.Particles.FleshStepParticle;
-import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.wiggle1000.bloodworks.Registry.RecipeRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -16,6 +13,7 @@ public class CommonProxy
     {
         // Some common setup code
         Globals.LogInfo("Initializing Common.");
+        RecipeRegistry.init();
     }
 
 }

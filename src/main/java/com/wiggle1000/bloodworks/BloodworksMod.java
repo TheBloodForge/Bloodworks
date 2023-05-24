@@ -1,10 +1,7 @@
 package com.wiggle1000.bloodworks;
 
 import com.wiggle1000.bloodworks.Config.BloodworksCommonConfig;
-import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
-import com.wiggle1000.bloodworks.Registry.BlockRegistry;
-import com.wiggle1000.bloodworks.Registry.ItemRegistry;
-import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
+import com.wiggle1000.bloodworks.Registry.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -30,6 +27,8 @@ public class BloodworksMod
         ItemRegistry.ITEMS.register(modEventBus);
         ParticleRegistry.PARTICLES.register(modEventBus);
         BlockEntityRegistry.BLOCK_ENTITIES.register(modEventBus);
+        FluidRegistry.FLUID_TYPES.register(modEventBus);
+        FluidRegistry.FLUIDS.register(modEventBus);
 
         // -------- Register Configs --------
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BloodworksCommonConfig.CONFIG_SPEC);

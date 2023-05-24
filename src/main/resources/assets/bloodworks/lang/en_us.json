@@ -1,5 +1,9 @@
 {
   "block.bloodworks.block_coagulated_blood": "Coagulated Blood",
   "block.bloodworks.block_coagulated_blood_stairs": "Coagulated Blood Stairs",
-  "block.bloodworks.block_coagulated_blood_slab": "Coagulated Blood Slab"
+  "block.bloodworks.block_coagulated_blood_slab": "Coagulated Blood Slab",
+  "block.bloodworks.block_fluid_blood": "Blood",
+  "block.bloodworks.block_fluid_blood_flowing": "Flowing Blood",
+  "block.bloodworks.block_fluid_blood_still": "Still Blood",
+  "item.bloodworks.fluid_blood_bucket": "Blood Bucket"
 }
