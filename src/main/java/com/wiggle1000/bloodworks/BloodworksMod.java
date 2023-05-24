@@ -29,6 +29,7 @@ public class BloodworksMod
         BlockEntityRegistry.BLOCK_ENTITIES.register(modEventBus);
         FluidRegistry.FLUID_TYPES.register(modEventBus);
         FluidRegistry.FLUIDS.register(modEventBus);
+        MenuRegistry.MENUS.register(modEventBus);
 
         // -------- Register Configs --------
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BloodworksCommonConfig.CONFIG_SPEC);

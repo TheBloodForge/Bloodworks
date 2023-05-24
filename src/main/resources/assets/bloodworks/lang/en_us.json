@@ -5,5 +5,7 @@
   "block.bloodworks.block_fluid_blood": "Blood",
   "block.bloodworks.block_fluid_blood_flowing": "Flowing Blood",
   "block.bloodworks.block_fluid_blood_still": "Still Blood",
-  "item.bloodworks.fluid_blood_bucket": "Blood Bucket"
+  "item.bloodworks.fluid_blood_bucket": "Blood Bucket",
+  "bloodworks.block_entity.infusion_chamber": "Infusion Chamber",
+  "bloodworks.infusion_chamber": "Infusion Chamber"
 }

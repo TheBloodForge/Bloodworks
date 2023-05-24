@@ -14,6 +14,6 @@ public class BlockRegistry
     public static final RegistryObject<Block> BLOCK_COAGULATED_BLOOD            = BLOCKS.register("block_coagulated_blood",         BlockBloodyBase::new);
     public static final RegistryObject<Block> BLOCK_COAGULATED_BLOOD_STAIRS     = BLOCKS.register("block_coagulated_blood_stairs",  BlockBloodyStairsBase::new);
     public static final RegistryObject<Block> BLOCK_COAGULATED_BLOOD_SLAB       = BLOCKS.register("block_coagulated_blood_slab",    BlockBloodySlabBase::new);
-    public static final RegistryObject<Block> BLOCK_INFUSION_CHAMBER            = BLOCKS.register("block_infusion_chamber",         BlockMachineInfusionChamber::new);
+    public static final RegistryObject<Block> BLOCK_INFUSION_CHAMBER            = BLOCKS.register("block_infusion_chamber",         BlockInfusionChamber::new);
     public static final RegistryObject<Block> BLOCK_INTESTINE                   = BLOCKS.register("block_intestine",                BlockIntestine::new);
 }

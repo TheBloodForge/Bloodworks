@@ -1,6 +1,6 @@
 package com.wiggle1000.bloodworks.Crafting;
 
-import com.wiggle1000.bloodworks.Blocks.BlockEntities.BlockEntityMachineInfusionChamber;
+import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_InfusionChamber;
 import com.wiggle1000.bloodworks.Registry.ItemRegistry;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +24,7 @@ public class RecipeBloodInfusion
         this.requiredTicks = requiredTicks;
     }
 
-    public boolean matches(BlockEntityMachineInfusionChamber container, Level level)
+    public boolean matches(BE_InfusionChamber container, Level level)
     {
         if (level != null && level.isClientSide()) return false;
 

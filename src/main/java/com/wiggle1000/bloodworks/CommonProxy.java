@@ -1,5 +1,6 @@
 package com.wiggle1000.bloodworks;
 
+import com.wiggle1000.bloodworks.Networking.PacketManager;
 import com.wiggle1000.bloodworks.Registry.RecipeRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -14,6 +15,7 @@ public class CommonProxy
         // Some common setup code
         Globals.LogInfo("Initializing Common.");
         RecipeRegistry.init();
+        PacketManager.register();
     }
 
 }

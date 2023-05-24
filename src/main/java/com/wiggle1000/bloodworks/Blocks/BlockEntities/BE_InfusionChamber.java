@@ -2,9 +2,12 @@ package com.wiggle1000.bloodworks.Blocks.BlockEntities;
 
 import com.wiggle1000.bloodworks.Crafting.RecipeBloodInfusion;
 import com.wiggle1000.bloodworks.Globals;
+import com.wiggle1000.bloodworks.Networking.FluidSyncS2CPacket;
+import com.wiggle1000.bloodworks.Networking.PacketManager;
 import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
 import com.wiggle1000.bloodworks.Registry.FluidRegistry;
 import com.wiggle1000.bloodworks.Registry.RecipeRegistry;
+import com.wiggle1000.bloodworks.Server.Menus.InfusionChamberMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,15 +28,17 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public class BlockEntityMachineInfusionChamber extends BlockEntity implements MenuProvider, IItemHandler, IFluidHandler
+public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFluidHandler, MenuProvider
 {
 
+    public static final Component TITLE = Component.translatable(Globals.MODID + ".infusion_chamber");
     private final ItemStackHandler itemHandler = new ItemStackHandler(3)
     {
         @Override
@@ -43,69 +48,65 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
             setChanged();
         }
     };
-
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+    private LazyOptional<IFluidHandler> lazyFluidHandler = LazyOptional.empty();
 
     public static final int COAGULATOR_SLOT_INDEX = 0;
     public static final int INPUT_SLOT_INDEX = 1;
     public static final int OUTPUT_SLOT_INDEX = 2;
 
 
-    protected final ContainerData data;
+    protected final ContainerData data = new ContainerData()
+    {
+        @Override
+        public int get(int index)
+        { return getContainerData(index); }
+
+        @Override
+        public void set(int index, int value)
+        { setContainerData(index, value); }
+
+        @Override
+        public int getCount()
+        { return getContainerCount(); }
+    };
+
     private int progress = 0;
     private RecipeBloodInfusion activeRecipe;
 
 
-    public BlockEntityMachineInfusionChamber(BlockPos pos, BlockState state)
+    public BE_InfusionChamber(BlockPos pos, BlockState state)
     {
-        super(BlockEntityRegistry.BLOCK_ENTITY_INFUSION_CHAMBER.get(), pos, state);
-        this.data = new ContainerData()
-        {
-            @Override
-            public int get(int index)
-            {
-                return getContainerData(index);
-            }
+        super(BlockEntityRegistry.BE_INFUSION_CHAMBER.get(), pos, state);
+    }
 
-            @Override
-            public void set(int index, int value)
-            {
-                setContainerData(index, value);
-            }
+    public ContainerData getContainerData() {
+        return this.data;
+    }
 
-            @Override
-            public int getCount()
-            {
-                return getContainerCount();
-            }
+    /** this is the data accessor for the game to save the data */
+    public int getContainerData(int index) {
+        return switch (index) {
+            case 0 -> this.progress;
+            case 1 -> this.activeRecipe != null ? this.activeRecipe.getTicksRequired() : 10000;
+            case 2 -> this.FLUID_TANK.getFluidAmount();
+            default -> 0;
         };
     }
 
-    public int getContainerData(int index)
-    {
-        return 0;
-    }
-
+    /** this sets the values relevant on loading */
     public void setContainerData(int index, int value)
     {
+        switch(index) {
+            case 0 -> this.progress = value;
+            case 2 -> this.fill(new FluidStack(FluidRegistry.FLUID_BLOOD.source.get().getSource(), value), FluidAction.EXECUTE);
+            default -> {}
+        }
     }
 
+    /** this returns the number of data entries to be saved */
     public int getContainerCount()
-    {
-        return 0;
-    }
-
-    @Override
-    public Component getDisplayName()
-    {
-        return Component.translatable(Globals.MODID + ".block_entity.infusion_chamber");
-    }
-
-    @Override
-    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
-    {
-        return null;
-    }
+    { return 3; }
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side)
@@ -113,6 +114,11 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
         if (cap == ForgeCapabilities.ITEM_HANDLER)
         {
             return lazyItemHandler.cast();
+        }
+
+        if (cap == ForgeCapabilities.FLUID_HANDLER)
+        {
+            return lazyFluidHandler.cast();
         }
         return super.getCapability(cap, side);
     }
@@ -122,6 +128,7 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
     {
         super.onLoad();
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
+        lazyFluidHandler = LazyOptional.of(() -> FLUID_TANK);
     }
 
     @Override
@@ -129,12 +136,16 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
     {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
+        lazyFluidHandler.invalidate();
     }
 
     @Override
     protected void saveAdditional(CompoundTag nbt)
     {
         nbt.put("inventory", itemHandler.serializeNBT());
+        nbt.putInt("progress", this.progress);
+        nbt = FLUID_TANK.writeToNBT(nbt);
+//        nbt.putInt("blood", storedFluid.getAmount());
         super.saveAdditional(nbt);
     }
 
@@ -142,6 +153,9 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
     public void load(CompoundTag nbt)
     {
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
+        progress = nbt.getInt("progress");
+        FLUID_TANK.readFromNBT(nbt);
+//        FLUID_TANK.setAmount(nbt.getInt("blood"));
         super.load(nbt);
     }
 
@@ -158,7 +172,7 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
     }
 
 
-    public static void tick(Level level, BlockPos blockPos, BlockState blockState, BlockEntityMachineInfusionChamber entity)
+    public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_InfusionChamber entity)
     {
         if (level.isClientSide()) return;
         if (!entity.isCrafting()) return;
@@ -194,10 +208,20 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
         return wasChanged;
     }
 
-    private final FluidStack storedFluid = new FluidStack(FluidRegistry.FLUID_BLOOD.source.get(), 0);
+    private final FluidTank FLUID_TANK = new FluidTank(6000) {
+        @Override
+        public boolean isFluidValid(FluidStack stack)
+        {
+            return stack.getFluid() == FluidRegistry.FLUID_BLOOD.source.get().getSource();
+        }
 
-    public int getFluidAmount()
-    { return storedFluid.getAmount(); }
+        @Override
+        protected void onContentsChanged()
+        {
+            setChanged();
+//            super.onContentsChanged();
+        }
+    };
 
     @Override
     public int getTanks()
@@ -208,19 +232,19 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
     @Override
     public @NotNull FluidStack getFluidInTank(int tank)
     {
-        return storedFluid;
+        return FLUID_TANK.getFluid();
     }
 
     @Override
     public int getTankCapacity(int tank)
     {
-        return 6000;
+        return FLUID_TANK.getCapacity();
     }
 
     @Override
     public boolean isFluidValid(int tank, @NotNull FluidStack stack)
     {
-        return stack.containsFluid(new FluidStack(FluidRegistry.FLUID_BLOOD.source.get(), 1));
+        return FLUID_TANK.isFluidValid(stack);
     }
 
     @Override
@@ -230,32 +254,19 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
         {
             return 0;
         }
-        int sourceVolume = resource.getAmount();
-        int currentVolume = getFluidAmount();
-        if (currentVolume + sourceVolume <= getTankCapacity(0))
-        {
-            storedFluid.grow(sourceVolume);
-            return sourceVolume;
-        } else {
-            int remainder = getTankCapacity(0) - currentVolume;
-            int drainedVolume = sourceVolume - remainder;
-            storedFluid.grow(drainedVolume);
-            return drainedVolume;
-        }
+        return FLUID_TANK.fill(resource, action);
     }
 
     @Override
     public @NotNull FluidStack drain(int maxDrain, IFluidHandler.FluidAction action)
     {
-        int amount = storedFluid.getAmount();
-        storedFluid.shrink(Math.min(maxDrain, amount));
-        return new FluidStack(storedFluid.getFluid(), amount);
+        return FLUID_TANK.drain(maxDrain, action);
     }
 
     @Override
     public @NotNull FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action)
     {
-        return drain(resource.getAmount(), action);
+        return FLUID_TANK.drain(resource, action);
     }
 
     @Override
@@ -297,5 +308,28 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
     public ItemStack getItem(int slot)
     {
         return itemHandler.getStackInSlot(slot);
+    }
+
+    public ItemStackHandler getInventory() {
+        return itemHandler;
+    }
+
+    @Override
+    public Component getDisplayName()
+    {
+        return TITLE;
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int window_id, Inventory inventory, Player player)
+    {
+        PacketManager.sendToClients(new FluidSyncS2CPacket(this.getFluidInTank(0), worldPosition));
+        return new InfusionChamberMenu(window_id, inventory, this, this.data);
+    }
+
+    public void setFluid(FluidStack fluidStack)
+    {
+        FLUID_TANK.setFluid(fluidStack);
     }
 }

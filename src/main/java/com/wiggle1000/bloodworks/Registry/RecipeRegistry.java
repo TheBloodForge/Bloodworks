@@ -1,6 +1,6 @@
 package com.wiggle1000.bloodworks.Registry;
 
-import com.wiggle1000.bloodworks.Blocks.BlockEntities.BlockEntityMachineInfusionChamber;
+import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_InfusionChamber;
 import com.wiggle1000.bloodworks.Crafting.RecipeBloodInfusion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -25,7 +25,7 @@ public class RecipeRegistry
         BLOOD_INFUSION_RECIPES.add(recipe);
     }
 
-    public static RecipeBloodInfusion getInfusionRecipeFromInputs(BlockEntityMachineInfusionChamber container)
+    public static RecipeBloodInfusion getInfusionRecipeFromInputs(BE_InfusionChamber container)
     {
         for (RecipeBloodInfusion bloodInfusionRecipe : BLOOD_INFUSION_RECIPES)
         {

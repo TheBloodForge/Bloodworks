@@ -17,5 +17,6 @@ public class ItemRegistry
     public static final RegistryObject<Item> BLOCK_COAGULATED_BLOOD_SLAB = ITEMS.register("block_coagulated_blood_slab", () -> new BlockItem(BlockRegistry.BLOCK_COAGULATED_BLOOD_SLAB.get(), new Item.Properties().tab(CREATIVE_TAB)));
     public static final RegistryObject<Item> BLOCK_COAGULATED_BLOOD_STAIRS = ITEMS.register("block_coagulated_blood_stairs", () -> new BlockItem(BlockRegistry.BLOCK_COAGULATED_BLOOD_STAIRS.get(), new Item.Properties().tab(CREATIVE_TAB)));
 
+    public static final RegistryObject<Item> BLOCK_INFUSION_CHAMBER = ITEMS.register("block_infusion_chamber", () -> new BlockItem(BlockRegistry.BLOCK_INFUSION_CHAMBER.get(), new Item.Properties().tab(CREATIVE_TAB)));
     public static final RegistryObject<Item> BLOCK_INTESTINE = ITEMS.register("block_intestine", () -> new BlockItem(BlockRegistry.BLOCK_INTESTINE.get(), new Item.Properties().tab(CREATIVE_TAB)));
 }
