@@ -1,7 +1,6 @@
 package com.wiggle1000.bloodworks.Crafting;
 
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BlockEntityMachineInfusionChamber;
-import com.wiggle1000.bloodworks.Blocks.BlockEntities.Containers.MachineInfusionContainer;
 import com.wiggle1000.bloodworks.Registry.ItemRegistry;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
@@ -51,4 +50,7 @@ public class RecipeBloodInfusion
 
     public int getTicksRequired()
     { return requiredTicks; }
+
+    public Ingredient getIngredient()
+    { return ingredient; }
 }

@@ -181,7 +181,10 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
 
     private void doCraftItem()
     {
-
+        itemHandler.insertItem(OUTPUT_SLOT_INDEX, activeRecipe.getResultItem(), false);
+        itemHandler.extractItem(INPUT_SLOT_INDEX, activeRecipe.getIngredient().getItems().length, false);
+        drain(activeRecipe.getBloodRequired(), FluidAction.EXECUTE);
+        activeRecipe = null;
     }
 
     private boolean resetProgress()
@@ -258,36 +261,41 @@ public class BlockEntityMachineInfusionChamber extends BlockEntity implements Me
     @Override
     public int getSlots()
     {
-        return 0;
+        return 3;
     }
 
     @Override
     public @NotNull ItemStack getStackInSlot(int slot)
     {
-        return null;
+        return itemHandler.getStackInSlot(slot);
     }
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
     {
-        return null;
+        return itemHandler.insertItem(slot, stack, simulate);
     }
 
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
     {
-        return null;
+        return itemHandler.extractItem(slot, amount, simulate);
     }
 
     @Override
     public int getSlotLimit(int slot)
     {
-        return 0;
+        return itemHandler.getSlotLimit(slot);
     }
 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack)
     {
-        return false;
+        return itemHandler.isItemValid(slot, stack);
+    }
+
+    public ItemStack getItem(int slot)
+    {
+        return itemHandler.getStackInSlot(slot);
     }
 }
