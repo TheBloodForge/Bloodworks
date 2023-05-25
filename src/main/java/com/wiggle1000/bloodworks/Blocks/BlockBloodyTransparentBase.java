@@ -12,7 +12,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
@@ -20,27 +19,28 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @SuppressWarnings({"NullableProblems", "Unused"})
-public class BlockBloodyBase extends Block
+public class BlockBloodyTransparentBase extends Block
 {
     private String selfQuoteText = "Clotted blood. Still a bit mushy..";
     private String useText = "Used for decoration";
-    public BlockBloodyBase()
+    public BlockBloodyTransparentBase()
     {
         super(
-                BlockBehaviour.Properties
+                Properties
                         .of(Material.STONE)
                         .strength(3f, 5f)
                         .sound(SoundType.SLIME_BLOCK)
         );
     }
 
-    public BlockBloodyBase(String selfQuote, String use)
+    public BlockBloodyTransparentBase(String selfQuote, String use)
     {
         super(
-                BlockBehaviour.Properties
+                Properties
                         .of(Material.STONE)
                         .strength(3f, 5f)
                         .sound(SoundType.SLIME_BLOCK)
+                        .noOcclusion()
         );
         if(selfQuoteText != null) selfQuoteText = selfQuote;
         if(useText != null) useText = use;
@@ -58,5 +58,11 @@ public class BlockBloodyBase extends Block
     {
         super.stepOn(level, pos, blockState, stepperOnner);
         ParticleHelper.DoStepParticle(ParticleRegistry.PARTICLE_FLESH_STEP.get(), level, pos, blockState, stepperOnner);
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState p_49928_, BlockGetter p_49929_, BlockPos p_49930_)
+    {
+        return true;
     }
 }

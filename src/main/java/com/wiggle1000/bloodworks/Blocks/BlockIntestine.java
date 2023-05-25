@@ -32,7 +32,7 @@ public class BlockIntestine extends BaseEntityBlock
         super(
                 BlockBehaviour.Properties
                         .of(Material.STONE)
-                        .strength(4f, 1200f)
+                        .strength(4f, 5f)
                         .sound(SoundType.SLIME_BLOCK)
                         .noOcclusion()
         );

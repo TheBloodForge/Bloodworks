@@ -16,4 +16,8 @@ public class BlockRegistry
     public static final RegistryObject<Block> BLOCK_COAGULATED_BLOOD_SLAB       = BLOCKS.register("block_coagulated_blood_slab",    BlockBloodySlabBase::new);
     public static final RegistryObject<Block> BLOCK_INFUSION_CHAMBER            = BLOCKS.register("block_infusion_chamber",         BlockInfusionChamber::new);
     public static final RegistryObject<Block> BLOCK_INTESTINE                   = BLOCKS.register("block_intestine",                BlockIntestine::new);
+    public static final RegistryObject<Block> BLOCK_FLESH_LIGHT                 = BLOCKS.register("block_flesh_light",              () -> new BlockFleshLight(false));
+    public static final RegistryObject<Block> BLOCK_FLESH_LIGHT_LARGE           = BLOCKS.register("block_flesh_light_large",        () -> new BlockFleshLight(true));
+    public static final RegistryObject<Block> BLOCK_FLESH_PORTHOLE              = BLOCKS.register("block_flesh_porthole",           () -> new BlockBloodyTransparentBase("Flesh with a window embedded.", "Used for decoration."));
+
 }

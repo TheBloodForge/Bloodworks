@@ -28,7 +28,7 @@ public class BlockBloodyStairsBase extends StairBlock
                 Blocks.COBBLESTONE_STAIRS::defaultBlockState,
                 Properties
                         .of(Material.STONE)
-                        .strength(4f, 1200f)
+                        .strength(3f, 5f)
                         .sound(SoundType.SLIME_BLOCK)
         );
     }

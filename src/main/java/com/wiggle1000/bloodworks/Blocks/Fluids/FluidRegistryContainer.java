@@ -11,19 +11,23 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.NotNull;
@@ -84,7 +88,14 @@ public class FluidRegistryContainer
         });
         this.properties.block(this.block);
 
-        this.bucket = ItemRegistry.ITEMS.register(name + "_bucket", () -> new BucketItem(this.source, itemProperties));
+        this.bucket = ItemRegistry.ITEMS.register(name + "_bucket", () -> new BucketItem(this.source, itemProperties)
+        {
+            @Override
+            public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt)
+            {
+                return new FluidBucketWrapper(stack);
+            }
+        });
         this.properties.bucket(this.bucket);
     }
 

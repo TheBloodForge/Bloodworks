@@ -27,7 +27,7 @@ public class BlockBloodySlabBase extends SlabBlock
         super(
                 BlockBehaviour.Properties
                         .of(Material.STONE)
-                        .strength(4f, 1200f)
+                        .strength(3f, 5f)
                         .sound(SoundType.SLIME_BLOCK)
         );
     }

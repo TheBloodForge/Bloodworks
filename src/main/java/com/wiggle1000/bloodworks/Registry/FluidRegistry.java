@@ -23,7 +23,7 @@ public class FluidRegistry
                             Globals.MODID,
                             "fluid_blood"
                     ).tint(0xAA1122)
-                            .fogColor(0.15f, 0.0f, 0.01f)
+                    .fogColor(0.15f, 0.0f, 0.01f)
             ),
             BlockBehaviour.Properties.copy(Blocks.WATER),
             new Item.Properties()

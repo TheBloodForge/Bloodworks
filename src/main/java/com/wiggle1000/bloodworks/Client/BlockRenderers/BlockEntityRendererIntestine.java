@@ -141,10 +141,10 @@ public class BlockEntityRendererIntestine implements BlockEntityRenderer<BlockEn
                 Vec2 uvC = new Vec2((float)U2, (float)nextY/2);
                 Vec2 uvD = new Vec2((float)U2, (float)basalY/2);
 
-                RenderHelper.DoQuad(buffer, poseStack.last().pose(), a, b, c, d, uvA, uvB, uvC, uvD, cLight + 30);
+                RenderHelper.DoQuad(buffer, poseStack.last().pose(), a, b, c, d, uvA, uvB, uvC, uvD, 255);//cLight + 30);
                 if(renderInside)
                 {
-                    RenderHelper.DoQuad(buffer, poseStack.last().pose(), d, c, b, a, uvD, uvC, uvB, uvA, cLight + 30);
+                    RenderHelper.DoQuad(buffer, poseStack.last().pose(), d, c, b, a, uvD, uvC, uvB, uvA, 255);//cLight + 30);
                     //Idea: use UV offset to add silia texture to inside?
                 }
             }
