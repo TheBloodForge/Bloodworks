@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "":
+    [
+      {"model": "bloodworks:block/block_flesh_1", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_1", "y":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_1", "x":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_1", "z":  90, "weight": 10},
+
+      {"model": "bloodworks:block/block_flesh_2", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_2", "y":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_2", "x":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_2", "z":  90, "weight": 10},
+
+      {"model": "bloodworks:block/block_flesh_3", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_3", "y":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_3", "x":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_3", "z":  90, "weight": 10},
+
+      {"model": "bloodworks:block/block_flesh_with_polyp", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/block_flesh_with_polyp", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/block_flesh_with_polyp", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/block_flesh_with_polyp", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/block_flesh_with_polyp", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/block_flesh_with_polyp", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/block_flesh_with_polyp", "z":  90 , "weight": 2},
+      {"model": "bloodworks:block/block_flesh_with_polyp", "z":  270, "weight": 2}
+    ]
+  }
+}

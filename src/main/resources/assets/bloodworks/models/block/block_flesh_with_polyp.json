@@ -1,0 +1,35 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "bloodworks:blocks/block_flesh4",
+		"1": "bloodworks:blocks/block_flesh1",
+		"particle": "bloodworks:blocks/block_flesh4"
+	},
+	"elements": [
+		{
+			"name": "Block",
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
+			}
+		},
+		{
+			"name": "XPolyps",
+			"from": [-2, 5, 4],
+			"to": [0, 11, 11],
+			"faces": {
+				"north": {"uv": [4, 5, 6, 11], "texture": "#1"},
+				"south": {"uv": [3, 6, 5, 12], "texture": "#1"},
+				"west": {"uv": [5, 5, 12, 11], "texture": "#1"},
+				"up": {"uv": [5, 5, 7, 12], "texture": "#1"},
+				"down": {"uv": [4, 5, 6, 12], "texture": "#1"}
+			}
+		}
+	]
+}
