@@ -38,8 +38,9 @@ public class InfusionChamberScreen extends AbstractContainerScreen<InfusionChamb
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY)
+    protected void renderBg(PoseStack poseStack, float deltaInTicks, int mouseX, int mouseY)
     {
+        float deltaTime = deltaInTicks * 50; // 50 ms per tick
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -47,21 +48,29 @@ public class InfusionChamberScreen extends AbstractContainerScreen<InfusionChamb
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        renderProgressArrow(poseStack, x, y);
+        renderProgressArrow(poseStack, x, y, deltaTime);
         renderer.render(poseStack, x + 24, y + 18, menu.getFluidStack());
-//        blit(poseStack, x + 23, y + 18, 176, 64, 16, 80, 256, 172);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 0.25f);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        blit(poseStack, x + 23, y + 18, 176, 64, 16, 80, 256, 172);
     }
 
     int frame = 0;
-    boolean skipFrame = false;
+    int pp = 0;
 
-    private void renderProgressArrow(PoseStack pPoseStack, int x, int y)
+    private void renderProgressArrow(PoseStack pPoseStack, int x, int y, float deltaTime)
     {
         if (menu.isCrafting())
         {
-            //noinspection AssignmentUsedAsCondition
-            if (skipFrame = !skipFrame) blit(pPoseStack, x + 65, y + 17, 224, 32 * frame++, 22, 22, 256, 172);
-            if (frame > 4) frame = 0;
+            int progress = menu.getProgress();
+            if (pp != progress)
+            {
+                frame++;
+                pp = progress;
+                if (frame > 4) frame = 0;
+            }
+            blit(pPoseStack, x + 65, y + 17, 224, 32 * frame, 22, 22, 256, 172);
             blit(pPoseStack, x + 50, y + 42, 176, 32, 15, menu.getScaledProgressBlood(), 256, 172);
             blit(pPoseStack, x + 72, y + 42, 176, 0, menu.getScaledProgressArrow(), 29, 256, 172);
         }

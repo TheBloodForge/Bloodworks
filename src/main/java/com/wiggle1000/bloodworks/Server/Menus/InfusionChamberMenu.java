@@ -61,6 +61,11 @@ public class InfusionChamberMenu extends AbstractContainerMenu
         return this.blockEntity;
     }
 
+    public int getProgress() {
+        int progress = this.data.get(0);
+        return progress;
+    }
+
     public int getScaledProgressArrow() {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);  // Max Progress
