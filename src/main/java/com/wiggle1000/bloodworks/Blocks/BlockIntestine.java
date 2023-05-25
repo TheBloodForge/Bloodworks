@@ -91,7 +91,7 @@ public class BlockIntestine extends BaseEntityBlock
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext)
     {
-        return this.defaultBlockState().setValue(FACING_FROM, pContext.getClickedFace()).setValue(FACING_TO, pContext.getClickedFace().getOpposite());
+        return this.defaultBlockState().setValue(FACING_FROM, pContext.getClickedFace()).setValue(FACING_TO, pContext.getClickedFace());
     }
 
     @Override
@@ -113,10 +113,10 @@ public class BlockIntestine extends BaseEntityBlock
         if (!player.getItemInHand(interactedHand).is(ItemRegistry.BLOCK_INTESTINE.get())) {
             return super.use(state, level, blockPos, player, interactedHand, hitResult);
         }
-        BlockState bs;
-        System.out.println(blockPos.toShortString());
-        if ((bs = level.getBlockState(blockPos)).getBlock() instanceof BlockIntestine) {
-            System.out.println("to = " + bs.getValue(getFacingTo()) + " from = " + bs.getValue(getFacingFrom()));
+        if (state.getBlock() instanceof BlockIntestine) {
+            BlockState newState = this.defaultBlockState().setValue(FACING_FROM, state.getValue(FACING_FROM)).setValue(FACING_TO, hitResult.getDirection());
+            level.setBlocksDirty(blockPos, state, newState);
+            level.setBlockAndUpdate(blockPos, newState);
         }
         return super.use(state, level, blockPos, player, interactedHand, hitResult);
     }
