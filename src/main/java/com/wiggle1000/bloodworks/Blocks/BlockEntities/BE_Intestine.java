@@ -7,12 +7,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class BlockEntityIntestine extends BlockEntity
+public class BE_Intestine extends BlockEntity
 {
 
-    public BlockEntityIntestine(BlockPos pos, BlockState blockState)
+    public BE_Intestine(BlockPos pos, BlockState blockState)
     {
-        super(BlockEntityRegistry.BLOCK_ENTITY_INTESTINE.get(), pos, blockState);
+        super(BlockEntityRegistry.BE_INTESTINE.get(), pos, blockState);
     }
 
     @Override

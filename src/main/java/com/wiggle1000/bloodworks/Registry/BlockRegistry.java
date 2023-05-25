@@ -22,4 +22,5 @@ public class BlockRegistry
 
     public static final RegistryObject<Block> BLOCK_FLESH                       = BLOCKS.register("block_flesh",                    BlockBloodyBase::new);
 
+    public static final RegistryObject<Block> BLOCK_BLOOD_TANK                  = BLOCKS.register("block_blood_tank",               BlockBloodTank::new);
 }

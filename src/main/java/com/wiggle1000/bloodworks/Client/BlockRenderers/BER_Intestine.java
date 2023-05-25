@@ -3,7 +3,7 @@ package com.wiggle1000.bloodworks.Client.BlockRenderers;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.wiggle1000.bloodworks.Blocks.BlockEntities.BlockEntityIntestine;
+import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_Intestine;
 import com.wiggle1000.bloodworks.Config.BloodworksCommonConfig;
 import com.wiggle1000.bloodworks.Globals;
 import net.minecraft.client.Minecraft;
@@ -19,11 +19,11 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class BlockEntityRendererIntestine implements BlockEntityRenderer<BlockEntityIntestine> //TODO: specify blockentity
+public class BER_Intestine implements BlockEntityRenderer<BE_Intestine> //TODO: specify blockentity
 {
 
     private final BlockEntityRendererProvider.Context context;
-    public BlockEntityRendererIntestine(BlockEntityRendererProvider.Context context)
+    public BER_Intestine(BlockEntityRendererProvider.Context context)
     {
         this.context = context;
     }
@@ -37,7 +37,7 @@ public class BlockEntityRendererIntestine implements BlockEntityRenderer<BlockEn
     }
 
     @Override
-    public void render(BlockEntityIntestine ent, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay)
+    public void render(BE_Intestine ent, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay)
     {
         BlockPos blockPos = ent.getBlockPos();
         if(Minecraft.getInstance().cameraEntity.blockPosition().distSqr(blockPos) > 80*80)
@@ -154,13 +154,13 @@ public class BlockEntityRendererIntestine implements BlockEntityRenderer<BlockEn
     }
 
     @Override
-    public boolean shouldRender(BlockEntityIntestine p_173568_, Vec3 p_173569_)
+    public boolean shouldRender(BE_Intestine p_173568_, Vec3 p_173569_)
     {
         return true;
     }
 
     @Override
-    public boolean shouldRenderOffScreen(BlockEntityIntestine p_112306_)
+    public boolean shouldRenderOffScreen(BE_Intestine p_112306_)
     {
         return true;
     }

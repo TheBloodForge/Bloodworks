@@ -1,6 +1,7 @@
 package com.wiggle1000.bloodworks;
 
-import com.wiggle1000.bloodworks.Client.BlockRenderers.BlockEntityRendererIntestine;
+import com.wiggle1000.bloodworks.Client.BlockRenderers.BER_BloodTank;
+import com.wiggle1000.bloodworks.Client.BlockRenderers.BER_Intestine;
 import com.wiggle1000.bloodworks.Client.Screens.InfusionChamberScreen;
 import com.wiggle1000.bloodworks.Particles.FleshStepParticle;
 import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
@@ -35,6 +36,7 @@ public class ClientProxy
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers registerRenderers)
     {
-        registerRenderers.registerBlockEntityRenderer(BlockEntityRegistry.BLOCK_ENTITY_INTESTINE.get(), context -> new BlockEntityRendererIntestine(context));
+        registerRenderers.registerBlockEntityRenderer(BlockEntityRegistry.BE_INTESTINE.get(), context -> new BER_Intestine(context));
+        registerRenderers.registerBlockEntityRenderer(BlockEntityRegistry.BE_BLOOD_TANK.get(), context -> new BER_BloodTank(context));
     }
 }

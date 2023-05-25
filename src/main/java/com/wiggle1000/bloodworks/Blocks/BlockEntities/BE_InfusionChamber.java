@@ -6,6 +6,7 @@ import com.wiggle1000.bloodworks.Networking.FluidSyncS2CPacket;
 import com.wiggle1000.bloodworks.Networking.PacketManager;
 import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
 import com.wiggle1000.bloodworks.Registry.FluidRegistry;
+import com.wiggle1000.bloodworks.Registry.ItemRegistry;
 import com.wiggle1000.bloodworks.Registry.RecipeRegistry;
 import com.wiggle1000.bloodworks.Server.Menus.InfusionChamberMenu;
 import net.minecraft.core.BlockPos;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,8 +49,53 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
             super.onContentsChanged(slot);
             setChanged();
         }
+
+        @Override
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
+        {
+            return super.extractItem(slot, amount, simulate);
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack)
+        {
+            return switch (slot){
+                case 0 -> stack.is(ItemRegistry.ITEM_STABILIZER.get());
+                case 1 -> true;
+                default -> activeRecipe != null && activeRecipe.getResultItem().is(stack.getItem());
+            };
+        }
+    };
+    private final ItemStackHandler automationItemHandler = new ItemStackHandler(3)
+    {
+        @Override
+        protected void onContentsChanged(int slot)
+        {
+            super.onContentsChanged(slot);
+            setChanged();
+        }
+
+        @Override
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
+        {
+            if (slot != OUTPUT_SLOT_INDEX) return new ItemStack(Items.AIR);
+            return BE_InfusionChamber.this.extractItem(slot, amount, simulate);
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack)
+        {
+            return BE_InfusionChamber.this.isItemValid(slot, stack);
+        }
+
+        @Override
+        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
+        {
+            return BE_InfusionChamber.this.insertItem(slot, stack, simulate);
+        }
     };
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+    private LazyOptional<IItemHandler> lazyAutomationItemHandler = LazyOptional.empty();
     private LazyOptional<IFluidHandler> lazyFluidHandler = LazyOptional.empty();
 
     public static final int COAGULATOR_SLOT_INDEX = 0;
@@ -113,6 +160,9 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
     {
         if (cap == ForgeCapabilities.ITEM_HANDLER)
         {
+            if (side != null) {
+                return lazyAutomationItemHandler.cast();
+            }
             return lazyItemHandler.cast();
         }
 
@@ -128,6 +178,7 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
     {
         super.onLoad();
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
+        lazyAutomationItemHandler = LazyOptional.of(() -> automationItemHandler);
         lazyFluidHandler = LazyOptional.of(() -> FLUID_TANK);
     }
 
@@ -136,6 +187,7 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
     {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
+        lazyAutomationItemHandler.invalidate();
         lazyFluidHandler.invalidate();
     }
 
@@ -175,7 +227,10 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_InfusionChamber entity)
     {
         if (level.isClientSide()) return;
-        if (!entity.isCrafting()) return;
+        if (!entity.isCrafting()) {
+            entity.resetProgress();
+            return;
+        }
 
         entity.progress++;
         setChanged(level, blockPos, blockState);
@@ -190,7 +245,7 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
     private boolean isCrafting()
     {
         activeRecipe = activeRecipe != null ? activeRecipe : RecipeRegistry.getInfusionRecipeFromInputs(this);
-        return activeRecipe != null;
+        return activeRecipe != null && activeRecipe.matches(this, level);
     }
 
     private void doCraftItem()
@@ -200,14 +255,17 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
             itemHandler.insertItem(OUTPUT_SLOT_INDEX, activeRecipe.getResultItem().copy(), false);
             itemHandler.extractItem(INPUT_SLOT_INDEX, activeRecipe.getIngredient().getItems().length, false);
             drain(activeRecipe.getBloodRequired(), FluidAction.EXECUTE);
-            activeRecipe = null;
+            PacketManager.sendToClients(new FluidSyncS2CPacket(getFluidInTank(0), worldPosition));
         }
     }
 
     private boolean resetProgress()
     {
         boolean wasChanged = this.progress != 0;
-        this.progress = 0;
+        if (activeRecipe != null && activeRecipe.matches(this, level))
+            this.progress = 20;
+        else
+            this.progress = 0;
         return wasChanged;
     }
 
@@ -222,6 +280,7 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
         protected void onContentsChanged()
         {
             setChanged();
+            PacketManager.sendToClients(new FluidSyncS2CPacket(getFluidInTank(0), worldPosition));
 //            super.onContentsChanged();
         }
     };

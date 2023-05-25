@@ -15,7 +15,8 @@ public class InfusionChamberScreen extends AbstractContainerScreen<InfusionChamb
     private static final ResourceLocation TEXTURE = new ResourceLocation(Globals.MODID, "textures/gui/machine/infusion_chamber.png");
     private FluidTankRenderer renderer;
 
-    public InfusionChamberScreen(InfusionChamberMenu menu, Inventory playerInv, Component title) {
+    public InfusionChamberScreen(InfusionChamberMenu menu, Inventory playerInv, Component title)
+    {
         super(menu, playerInv, title);
         this.leftPos = 0;
         this.topPos = 0;
@@ -31,12 +32,14 @@ public class InfusionChamberScreen extends AbstractContainerScreen<InfusionChamb
         assignFluidRenderer();
     }
 
-    private void assignFluidRenderer() {
+    private void assignFluidRenderer()
+    {
         renderer = new FluidTankRenderer(6000, true, 16, 59, 0xFF990022);
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY)
+    {
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -46,15 +49,27 @@ public class InfusionChamberScreen extends AbstractContainerScreen<InfusionChamb
 
         renderProgressArrow(poseStack, x, y);
         renderer.render(poseStack, x + 24, y + 18, menu.getFluidStack());
+//        blit(poseStack, x + 23, y + 18, 176, 64, 16, 80, 256, 172);
     }
 
-    private void renderProgressArrow(PoseStack pPoseStack, int x, int y) {
-        if(menu.isCrafting()) {
-            blit(pPoseStack, x + 105, y + 33, 176, 0, 8, menu.getScaledProgress());
+    int frame = 0;
+    boolean skipFrame = false;
+
+    private void renderProgressArrow(PoseStack pPoseStack, int x, int y)
+    {
+        if (menu.isCrafting())
+        {
+            //noinspection AssignmentUsedAsCondition
+            if (skipFrame = !skipFrame) blit(pPoseStack, x + 65, y + 17, 224, 32 * frame++, 22, 22, 256, 172);
+            if (frame > 4) frame = 0;
+            blit(pPoseStack, x + 50, y + 42, 176, 32, 15, menu.getScaledProgressBlood(), 256, 172);
+            blit(pPoseStack, x + 72, y + 42, 176, 0, menu.getScaledProgressArrow(), 29, 256, 172);
         }
     }
+
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
+    {
         super.render(poseStack, mouseX, mouseY, partialTicks);
         renderTooltip(poseStack, mouseX, mouseY);
     }

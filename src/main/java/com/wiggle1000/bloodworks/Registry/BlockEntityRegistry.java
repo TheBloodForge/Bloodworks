@@ -1,7 +1,8 @@
 package com.wiggle1000.bloodworks.Registry;
 
-import com.wiggle1000.bloodworks.Blocks.BlockEntities.BlockEntityIntestine;
+import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_BloodTank;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_InfusionChamber;
+import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_Intestine;
 import com.wiggle1000.bloodworks.Globals;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -18,10 +19,15 @@ public class BlockEntityRegistry
                     BlockRegistry.BLOCK_INFUSION_CHAMBER.get()
             ).build(null));
 
-    public static final RegistryObject<BlockEntityType<BlockEntityIntestine>> BLOCK_ENTITY_INTESTINE = BLOCK_ENTITIES.register("be_intestine",
+    public static final RegistryObject<BlockEntityType<BE_Intestine>> BE_INTESTINE = BLOCK_ENTITIES.register("be_intestine",
             () -> BlockEntityType.Builder.of(
-                    BlockEntityIntestine::new,
+                    BE_Intestine::new,
                     BlockRegistry.BLOCK_INTESTINE.get()
             ).build(null));
 
+    public static final RegistryObject<BlockEntityType<BE_BloodTank>> BE_BLOOD_TANK = BLOCK_ENTITIES.register("be_blood_tank",
+            () -> BlockEntityType.Builder.of(
+                    BE_BloodTank::new,
+                    BlockRegistry.BLOCK_BLOOD_TANK.get()
+            ).build(null));
 }

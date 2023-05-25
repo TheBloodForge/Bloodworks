@@ -38,7 +38,7 @@ public class InfusionChamberMenu extends AbstractContainerMenu
         addPlayerHotbar(inv);
 
         IItemHandler handler = blockEntity.getInventory();
-        addSlot(new SlotWithRestriction(handler, 0, 68, 20, (s) -> new ItemStack(ItemRegistry.BLOCK_FLESH_LIGHT.get()).is(s.getItem())));
+        addSlot(new SlotWithRestriction(handler, 0, 68, 20, (s) -> new ItemStack(ItemRegistry.ITEM_STABILIZER.get()).is(s.getItem())));
         addSlot(new SlotItemHandler(handler, 1, 50, 61));
         addSlot(new SlotWithRestriction(handler, 2, 129, 43));
 
@@ -61,13 +61,24 @@ public class InfusionChamberMenu extends AbstractContainerMenu
         return this.blockEntity;
     }
 
-    public int getScaledProgress() {
+    public int getScaledProgressArrow() {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);  // Max Progress
-        int progressArrowSize = 26; // This is the height in pixels of your arrow
+        int progressArrowSize = 44; // This is the height in pixels of your arrow
+        return getScaledProgressOffsetBy(Math.max(0, progress - 20), maxProgress - 20, progressArrowSize);
+    }
 
+    public int getScaledProgressBlood() {
+        int progress = this.data.get(0);
+        int maxProgress = 20;  // Max Progress
+        int progressBloodSize = 17; // This is the height in pixels of your arrow
+        return getScaledProgressOffsetBy(Math.min(20, progress), maxProgress, progressBloodSize);
+    }
+
+    public int getScaledProgressOffsetBy(int progress, int maxProgress, int progressArrowSize) {
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
+
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
     // must assign a slot number to each of the slots used by the GUI.

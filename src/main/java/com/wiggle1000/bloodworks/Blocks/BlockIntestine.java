@@ -57,7 +57,7 @@ public class BlockIntestine extends BaseEntityBlock
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return BlockEntityRegistry.BLOCK_ENTITY_INTESTINE.get().create(pos, state);
+        return BlockEntityRegistry.BE_INTESTINE.get().create(pos, state);
     }
 
     @Override

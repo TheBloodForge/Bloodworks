@@ -27,7 +27,7 @@ public class RecipeBloodInfusion
     {
         if (level != null && level.isClientSide()) return false;
         boolean hasIngredient = ingredient.test(container.getItem(1));
-        boolean coagulatorCheck = (coagulatedBlood || container.getStackInSlot(0).is(ItemRegistry.BLOCK_FLESH_LIGHT.get()));
+        boolean coagulatorCheck = (coagulatedBlood || container.getStackInSlot(0).is(ItemRegistry.ITEM_STABILIZER.get()));
         return hasIngredient && coagulatorCheck && container.getFluidInTank(0).getAmount() >= bloodRequired;
     }
 

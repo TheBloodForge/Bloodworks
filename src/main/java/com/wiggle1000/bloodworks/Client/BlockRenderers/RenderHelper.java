@@ -3,7 +3,6 @@ package com.wiggle1000.bloodworks.Client.BlockRenderers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
-import com.wiggle1000.bloodworks.Globals;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
@@ -16,7 +15,7 @@ public class RenderHelper
     {
         buffer.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX_COLOR);
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        RenderSystem.setShaderTexture(0, new ResourceLocation(Globals.MODID, "textures/blocks/block_intestine.png"));
+        RenderSystem.setShaderTexture(0, texture);
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
         //RenderSystem.disableCull();
