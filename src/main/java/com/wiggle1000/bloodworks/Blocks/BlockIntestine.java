@@ -93,7 +93,7 @@ public class BlockIntestine extends BaseEntityBlock
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext)
     {
-        return this.defaultBlockState().setValue(FACING_FROM, pContext.getClickedFace()).setValue(FACING_TO, pContext.getClickedFace());
+        return this.defaultBlockState().setValue(FACING_FROM, pContext.getClickedFace().getOpposite()).setValue(FACING_TO, pContext.getClickedFace().getOpposite());
     }
 
     @Override
@@ -120,7 +120,7 @@ public class BlockIntestine extends BaseEntityBlock
             BlockState newState = this.defaultBlockState().setValue(FACING_FROM, state.getValue(FACING_FROM)).setValue(FACING_TO, hitResult.getDirection());
             level.setBlocksDirty(blockPos, state, newState);
             level.setBlockAndUpdate(blockPos, newState);
-            player.level.setBlockAndUpdate(getPlacePos(blockPos, hitResult.getDirection()), BlockRegistry.BLOCK_INTESTINE.get().defaultBlockState());
+            player.level.setBlockAndUpdate(getPlacePos(blockPos, hitResult.getDirection()), BlockRegistry.BLOCK_INTESTINE.get().defaultBlockState().setValue(FACING_FROM, hitResult.getDirection().getOpposite()));
             return InteractionResult.sidedSuccess(!level.isClientSide);
         }
         return super.use(state, level, blockPos, player, interactedHand, hitResult);
