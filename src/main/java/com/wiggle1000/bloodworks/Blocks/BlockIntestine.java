@@ -3,9 +3,11 @@ package com.wiggle1000.bloodworks.Blocks;
 import com.wiggle1000.bloodworks.ClientUtils;
 import com.wiggle1000.bloodworks.Particles.ParticleHelper;
 import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
+import com.wiggle1000.bloodworks.Registry.BlockRegistry;
 import com.wiggle1000.bloodworks.Registry.ItemRegistry;
 import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -109,7 +111,8 @@ public class BlockIntestine extends BaseEntityBlock
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos blockPos, Player player, InteractionHand interactedHand, BlockHitResult hitResult)
     {
-        if(level.isClientSide()) return InteractionResult.FAIL;
+        if(level.isClientSide()) return InteractionResult.sidedSuccess(level.isClientSide());
+        System.out.println("Before | to = " + state.getValue(getFacingTo()) + " from = " + state.getValue(getFacingFrom()));
         if (!player.getItemInHand(interactedHand).is(ItemRegistry.BLOCK_INTESTINE.get())) {
             return super.use(state, level, blockPos, player, interactedHand, hitResult);
         }
@@ -117,7 +120,20 @@ public class BlockIntestine extends BaseEntityBlock
             BlockState newState = this.defaultBlockState().setValue(FACING_FROM, state.getValue(FACING_FROM)).setValue(FACING_TO, hitResult.getDirection());
             level.setBlocksDirty(blockPos, state, newState);
             level.setBlockAndUpdate(blockPos, newState);
+            player.level.setBlockAndUpdate(getPlacePos(blockPos, hitResult.getDirection()), BlockRegistry.BLOCK_INTESTINE.get().defaultBlockState());
+            return InteractionResult.sidedSuccess(!level.isClientSide);
         }
         return super.use(state, level, blockPos, player, interactedHand, hitResult);
+    }
+
+    public BlockPos getPlacePos(BlockPos pos, Direction dir) {
+        return switch (dir) {
+            case DOWN -> pos.below();
+            case UP -> pos.above();
+            case NORTH -> pos.north();
+            case SOUTH -> pos.south();
+            case WEST -> pos.west();
+            case EAST -> pos.east();
+        };
     }
 }
