@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -40,6 +41,7 @@ import java.util.List;
 public class BlockIntestine extends BaseEntityBlock
 {
     public static final DirectionProperty FACING_TO = DirectionProperty.create("facing_to"), FACING_FROM = DirectionProperty.create("facing_from");
+    public static final IntegerProperty INTESTINE_ID = IntegerProperty.create("intestine_id", 0, 800);
     public BlockIntestine()
     {
         super(
@@ -93,34 +95,28 @@ public class BlockIntestine extends BaseEntityBlock
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext)
     {
-        return this.defaultBlockState().setValue(FACING_FROM, pContext.getClickedFace().getOpposite()).setValue(FACING_TO, pContext.getClickedFace().getOpposite());
+        return this.defaultBlockState().setValue(FACING_FROM, pContext.getClickedFace().getOpposite()).setValue(FACING_TO, pContext.getClickedFace().getOpposite()).setValue(INTESTINE_ID, 1);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> blockStateDefinition)
     {
-        super.createBlockStateDefinition(blockStateDefinition.add(FACING_FROM).add(FACING_TO));
+        super.createBlockStateDefinition(blockStateDefinition.add(FACING_FROM).add(FACING_TO).add(INTESTINE_ID));
     }
-
-    public DirectionProperty getFacingTo()
-    { return FACING_TO; }
-
-    public DirectionProperty getFacingFrom()
-    { return FACING_FROM; }
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos blockPos, Player player, InteractionHand interactedHand, BlockHitResult hitResult)
     {
         if(level.isClientSide()) return InteractionResult.sidedSuccess(level.isClientSide());
-        System.out.println("Before | to = " + state.getValue(getFacingTo()) + " from = " + state.getValue(getFacingFrom()));
+        System.out.println("Before | to = " + state.getValue(FACING_TO) + " from = " + state.getValue(FACING_FROM) + " ID = " + state.getValue(INTESTINE_ID));
         if (!player.getItemInHand(interactedHand).is(ItemRegistry.BLOCK_INTESTINE.get())) {
             return super.use(state, level, blockPos, player, interactedHand, hitResult);
         }
         if (state.getBlock() instanceof BlockIntestine) {
-            BlockState newState = this.defaultBlockState().setValue(FACING_FROM, state.getValue(FACING_FROM)).setValue(FACING_TO, hitResult.getDirection());
+            BlockState newState = this.defaultBlockState().setValue(FACING_FROM, state.getValue(FACING_FROM)).setValue(FACING_TO, hitResult.getDirection()).setValue(INTESTINE_ID, state.getValue(INTESTINE_ID));
             level.setBlocksDirty(blockPos, state, newState);
             level.setBlockAndUpdate(blockPos, newState);
-            player.level.setBlockAndUpdate(getPlacePos(blockPos, hitResult.getDirection()), BlockRegistry.BLOCK_INTESTINE.get().defaultBlockState().setValue(FACING_FROM, hitResult.getDirection().getOpposite()));
+            player.level.setBlockAndUpdate(getPlacePos(blockPos, hitResult.getDirection()), BlockRegistry.BLOCK_INTESTINE.get().defaultBlockState().setValue(FACING_FROM, hitResult.getDirection().getOpposite()).setValue(INTESTINE_ID, state.getValue(INTESTINE_ID) + 1));
             return InteractionResult.sidedSuccess(!level.isClientSide);
         }
         return super.use(state, level, blockPos, player, interactedHand, hitResult);

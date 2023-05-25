@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BE_BloodTank extends BlockEntity implements IFluidHandler
 {
+    int DEFAULT_CAPACITY = 10000;
     private LazyOptional<IFluidHandler> lazyFluidHandler = LazyOptional.empty();
     protected final ContainerData data = new ContainerData()
     {
@@ -39,6 +40,8 @@ public class BE_BloodTank extends BlockEntity implements IFluidHandler
     {
         super(BlockEntityRegistry.BE_BLOOD_TANK.get(), pos, state);
     }
+
+
     public ContainerData getContainerData() {
         return this.data;
     }
@@ -91,55 +94,71 @@ public class BE_BloodTank extends BlockEntity implements IFluidHandler
     @Override
     protected void saveAdditional(CompoundTag nbt)
     {
-        nbt = FLUID_TANK.writeToNBT(nbt);
+        if (FLUID_TANK != null)
+            nbt = FLUID_TANK.writeToNBT(nbt);
         super.saveAdditional(nbt);
+    }
+
+    @Override
+    public void setRemoved()
+    {
+        if (FLUID_TANK != null)
+            FLUID_TANK.setCapacity(FLUID_TANK.getCapacity() - DEFAULT_CAPACITY);
+        if (FLUID_TANK != null && !FLUID_TANK.getFluid().isEmpty())
+            FLUID_TANK.getFluid().setAmount(Math.min(FLUID_TANK.getCapacity(), FLUID_TANK.getFluidAmount()));
+        super.setRemoved();
     }
 
     @Override
     public void load(CompoundTag nbt)
     {
-        FLUID_TANK.readFromNBT(nbt);
+        if (FLUID_TANK != null) FLUID_TANK.readFromNBT(nbt);
         super.load(nbt);
     }
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_BloodTank entity)
     {
         if (level.isClientSide()) return;
-        setChanged(level, blockPos, blockState);
-        BlockEntity be;
-        if ((be = level.getBlockEntity(blockPos.east())) instanceof IFluidHandler) {
-            ((IFluidHandler) be).fill(new FluidStack(FluidRegistry.FLUID_BLOOD.source.get(), 1000), FluidAction.EXECUTE);
-        }
-        if ((be = level.getBlockEntity(blockPos.west())) instanceof IFluidHandler) {
-            ((IFluidHandler) be).fill(new FluidStack(FluidRegistry.FLUID_BLOOD.source.get(), 1000), FluidAction.EXECUTE);
-        }
-        if ((be = level.getBlockEntity(blockPos.north())) instanceof IFluidHandler) {
-            ((IFluidHandler) be).fill(new FluidStack(FluidRegistry.FLUID_BLOOD.source.get(), 1000), FluidAction.EXECUTE);
-        }
-        if ((be = level.getBlockEntity(blockPos.south())) instanceof IFluidHandler) {
-            ((IFluidHandler) be).fill(new FluidStack(FluidRegistry.FLUID_BLOOD.source.get(), 1000), FluidAction.EXECUTE);
-        }
-        if ((be = level.getBlockEntity(blockPos.above())) instanceof IFluidHandler) {
-            ((IFluidHandler) be).fill(new FluidStack(FluidRegistry.FLUID_BLOOD.source.get(), 1000), FluidAction.EXECUTE);
-        }
-        if ((be = level.getBlockEntity(blockPos.below())) instanceof IFluidHandler) {
-            ((IFluidHandler) be).fill(new FluidStack(FluidRegistry.FLUID_BLOOD.source.get(), 1000), FluidAction.EXECUTE);
-        }
-    }
-    private final FluidTank FLUID_TANK = new FluidTank(10000) {
-        @Override
-        public boolean isFluidValid(FluidStack stack)
-        {
-            return stack.getFluid() == FluidRegistry.FLUID_BLOOD.source.get().getSource();
-        }
+        if (entity.FLUID_TANK == null) entity.setTank(blockPos, level);
 
-        @Override
-        protected void onContentsChanged()
-        {
-            setChanged();
-//            super.onContentsChanged();
+        setChanged(level, blockPos, blockState);
+        IFluidHandler be = getNeighborFluidHandler(blockPos, level);
+        if (be == null) return;
+
+        be.fill(new FluidStack(entity.FLUID_TANK.getFluid().getRawFluid(), 1000), FluidAction.EXECUTE);
+    }
+
+    private void setTank(BlockPos blockPos, Level level)
+    {
+        if (getNeighborTank(blockPos, level) != null && getNeighborTank(blockPos, level).getTank() != null) {
+            FLUID_TANK = getNeighborTank(blockPos, level).getTank();
+            FLUID_TANK.setCapacity(FLUID_TANK.getCapacity() + DEFAULT_CAPACITY);
+        } else {
+            FLUID_TANK = new FluidTank(DEFAULT_CAPACITY)
+            {
+                @Override
+                public boolean isFluidValid(FluidStack stack)
+                {
+                    return stack.getFluid() == FluidRegistry.FLUID_BLOOD.source.get().getSource();
+                }
+
+                @Override
+                protected void onContentsChanged()
+                {
+                    setChanged();
+                }
+
+                @Override
+                public int getCapacity()
+                {
+                    return super.getCapacity();
+                }
+            };
         }
-    };
+        System.out.println("Capacity = " + FLUID_TANK.getCapacity());
+    }
+
+    private FluidTank FLUID_TANK = null;
 
     @Override
     public int getTanks()
@@ -150,19 +169,19 @@ public class BE_BloodTank extends BlockEntity implements IFluidHandler
     @Override
     public @NotNull FluidStack getFluidInTank(int tank)
     {
-        return FLUID_TANK.getFluid();
+        return FLUID_TANK == null ? FluidStack.EMPTY : FLUID_TANK.getFluid();
     }
 
     @Override
     public int getTankCapacity(int tank)
     {
-        return FLUID_TANK.getCapacity();
+        return FLUID_TANK == null ? 0 : FLUID_TANK.getCapacity();
     }
 
     @Override
     public boolean isFluidValid(int tank, @NotNull FluidStack stack)
     {
-        return FLUID_TANK.isFluidValid(stack);
+        return FLUID_TANK != null && FLUID_TANK.isFluidValid(stack);
     }
 
     @Override
@@ -185,5 +204,57 @@ public class BE_BloodTank extends BlockEntity implements IFluidHandler
     public @NotNull FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action)
     {
         return FLUID_TANK.drain(resource, action);
+    }
+
+    private static BE_BloodTank getNeighborTank(BlockPos blockPos, Level level)
+    {
+        BlockEntity be;
+        if ((be = level.getBlockEntity(blockPos.east())) instanceof BE_BloodTank) {
+            return (BE_BloodTank) be;
+        }
+        if ((be = level.getBlockEntity(blockPos.west())) instanceof BE_BloodTank) {
+            return (BE_BloodTank) be;
+        }
+        if ((be = level.getBlockEntity(blockPos.north())) instanceof BE_BloodTank) {
+            return (BE_BloodTank) be;
+        }
+        if ((be = level.getBlockEntity(blockPos.south())) instanceof BE_BloodTank) {
+            return (BE_BloodTank) be;
+        }
+        if ((be = level.getBlockEntity(blockPos.above())) instanceof BE_BloodTank) {
+            return (BE_BloodTank) be;
+        }
+        if ((be = level.getBlockEntity(blockPos.below())) instanceof BE_BloodTank) {
+            return (BE_BloodTank) be;
+        }
+        return null;
+    }
+
+    public static IFluidHandler getNeighborFluidHandler(BlockPos blockPos, Level level) {
+        BlockEntity be;
+        if ((be = level.getBlockEntity(blockPos.east())) instanceof IFluidHandler && !(be instanceof BE_BloodTank)) {
+            return (IFluidHandler) be;
+        }
+        if ((be = level.getBlockEntity(blockPos.west())) instanceof IFluidHandler && !(be instanceof BE_BloodTank)) {
+            return (IFluidHandler) be;
+        }
+        if ((be = level.getBlockEntity(blockPos.north())) instanceof IFluidHandler && !(be instanceof BE_BloodTank)) {
+            return (IFluidHandler) be;
+        }
+        if ((be = level.getBlockEntity(blockPos.south())) instanceof IFluidHandler && !(be instanceof BE_BloodTank)) {
+            return (IFluidHandler) be;
+        }
+        if ((be = level.getBlockEntity(blockPos.above())) instanceof IFluidHandler && !(be instanceof BE_BloodTank)) {
+            return (IFluidHandler) be;
+        }
+        if ((be = level.getBlockEntity(blockPos.below())) instanceof IFluidHandler && !(be instanceof BE_BloodTank)) {
+            return (IFluidHandler) be;
+        }
+        return null;
+    }
+
+    private FluidTank getTank()
+    {
+        return FLUID_TANK;
     }
 }

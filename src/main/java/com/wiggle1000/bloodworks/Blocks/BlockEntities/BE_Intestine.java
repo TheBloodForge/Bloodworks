@@ -9,7 +9,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class BE_Intestine extends BlockEntity
 {
-
     public BE_Intestine(BlockPos pos, BlockState blockState)
     {
         super(BlockEntityRegistry.BE_INTESTINE.get(), pos, blockState);
@@ -20,7 +19,4 @@ public class BE_Intestine extends BlockEntity
     {
         return AABB.ofSize(new Vec3(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ()), 1.5, 1.5, 1.5);
     }
-
-
-
 }
