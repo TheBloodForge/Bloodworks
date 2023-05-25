@@ -9,6 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import static com.wiggle1000.bloodworks.Globals.CREATIVE_TAB;
 
+@SuppressWarnings("unused")
 public class ItemRegistry
 {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Globals.MODID);

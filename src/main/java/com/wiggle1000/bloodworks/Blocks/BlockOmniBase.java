@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@SuppressWarnings({"NullableProblems", "Unused"})
+@SuppressWarnings({"NullableProblems", "Unused", "deprecation"})
 public class BlockOmniBase extends FaceAttachedHorizontalDirectionalBlock
 {
     protected VoxelShape CEILING_AABB_X = Block.box(6.0D, 14.0D, 5.0D, 10.0D, 16.0D, 11.0D);

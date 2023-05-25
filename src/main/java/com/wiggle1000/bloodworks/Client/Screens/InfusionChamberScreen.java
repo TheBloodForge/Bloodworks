@@ -20,7 +20,8 @@ public class InfusionChamberScreen extends AbstractContainerScreen<InfusionChamb
         this.leftPos = 0;
         this.topPos = 0;
         this.imageWidth = 176;
-        this.imageHeight = 166;
+        this.imageHeight = 172;
+        this.inventoryLabelY += 7;
     }
 
     @Override
@@ -39,12 +40,12 @@ public class InfusionChamberScreen extends AbstractContainerScreen<InfusionChamb
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        blit(poseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 166);
+        blit(poseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 172);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
         renderProgressArrow(poseStack, x, y);
-        renderer.render(poseStack, x + 24, y + 12, menu.getFluidStack());
+        renderer.render(poseStack, x + 24, y + 18, menu.getFluidStack());
     }
 
     private void renderProgressArrow(PoseStack pPoseStack, int x, int y) {

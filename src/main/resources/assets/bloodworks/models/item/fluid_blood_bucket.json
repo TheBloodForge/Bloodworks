@@ -1,5 +1,9 @@
 {
   "parent": "forge:item/bucket",
   "loader": "forge:fluid_container",
+  "textures": {
+    "base": "item/bucket",
+    "fluid": "bloodworks:items/drip_bucket"
+  },
   "fluid": "bloodworks:fluid_blood"
 }

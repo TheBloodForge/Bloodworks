@@ -10,6 +10,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings({"SameReturnValue", "UnusedReturnValue"})
 public class FluidSyncS2CPacket
 {
     private final FluidStack fluidStack;

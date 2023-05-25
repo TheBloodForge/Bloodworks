@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@SuppressWarnings({"NullableProblems", "Unused"})
+@SuppressWarnings({"NullableProblems", "Unused", "unused"})
 public class BlockBloodyTransparentBase extends Block
 {
     private String selfQuoteText = "Clotted blood. Still a bit mushy..";

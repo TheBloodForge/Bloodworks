@@ -2,6 +2,7 @@ package com.wiggle1000.bloodworks.Server.Menus;
 
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_InfusionChamber;
 import com.wiggle1000.bloodworks.Registry.BlockRegistry;
+import com.wiggle1000.bloodworks.Registry.ItemRegistry;
 import com.wiggle1000.bloodworks.Registry.MenuRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -37,9 +38,9 @@ public class InfusionChamberMenu extends AbstractContainerMenu
         addPlayerHotbar(inv);
 
         IItemHandler handler = blockEntity.getInventory();
-        addSlot(new SlotWithRestriction(handler, 0, 68, 14));
-        addSlot(new SlotItemHandler(handler, 1, 50, 55));
-        addSlot(new SlotItemHandler(handler, 2, 129, 37));
+        addSlot(new SlotWithRestriction(handler, 0, 68, 20, (s) -> new ItemStack(ItemRegistry.BLOCK_FLESH_LIGHT.get()).is(s.getItem())));
+        addSlot(new SlotItemHandler(handler, 1, 50, 61));
+        addSlot(new SlotWithRestriction(handler, 2, 129, 43));
 
         this.addDataSlots(this.data);
     }
@@ -128,14 +129,14 @@ public class InfusionChamberMenu extends AbstractContainerMenu
     private void addPlayerInventory(Inventory playerInventory) {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 84 + i * 18));
+                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 90 + i * 18));
             }
         }
     }
 
     private void addPlayerHotbar(Inventory playerInventory) {
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
+            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 148));
         }
     }
 }

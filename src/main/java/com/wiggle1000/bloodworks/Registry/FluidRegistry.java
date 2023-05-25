@@ -12,7 +12,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class FluidRegistry
 {
-
     public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, Globals.MODID);
     public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, Globals.MODID);
     public static final FluidRegistryContainer FLUID_BLOOD = new FluidRegistryContainer(
@@ -22,15 +21,11 @@ public class FluidRegistry
                     new FluidRegistryContainer.ClientExtensions(
                             Globals.MODID,
                             "fluid_blood"
-                    ).tint(0xAA1122)
-                    .fogColor(0.15f, 0.0f, 0.01f)
+                    ).fogColor(0.15f, 0.0f, 0.01f)
             ),
             BlockBehaviour.Properties.copy(Blocks.WATER),
             new Item.Properties()
                     .tab(Globals.CREATIVE_TAB)
                     .stacksTo(1)
     );
-
-//    public static final RegistryObject<Fluid> FLUID_BLOOD_SOURCE       = FLUIDS.register("fluid_blood_source",         FluidBlood.Source::new);
-//    public static final RegistryObject<Fluid> FLUID_BLOOD_FLOWING      = FLUIDS.register("fluid_blood_flowing",        FluidBlood.Flowing::new);
 }

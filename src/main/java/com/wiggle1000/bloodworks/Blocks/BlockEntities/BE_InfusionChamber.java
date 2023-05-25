@@ -34,7 +34,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameReturnValue"})
 public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFluidHandler, MenuProvider
 {
 
@@ -195,10 +195,13 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
 
     private void doCraftItem()
     {
-        itemHandler.insertItem(OUTPUT_SLOT_INDEX, activeRecipe.getResultItem(), false);
-        itemHandler.extractItem(INPUT_SLOT_INDEX, activeRecipe.getIngredient().getItems().length, false);
-        drain(activeRecipe.getBloodRequired(), FluidAction.EXECUTE);
-        activeRecipe = null;
+        if (activeRecipe.matches(this, level))
+        {
+            itemHandler.insertItem(OUTPUT_SLOT_INDEX, activeRecipe.getResultItem().copy(), false);
+            itemHandler.extractItem(INPUT_SLOT_INDEX, activeRecipe.getIngredient().getItems().length, false);
+            drain(activeRecipe.getBloodRequired(), FluidAction.EXECUTE);
+            activeRecipe = null;
+        }
     }
 
     private boolean resetProgress()

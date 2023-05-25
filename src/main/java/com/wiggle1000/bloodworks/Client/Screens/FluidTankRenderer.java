@@ -30,6 +30,7 @@ import java.util.List;
 // Under MIT-License: https://github.com/mezz/JustEnoughItems/blob/1.19/LICENSE.txt
 // Includes major rewrites and methods from:
 // https://github.com/mezz/JustEnoughItems/blob/1.19/Forge/src/main/java/mezz/jei/forge/platform/FluidHelper.java
+@SuppressWarnings({"SameParameterValue", "unused"})
 public class FluidTankRenderer {
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -43,6 +44,7 @@ public class FluidTankRenderer {
     private final int height;
     private int tint = 0;
 
+    @SuppressWarnings("unused")
     enum TooltipMode {
         SHOW_AMOUNT,
         SHOW_AMOUNT_AND_CAPACITY,
@@ -140,7 +142,7 @@ public class FluidTankRenderer {
         final long yTileCount = scaledAmount / TEXTURE_SIZE;
         final long yRemainder = scaledAmount - (yTileCount * TEXTURE_SIZE);
 
-        final int yStart = tiledHeight;
+        @SuppressWarnings("UnnecessaryLocalVariable") final int yStart = tiledHeight;
 
         for (int xTile = 0; xTile <= xTileCount; xTile++) {
             for (int yTile = 0; yTile <= yTileCount; yTile++) {

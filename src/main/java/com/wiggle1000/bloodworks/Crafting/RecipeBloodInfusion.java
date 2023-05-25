@@ -2,7 +2,6 @@ package com.wiggle1000.bloodworks.Crafting;
 
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_InfusionChamber;
 import com.wiggle1000.bloodworks.Registry.ItemRegistry;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
@@ -27,17 +26,10 @@ public class RecipeBloodInfusion
     public boolean matches(BE_InfusionChamber container, Level level)
     {
         if (level != null && level.isClientSide()) return false;
-
-        return ingredient.test(container.getItem(0)) && (!coagulatedBlood && container.getStackInSlot(1).is(ItemRegistry.BLOCK_INTESTINE.get()));
+        boolean hasIngredient = ingredient.test(container.getItem(1));
+        boolean coagulatorCheck = (coagulatedBlood || container.getStackInSlot(0).is(ItemRegistry.BLOCK_FLESH_LIGHT.get()));
+        return hasIngredient && coagulatorCheck && container.getFluidInTank(0).getAmount() >= bloodRequired;
     }
-
-    public ItemStack assemble(SimpleContainer container)
-    {
-        return null;
-    }
-
-    public boolean canCraftInDimensions(int posX, int posY)
-    { return true; }
 
     public ItemStack getResultItem()
     { return output; }

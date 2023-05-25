@@ -24,6 +24,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public class BlockEntityMachineBase extends BaseContainerBlockEntity
 {
 
@@ -43,11 +44,8 @@ public class BlockEntityMachineBase extends BaseContainerBlockEntity
 
 
     protected final ContainerData data;
-    private int progress = 0;
-    private int processingTicks = 40;
-
-    private Runnable tickFunction = null;
-
+    private final int progress = 0;
+    private final int processingTicks = 40;
 
     public BlockEntityMachineBase(BlockEntityType block, BlockPos pos, BlockState state)
     {
@@ -144,15 +142,6 @@ public class BlockEntityMachineBase extends BaseContainerBlockEntity
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BlockEntityMachineBase entity)
     {
         if (level.isClientSide()) return;
-        if (entity.getTickFunction() != null)
-        {
-            entity.getTickFunction().run();
-        }
-    }
-
-    private Runnable getTickFunction()
-    {
-        return tickFunction;
     }
 
     @Override

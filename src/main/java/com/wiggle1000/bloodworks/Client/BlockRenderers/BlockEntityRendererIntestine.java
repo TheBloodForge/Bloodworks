@@ -18,24 +18,22 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class BlockEntityRendererIntestine implements BlockEntityRenderer<BlockEntityIntestine> //TODO: specify blockentity
 {
 
-    private BlockEntityRendererProvider.Context context;
+    private final BlockEntityRendererProvider.Context context;
     public BlockEntityRendererIntestine(BlockEntityRendererProvider.Context context)
     {
         this.context = context;
     }
 
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean checkLOS(BlockPos blockPos, Vec3 offset)
     {
         BlockHitResult hr = Minecraft.getInstance().level.clip(new ClipContext(Minecraft.getInstance().cameraEntity.getEyePosition(), new Vec3(blockPos.getX() + offset.x, blockPos.getY() + offset.y, blockPos.getZ() + offset.z), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, Minecraft.getInstance().player));
-        if(hr.getType() != HitResult.Type.MISS && Minecraft.getInstance().level.getBlockState(hr.getBlockPos()).canOcclude())
-        {
-            return false;
-        }
-        return true;
+        return hr.getType() == HitResult.Type.MISS || !Minecraft.getInstance().level.getBlockState(hr.getBlockPos()).canOcclude();
     }
 
     @Override
@@ -74,7 +72,7 @@ public class BlockEntityRendererIntestine implements BlockEntityRenderer<BlockEn
         int numSegments = 20;
         boolean renderInside = true;
 
-        int cLight = combinedLight;
+        @SuppressWarnings("UnnecessaryLocalVariable") int cLight = combinedLight;
 
 
         if(Minecraft.getInstance().cameraEntity.blockPosition().distManhattan(blockPos) > 30)

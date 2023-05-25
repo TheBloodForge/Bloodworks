@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class FluidRegistryContainer
 {
     public final RegistryObject<FluidType> type;
@@ -166,6 +167,7 @@ public class FluidRegistryContainer
         };
     }
 
+    @SuppressWarnings("unused")
     public static class AdditionalProperties
     {
         private int levelDecreasePerBlock = 1;
@@ -198,6 +200,7 @@ public class FluidRegistryContainer
         }
     }
 
+    @SuppressWarnings({"UnusedReturnValue", "unused"})
     public static class ClientExtensions
     {
         private ResourceLocation still;

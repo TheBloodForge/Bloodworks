@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 public class BlockIntestine extends BaseEntityBlock
 {
     public BlockIntestine()

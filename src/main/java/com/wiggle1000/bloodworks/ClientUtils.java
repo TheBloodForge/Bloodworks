@@ -15,15 +15,15 @@ public class ClientUtils
             components.add(Component.literal("\"" + selfQuote + "\"").withStyle(ChatFormatting.DARK_RED));
             String[] useWords = use.split(" ");
             int lineLenLimit = 30;
-            String thisLineBuff = "";
+            StringBuilder thisLineBuff = new StringBuilder();
             int cLine = 0;
             for( String word : useWords)
             {
-                thisLineBuff += word + " ";
+                thisLineBuff.append(word).append(" ");
                 if(thisLineBuff.length() > lineLenLimit || cLine == useWords.length - 1)
                 {
-                    components.add(Component.literal(thisLineBuff).withStyle(ChatFormatting.LIGHT_PURPLE));
-                    thisLineBuff = "";
+                    components.add(Component.literal(thisLineBuff.toString()).withStyle(ChatFormatting.LIGHT_PURPLE));
+                    thisLineBuff = new StringBuilder();
                 }
                 cLine++;
             }

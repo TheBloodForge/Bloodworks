@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 
 import java.util.Random;
 
+@SuppressWarnings("unused")
 public class Globals
 {
     // Define mod id in a common place for everything to reference

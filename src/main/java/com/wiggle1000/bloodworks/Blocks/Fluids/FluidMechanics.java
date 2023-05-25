@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
+@SuppressWarnings("unused")
 public class FluidMechanics
 {
     public static void tickFluid(LiquidBlock fluidBlock, BlockState state, ServerLevel level, BlockPos pos) {
