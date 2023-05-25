@@ -2,7 +2,7 @@ package com.wiggle1000.bloodworks.Client.BlockRenderers;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_BloodTank;
@@ -40,7 +40,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
     }
 
     @Override
-    public void render(BE_BloodTank tileEntityIn, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn)
+    public void render(BE_BloodTank tileEntityIn, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLightIn, int combinedOverlayIn)
     {
         if (tileEntityIn.isRemoved()) return;
 
@@ -51,10 +51,8 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
 
         ResourceLocation fluidStill = new ResourceLocation(Globals.MODID, "textures/blocks/fluid_blood_still.png");
 
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder builder = tesselator.getBuilder();
+        VertexConsumer buffer = RenderHelper.StartRendering(bufferSource, fluidStill);
 
-        RenderHelper.StartRenderingTris(builder, fluidStill);
         float scale = (1.0f - TANK_THICKNESS / 2 - TANK_THICKNESS) * fluid.getAmount() / (tileEntityIn.getTankCapacity(0));
 
         Quaternion rotation = Vector3f.YP.rotationDegrees(0);
@@ -85,11 +83,11 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
         Vec2 uvb = new Vec2(getMinU(), getMaxV());
         Vec2 uvc = new Vec2(getMaxU(), getMinV());
         Vec2 uvd = new Vec2(getMinU(), getMaxV());
-        RenderHelper.DoQuad(builder, poseStack.last().pose(), ua, ub, uc, ud, uva, uvb, uvc, uvd, (combinedLightIn * 15) + 30);
-        RenderHelper.DoQuad(builder, poseStack.last().pose(), ua, ub, uc, ud, uva, uvb, uvc, uvd, (combinedLightIn * 15) + 30);
+        RenderHelper.DoQuad(buffer, poseStack.last().pose(), ua, ub, uc, ud, uva, uvb, uvc, uvd, combinedLightIn);
+        RenderHelper.DoQuad(buffer, poseStack.last().pose(), ua, ub, uc, ud, uva, uvb, uvc, uvd, combinedLightIn);
 
+        RenderHelper.FinishRendering(buffer);
         poseStack.popPose();
-        RenderHelper.FinishRendering(builder);
     }
 
     private float getMinU()

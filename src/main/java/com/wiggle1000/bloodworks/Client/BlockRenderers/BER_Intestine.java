@@ -1,8 +1,7 @@
 package com.wiggle1000.bloodworks.Client.BlockRenderers;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_Intestine;
 import com.wiggle1000.bloodworks.Config.BloodworksCommonConfig;
 import com.wiggle1000.bloodworks.Globals;
@@ -58,21 +57,15 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine> //TODO: 
         }
 
 
-        BlockHitResult hr = ent.getLevel().clip(new ClipContext(Minecraft.getInstance().cameraEntity.getEyePosition(), new Vec3(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, Minecraft.getInstance().player));
-
         poseStack.pushPose();
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder buffer = tesselator.getBuilder();
+
         long totalTicks = Minecraft.getInstance().level.getGameTime();
 
-        RenderHelper.StartRenderingTris(buffer, new ResourceLocation(Globals.MODID, "textures/blocks/block_intestine.png"));
-        //GL11.glBindTexture(GL31.GL_TEXTURE_BUFFER, 2);//Minecraft.getInstance().getTextureManager().getTexture(new ResourceLocation(Globals.MODID, "textures/blocks/block_intestine.png")).getId());
+        VertexConsumer buffer = RenderHelper.StartRendering(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_intestine.png"));
 
         int numRings = 20;
         int numSegments = 20;
         boolean renderInside = true;
-
-        @SuppressWarnings("UnnecessaryLocalVariable") int cLight = combinedLight;
 
 
         if(Minecraft.getInstance().cameraEntity.blockPosition().distManhattan(blockPos) > 30)
@@ -139,10 +132,10 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine> //TODO: 
                 Vec2 uvC = new Vec2((float)U2, (float)nextY/2);
                 Vec2 uvD = new Vec2((float)U2, (float)basalY/2);
 
-                RenderHelper.DoQuad(buffer, poseStack.last().pose(), a, b, c, d, uvA, uvB, uvC, uvD, 255);//cLight + 30);
+                RenderHelper.DoQuad(buffer, poseStack.last().pose(), a, b, c, d, uvA, uvB, uvC, uvD, combinedLight);//cLight + 30);
                 if(renderInside)
                 {
-                    RenderHelper.DoQuad(buffer, poseStack.last().pose(), d, c, b, a, uvD, uvC, uvB, uvA, 255);//cLight + 30);
+                    RenderHelper.DoQuad(buffer, poseStack.last().pose(), d, c, b, a, uvD, uvC, uvB, uvA, combinedLight);//cLight + 30);
                     //Idea: use UV offset to add silia texture to inside?
                 }
             }
