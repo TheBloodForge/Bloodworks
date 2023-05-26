@@ -1,23 +1,36 @@
 {
-
-  "_comment": "-------------------------------------------BLOCKS----------------------------------------------------",
-  "block.bloodworks.block_coagulated_blood": "Coagulated Blood",
+  "_comment": "------------------------------------------BLOCKS----------------------------------------------------",
+  "block.bloodworks.block_coagulated_blood": "Coagulated Blood Block",
   "block.bloodworks.block_coagulated_blood_stairs": "Coagulated Blood Stairs",
   "block.bloodworks.block_coagulated_blood_slab": "Coagulated Blood Slab",
+  "block.bloodworks.block_flesh": "Flesh Block",
+  "block.bloodworks.block_flesh_stairs": "Flesh Stairs",
+  "block.bloodworks.block_flesh_slab": "Flesh Slab",
+  "block.bloodworks.block_flesh_porthole": "Flesh Porthole",
+  "block.bloodworks.block_infusion_chamber": "Infusion Chamber",
   "block.bloodworks.block_intestine": "Intestine",
   "block.bloodworks.block_flesh_light": "Flesh Light",
   "block.bloodworks.block_flesh_light_large": "Jumbo Flesh Light",
+  "block.bloodworks.block_blood_tank": "Blood Tank",
 
-  "_comment": "-------------------------------------------MACHINES----------------------------------------------------",
+  "_comment": "------------------------------------------MACHINES--------------------------------------------------",
   "bloodworks.block_entity.infusion_chamber": "Infusion Chamber",
   "bloodworks.infusion_chamber": "Infusion Chamber",
 
 
   "_comment": "-------------------------------------------ITEMS----------------------------------------------------",
+  "item.bloodworks.item_stabilizer": "Stabilizer",
+  "item.bloodworks.item_sinew": "Sinew",
+  "item.bloodworks.item_coagulated_blood": "Coagulated Blood",
 
-  "_comment": "-------------------------------------------FLUIDS----------------------------------------------------",
+  "_comment": "-------------------------------------------FLUIDS---------------------------------------------------",
   "block.bloodworks.block_fluid_blood": "Blood",
   "block.bloodworks.block_fluid_blood_flowing": "Flowing Blood",
   "block.bloodworks.block_fluid_blood_still": "Still Blood",
-  "item.bloodworks.fluid_blood_bucket": "Blood Bucket"
+  "item.bloodworks.fluid_blood_bucket": "Blood Bucket",
+  "fluid_type.bloodworks.fluid_blood": "Blood",
+
+  "_comment": "--------------------------------------------MISC----------------------------------------------------",
+  "bloodworks.blood_tank.info.capacity": "Capacity",
+  "bloodworks.blood_tank.info.storage": "Stored"
 }

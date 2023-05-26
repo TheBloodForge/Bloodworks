@@ -1,109 +1,114 @@
 package com.wiggle1000.bloodworks.Client.BlockRenderers;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Matrix4f;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_BloodTank;
-import com.wiggle1000.bloodworks.Globals;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
 {
 
-    public static final float TANK_THICKNESS = 0.3f;
-    public static final float TANK_HEIGHT = 0.2f;
-    public static final float TANK_BOTTOM = 0.0f;
-
     private final BlockEntityRendererProvider.Context context;
-
     public BER_BloodTank(BlockEntityRendererProvider.Context context)
     {
+        super();
         this.context = context;
     }
 
-    private void add(BufferBuilder renderer, PoseStack stack, float x, float y, float z, float u, float v, float r, float g, float b, float a)
-    {
-        renderer.vertex(stack.last().pose(), x, y, z)
-                .color(r, g, b, a)
-                .uv(u, v)
-                .normal(1, 0, 0)
-                .endVertex();
-    }
+    public static final float TANK_THICKNESS = 0.3f;
+    public static final float TANK_HEIGHT = 0.2f;
+    public static final float TANK_BOTTOM = 0.0f;
+    private static final float SIDE_MARGIN = 0.99f, MIN_Y = 1 / 16f, MAX_Y = 1 - MIN_Y;
+//    private static float milliseconds = -1;
 
     @Override
-    public void render(BE_BloodTank tileEntityIn, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLightIn, int combinedOverlayIn)
+    public void render(BE_BloodTank tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int combinedLight, int combinedOverlay)
     {
-        if (tileEntityIn.isRemoved()) return;
+        FluidStack fluidStack = tileEntity.getFluidInTank(0);
+        /*milliseconds += partialTicks * 50;
+        if (milliseconds == -1 || milliseconds >= 750f) {
+            milliseconds = 0;
+            PacketManager.sendToServer(new FluidSyncRequestC2SPacket(tileEntity.getBlockPos()));
+        }*/
+        if (fluidStack.isEmpty())
+            return;
 
-        FluidStack fluid = tileEntityIn.getFluidInTank(0);
+        float fillPercentage = Math.min(1, (float) fluidStack.getAmount() / tileEntity.getTankCapacity(0));
+        if (fluidStack.getFluid().getFluidType().isLighterThanAir())
+            renderFluid(matrixStack, renderTypeBuffer, fluidStack, fillPercentage, 1, combinedLight, tileEntity.getBlockPos());
+        else
+            renderFluid(matrixStack, renderTypeBuffer, fluidStack, 1, fillPercentage, combinedLight, tileEntity.getBlockPos());
+    }
 
-        Fluid renderFluid = fluid.getFluid();
-        if (renderFluid == null) return;
+    private static void renderFluid(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, FluidStack fluidStack, float alpha, float heightPercentage, int combinedLight, BlockPos blockPos)
+    {
+        VertexConsumer vertexBuilder = renderTypeBuffer.getBuffer(RenderType.translucent());
+        IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+        /* @wiggle fucking finally got it, took a whole 18 iterations
+        *   However it still has a bit to go, it's apparent it's rendering too much*/
+        //ForgeRegistries.FLUIDS.getDelegate(fluidStack.getRawFluid()).get().key().registry()
+//        ResourceLocation TEXTURE = ForgeRegistries.FLUIDS.getDelegate(fluidStack.getRawFluid()).get().key().location();
+//        String[] starr = ForgeRegistries.FLUIDS.getKey(fluidStack.getFluid()).toString().split(":");
+//        ResourceLocation TEXTURE2 = Minecraft.getInstance().getBlockRenderer().getBlockModel(fluidStack.getFluid().defaultFluidState().createLegacyBlock()).getQuads().get(0).getSprite().getName();
+//        System.out.println(fluidStack.getFluid().defaultFluidState().createLegacyBlock().getBlock().builtInRegistryHolder().key().location().getPath());
+//        ResourceLocation TEXTURE = new ResourceLocation(starr[0], "textures/block" + (starr[0].equals("minecraft") ? "" : "s") + "/" + starr[1].replace("_source", "") + "_still.png");
+//        TextureAtlasSprite sprite = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getTexture(fluidStack.getFluid().defaultFluidState().createLegacyBlock(), Minecraft.getInstance().level, blockPos);
+//        ResourceLocation TEXTURE2 = sprite.getName();
+//        ResourceLocation TEXTURE3 = new ResourceLocation("bloodworks:textures/blocks/fluid_still.png");
+        String[] strArr = fluidTypeExtensions.getTextures().findFirst().get().toString().split(":");
+        ResourceLocation TEXTURE4 = new ResourceLocation(strArr[0], "textures/" + strArr[1] + ".png");
+        int color = fluidTypeExtensions.getTintColor();
+        alpha *= (color >> 24 & 255) / 255f;
+        float red = (color >> 16 & 255) / 255f;
+        float green = (color >> 8 & 255) / 255f;
+        float blue = (color & 255) / 255f;
 
-        ResourceLocation fluidStill = new ResourceLocation(Globals.MODID, "textures/blocks/fluid_blood_still.png");
+        renderQuads(matrixStack.last().pose(), renderTypeBuffer.getBuffer(RenderType.entityCutout(TEXTURE4)), red, green, blue, alpha, heightPercentage, combinedLight);
+    }
 
-        VertexConsumer buffer = RenderHelper.StartRendering(bufferSource, fluidStill);
-
-        float scale = (1.0f - TANK_THICKNESS / 2 - TANK_THICKNESS) * fluid.getAmount() / (tileEntityIn.getTankCapacity(0));
-
-        Quaternion rotation = Vector3f.YP.rotationDegrees(0);
-
-        poseStack.pushPose();
-        poseStack.translate(.5, 0, .5);
-        poseStack.mulPose(rotation);
-        if (scale == 0.330f)
+    private static void renderQuads(Matrix4f matrix, VertexConsumer vertexBuilder, float r, float g, float b, float alpha, float heightPercentage, int light)
+    {
+        float height = MIN_Y + (MAX_Y - MIN_Y) * heightPercentage;
+        float minU = SIDE_MARGIN, maxU = (1 - SIDE_MARGIN);
+        float minV = MIN_Y, maxV = height;
+        // min z
+        vertexBuilder.vertex(matrix, SIDE_MARGIN, MIN_Y, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 0, -1).endVertex();
+        vertexBuilder.vertex(matrix, SIDE_MARGIN, height, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 0, -1).endVertex();
+        vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, height, SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 0, -1).endVertex();
+        vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, MIN_Y, SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 0, -1).endVertex();
+        // max z
+        vertexBuilder.vertex(matrix, SIDE_MARGIN, MIN_Y, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 0, 1).endVertex();
+        vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, MIN_Y, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 0, 1).endVertex();
+        vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, height, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 0, 1).endVertex();
+        vertexBuilder.vertex(matrix, SIDE_MARGIN, height, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 0, 1).endVertex();
+        // min x
+        vertexBuilder.vertex(matrix, SIDE_MARGIN, MIN_Y, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(-1, 0, 0).endVertex();
+        vertexBuilder.vertex(matrix, SIDE_MARGIN, MIN_Y, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(-1, 0, 0).endVertex();
+        vertexBuilder.vertex(matrix, SIDE_MARGIN, height, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(-1, 0, 0).endVertex();
+        vertexBuilder.vertex(matrix, SIDE_MARGIN, height, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(-1, 0, 0).endVertex();
+        // max x
+        vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, MIN_Y, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, height, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, height, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, MIN_Y, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        // top
+        if (heightPercentage < 1)
         {
-            poseStack.translate(0, -.1, 0);
-            poseStack.scale(.6f, scale + 0.110f, .6f);
-        } else if (scale == 0.440f) {
-            poseStack.translate(0, -.2, 0);
-            poseStack.scale(.6f, scale + 0.110f, .6f);
-        } else if (scale == 0.550f) {
-            poseStack.translate(0, -.4, 0);
-            poseStack.scale(.6f, scale + 0.210f, .6f);
-        } else {
-            poseStack.scale(.6f, scale, .6f);
+            minV = SIDE_MARGIN * 16;
+            maxV = (1 - SIDE_MARGIN) * 16;
+            vertexBuilder.vertex(matrix, SIDE_MARGIN, height, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
+            vertexBuilder.vertex(matrix, SIDE_MARGIN, height, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
+            vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, height, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
+            vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, height, SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
         }
-        poseStack.translate(-.5, scale, -.5);
-        float xa = 0.2f, xb = 0.8f, ya = 1, yb = 0;
-        Vec3 ua = new Vec3(xa, ya, xb);
-        Vec3 ub = new Vec3(xb, ya, xa);
-        Vec3 uc = new Vec3(xa, yb, xb);
-        Vec3 ud = new Vec3(xb, yb, xa);
-        Vec2 uva = new Vec2(getMinU(), getMinV());
-        Vec2 uvb = new Vec2(getMinU(), getMaxV());
-        Vec2 uvc = new Vec2(getMaxU(), getMinV());
-        Vec2 uvd = new Vec2(getMinU(), getMaxV());
-        RenderHelper.DoQuad(buffer, poseStack.last().pose(), ua, ub, uc, ud, uva, uvb, uvc, uvd, combinedLightIn);
-        RenderHelper.DoQuad(buffer, poseStack.last().pose(), ua, ub, uc, ud, uva, uvb, uvc, uvd, combinedLightIn);
-
-        RenderHelper.FinishRendering(buffer);
-        poseStack.popPose();
-    }
-
-    private float getMinU()
-    {
-        return 0;
-    }
-    private float getMinV()
-    {
-        return 0;
-    }
-    private float getMaxU()
-    {
-        return 1;
-    }
-    private float getMaxV()
-    {
-        return 1;
     }
 }

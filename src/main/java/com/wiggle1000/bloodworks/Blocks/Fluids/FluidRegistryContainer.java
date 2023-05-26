@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidType;
@@ -59,6 +60,7 @@ public class FluidRegistryContainer
             {
                 consumer.accept(clientExtensions.get());
             }
+
         });
 
         this.source = FluidRegistry.FLUIDS.register(name + "_source", () -> new ForgeFlowingFluid.Source(this.properties));
@@ -78,6 +80,12 @@ public class FluidRegistryContainer
             public boolean isRandomlyTicking(BlockState p_54732_)
             {
                 return true;
+            }
+
+            @Override
+            public MaterialColor defaultMaterialColor()
+            {
+                return MaterialColor.COLOR_RED;
             }
 
             @Override

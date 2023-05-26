@@ -24,10 +24,15 @@ public class BlockMachineBase extends BaseEntityBlock
         super(
                 BlockBehaviour.Properties
                         .of(Material.STONE)
-                        .strength(4f, 100f)
+                        .strength(1f, 8f)
                         .sound(SoundType.METAL)
                         .requiresCorrectToolForDrops()
         );
+    }
+
+    public BlockMachineBase(Properties props)
+    {
+        super(props);
     }
 
     // -------- Block entity stuff --------

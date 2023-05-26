@@ -11,6 +11,11 @@ import net.minecraftforge.network.simple.SimpleChannel;
 @SuppressWarnings("unused")
 public class PacketManager {
     private static SimpleChannel INSTANCE;
+    /* Stupid fucking names */
+    private static final NetworkDirection PAYLOAD_TO_SERVER = NetworkDirection.PLAY_TO_SERVER;
+    private static final NetworkDirection PAYLOAD_TO_CLIENT = NetworkDirection.PLAY_TO_CLIENT;
+    private static final NetworkDirection QUERY_TO_SERVER = NetworkDirection.LOGIN_TO_SERVER;
+    private static final NetworkDirection QUERY_TO_CLIENT = NetworkDirection.LOGIN_TO_CLIENT;
 
     private static int packetId = 0;
     private static int id() {
@@ -27,10 +32,22 @@ public class PacketManager {
 
         INSTANCE = net;
 
-        net.messageBuilder(FluidSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+        net.messageBuilder(FluidSyncS2CPacket.class, id(), PAYLOAD_TO_CLIENT)
                 .decoder(FluidSyncS2CPacket::new)
                 .encoder(FluidSyncS2CPacket::toBytes)
                 .consumerMainThread(FluidSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(FluidSyncRequestC2SPacket.class, id(), QUERY_TO_SERVER)
+                .decoder(FluidSyncRequestC2SPacket::new)
+                .encoder(FluidSyncRequestC2SPacket::toBytes)
+                .consumerMainThread(FluidSyncRequestC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(MessageS2CPacket.class, id(), PAYLOAD_TO_CLIENT)
+                .decoder(MessageS2CPacket::new)
+                .encoder(MessageS2CPacket::toBytes)
+                .consumerMainThread(MessageS2CPacket::handle)
                 .add();
     }
 

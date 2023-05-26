@@ -255,7 +255,7 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
             itemHandler.insertItem(OUTPUT_SLOT_INDEX, activeRecipe.getResultItem().copy(), false);
             itemHandler.extractItem(INPUT_SLOT_INDEX, activeRecipe.getIngredient().getItems().length, false);
             drain(activeRecipe.getBloodRequired(), FluidAction.EXECUTE);
-            PacketManager.sendToClients(new FluidSyncS2CPacket(getFluidInTank(0), worldPosition));
+            syncFluid();
         }
     }
 
@@ -280,7 +280,7 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
         protected void onContentsChanged()
         {
             setChanged();
-            PacketManager.sendToClients(new FluidSyncS2CPacket(getFluidInTank(0), worldPosition));
+            syncFluid();
 //            super.onContentsChanged();
         }
     };
@@ -386,12 +386,17 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
     @Override
     public AbstractContainerMenu createMenu(int window_id, Inventory inventory, Player player)
     {
-        PacketManager.sendToClients(new FluidSyncS2CPacket(this.getFluidInTank(0), worldPosition));
+        syncFluid();
         return new InfusionChamberMenu(window_id, inventory, this, this.data);
     }
 
     public void setFluid(FluidStack fluidStack)
     {
         FLUID_TANK.setFluid(fluidStack);
+    }
+
+    public void syncFluid()
+    {
+        PacketManager.sendToClients(new FluidSyncS2CPacket(getFluidInTank(0), getBlockPos()));
     }
 }
