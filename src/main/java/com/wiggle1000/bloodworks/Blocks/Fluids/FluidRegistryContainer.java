@@ -120,7 +120,7 @@ public class FluidRegistryContainer
         return this.properties;
     }
 
-    public static IClientFluidTypeExtensions createExtension(ClientExtensions extensions)
+    public static IClientFluidTypeExtensions createExtension(ClientExtensions extensions, int tintColour)
     {
         return new IClientFluidTypeExtensions()
         {
@@ -153,6 +153,12 @@ public class FluidRegistryContainer
             public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos)
             {
                 return extensions.tintFunction == null ? 0xFFFFFFFF : extensions.tintFunction.apply(state, getter, pos);
+            }
+
+            @Override
+            public int getTintColor()
+            {
+                return tintColour;
             }
 
             @Override

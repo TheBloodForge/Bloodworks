@@ -112,6 +112,8 @@ public class BE_BloodTank extends BlockEntity implements IFluidHandler
     {
         super.onLoad();
         lazyFluidHandler = LazyOptional.of(() -> FLUID_TANK);
+        if (!getLevel().isClientSide)
+            syncFluid();
     }
 
     @Override
@@ -155,11 +157,17 @@ public class BE_BloodTank extends BlockEntity implements IFluidHandler
         FLUID_TANK = new FluidTank(10000).readFromNBT(nbt);
     }
 
+    private int tickCounter = 5;
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_BloodTank entity)
     {
         if (level.isClientSide()) return;
         if (!entity.ensureTank()) return;
 
+        if (entity.tickCounter > 0) entity.tickCounter--;
+        if (entity.tickCounter == 0) {
+            entity.syncFluid();
+            entity.tickCounter = 30;
+        }
         setChanged(level, blockPos, blockState);
         List<IFluidHandler> fluidConsumers = getNeighborFluidHandlers(blockPos, level);
         if (fluidConsumers.isEmpty()) return;
@@ -278,12 +286,11 @@ public class BE_BloodTank extends BlockEntity implements IFluidHandler
             syncFluid();
         } else {
             createParentTank();
-            isParent = true;
             syncFluid();
         }
     }
 
-    private void createParentTank()
+    private FluidTank createParentTank()
     {
         FLUID_TANK = new FluidTank(DEFAULT_CAPACITY)
         {
@@ -307,6 +314,8 @@ public class BE_BloodTank extends BlockEntity implements IFluidHandler
                 return super.getCapacity();
             }
         };
+        isParent = true;
+        return FLUID_TANK;
     }
 
     public void syncFluid()
@@ -338,7 +347,7 @@ public class BE_BloodTank extends BlockEntity implements IFluidHandler
     { if (isParent) children.add(be_bloodTank.getBlockPos()); }
 
     private FluidTank getParentTank()
-    { return getParent().FLUID_TANK; }
+    { return getParent() == null ? createParentTank() : getParent().FLUID_TANK; }
 
     public List<BlockPos> getChildren()
     { return children; }
@@ -354,6 +363,12 @@ public class BE_BloodTank extends BlockEntity implements IFluidHandler
 
     private BE_BloodTank getTankAtPos(BlockPos parentPos, Level level)
     {
+        if (parentPos == null)
+        {
+            System.out.println("PANIK");
+            return null;
+        }
+
         if (level.getBlockEntity(parentPos) instanceof BE_BloodTank bloodTank)
             return bloodTank;
 
