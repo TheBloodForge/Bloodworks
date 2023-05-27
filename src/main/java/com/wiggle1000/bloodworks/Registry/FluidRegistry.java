@@ -21,8 +21,8 @@ public class FluidRegistry
                     new FluidRegistryContainer.ClientExtensions(
                             Globals.MODID,
                             "fluid_blood"
-                    ).fogColor(0.15f, 0.0f, 0.01f).tint(0xAA0011)
-            , 0xFFAA0011),
+                    ).fogColor(0.15f, 0.0f, 0.01f).tint(0xAAAA0011)
+            , 0xAAAA0011),
             BlockBehaviour.Properties.copy(Blocks.WATER),
             new Item.Properties()
                     .tab(Globals.CREATIVE_TAB)
