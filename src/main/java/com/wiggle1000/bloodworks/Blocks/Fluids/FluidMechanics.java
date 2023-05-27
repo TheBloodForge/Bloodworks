@@ -12,9 +12,14 @@ import net.minecraft.world.level.block.state.BlockState;
 public class FluidMechanics
 {
     public static void tickFluid(LiquidBlock fluidBlock, BlockState state, ServerLevel level, BlockPos pos) {
-        if (!level.isClientSide && FluidRegistry.FLUID_BLOOD.source.get().getSource() == fluidBlock.getFluid().getSource() && Globals.RAND.nextFloat() > 0.6f)
+        if(level.isClientSide) return;
+        if (FluidRegistry.FLUID_BLOOD.source.get().getSource() == fluidBlock.getFluid().getSource())
         {
-            level.setBlockAndUpdate(pos, BlockRegistry.BLOCK_COAGULATED_BLOOD.get().defaultBlockState());
+            if(Globals.RAND.nextFloat() > 0.6f) level.setBlockAndUpdate(pos, BlockRegistry.BLOCK_COAGULATED_BLOOD.get().defaultBlockState());
+        }
+        else if (FluidRegistry.FLUID_CRANIAL.source.get().getSource() == fluidBlock.getFluid().getSource())
+        {
+            //TODO: add immersion particles
         }
     }
 }
