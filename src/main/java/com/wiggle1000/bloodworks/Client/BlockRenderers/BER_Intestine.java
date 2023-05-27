@@ -2,9 +2,6 @@ package com.wiggle1000.bloodworks.Client.BlockRenderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_Intestine;
 import com.wiggle1000.bloodworks.Blocks.BlockIntestine;
 import com.wiggle1000.bloodworks.Config.BloodworksCommonConfig;
@@ -135,7 +132,7 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine> //TODO: 
     }
 
 
-    private void DrawStraightSegment(VertexConsumer buffer, PoseStack poseStack, int combinedLight, int numRings, int numSegments, long totalTicks, BlockPos blockPos, boolean renderInside, Direction fromDir)
+    /*private void DrawStraightSegment(VertexConsumer buffer, PoseStack poseStack, int combinedLight, int numRings, int numSegments, long totalTicks, BlockPos blockPos, boolean renderInside, Direction fromDir)
     {
 
         poseStack.pushPose();
@@ -192,7 +189,7 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine> //TODO: 
     {
         poseStack.pushPose();
         OrientFromDirection(poseStack, fromDir);
-        poseStack.mulPose(Quaternion.fromXYZDegrees(new Vector3f(0, 0, 0f)));
+        poseStack.mulPose(Quaternion.fromXYZDegrees(new Vector3f(0, 0, 0)));
         double blockOffsetMagnitude = currentBE.getBlockState().getValue(BlockIntestine.INTESTINE_ID);
         float hCurveFactor = 0;
         float vCurveFactor = 0;
@@ -302,62 +299,120 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine> //TODO: 
 
         }
         poseStack.popPose();
-    }
+    }*/
 
     private void DrawIntestineSegmentAdvanced(VertexConsumer buffer, PoseStack poseStack, int combinedLight, int numRings, int numSegments, long animTime, Direction fromDir, Direction toDir)
     {
+        int uvrand1 = Integer.reverse(Integer.reverseBytes(currentBE.getBlockPos().getX() + currentBE.getBlockPos().getY() + currentBE.getBlockPos().getZ()));
+        uvrand1 = (int)Math.floor((uvrand1 << 3) * 0.1f);
+        float UVXOff = (uvrand1 % 4) / 4f;
+        float UVYOff = (uvrand1 % 2) / 2f;
+        float UVXScale = 1f;
+        float UVYScale = 0.62f;
         double width = 1.0;
         double blockAnimOffsetBase = currentBE.getBlockState().getValue(BlockIntestine.INTESTINE_ID);
-        Vector3f initialDir = fromDir.getOpposite().step();
-        Vector3f initialPos = fromDir.step();
-        initialPos.mul(0.5f);
-        Vector3f endDir = toDir.step();
-        Vector3f endPos = toDir.step();
-        Vector3f middleCurvePoint = new Vector3f(new Vec3(initialPos).add(new Vec3(initialDir).scale(0.5f)));//.add(new Vec3(endDir).scale(-1)));
-        endPos.mul(0.5f);
+        Vec3 initialDir = new Vec3(fromDir.getOpposite().step());
+        Vec3 initialPos = new Vec3(fromDir.step()).scale(0.5f);
+        Vec3 endDir = new Vec3(toDir.step());
+        Vec3 endPos = new Vec3(toDir.step()).scale(0.5f);
+        Vec3 middleCurvePoint = initialPos.add(initialDir.scale(0.5f));
+        float lastAlongScale = 0;
 
-        for(int i = 0; i < numRings; i++)
+        Vec3 lastDir = Util.Lerp(initialDir, endDir, lastAlongScale);
+        Vec3 lastBezA = Util.Lerp(initialPos, middleCurvePoint, lastAlongScale);
+        Vec3 lastBezB = Util.Lerp(middleCurvePoint, endPos, lastAlongScale);
+        Vec3 lastSegmentCenter = Util.Lerp(lastBezA, lastBezB, lastAlongScale);
+        lastSegmentCenter = AnimateCenter(lastSegmentCenter, lastDir, (animTime/2f), (float)blockAnimOffsetBase);
+
+        Vec3 lN = lastDir;
+        Vec3 lCircleRelativeUp = lN.cross(initialDir.subtract(endDir).scale(-1));
+        if(fromDir.getOpposite() == toDir)
+        {
+            lCircleRelativeUp = new Vec3(fromDir.step()).xRot(1.5708f).zRot(1.5708f);
+        }
+        Vec3 lCircleRelativeRight = lN.cross(lCircleRelativeUp).normalize();
+        lCircleRelativeUp = lCircleRelativeUp.normalize();
+        for(int i = 1; i <= numRings; i++)
         {
             float alongScale = (float)i/numRings;
             double blockAnimOffset = blockAnimOffsetBase + alongScale;
+            double blockAnimOffsetLast = blockAnimOffsetBase + alongScale - 1;
 
-            Vector3f lerpedDir = Util.Lerp(initialDir, endDir, alongScale);
-            Vector3f lerpedBezA = Util.Lerp(initialPos, middleCurvePoint, alongScale);
-            Vector3f lerpedBezB = Util.Lerp(middleCurvePoint, endPos, alongScale);
-            Vector3f finalSegmentCenter = Util.Lerp(lerpedBezA, lerpedBezB, alongScale);
+            Vec3 lerpedDir = Util.Lerp(initialDir, endDir, alongScale);
+            Vec3 lerpedBezA = Util.Lerp(initialPos, middleCurvePoint, alongScale);
+            Vec3 lerpedBezB = Util.Lerp(middleCurvePoint, endPos, alongScale);
+            Vec3 finalSegmentCenter = Util.Lerp(lerpedBezA, lerpedBezB, alongScale);
+            finalSegmentCenter = AnimateCenter(finalSegmentCenter, lerpedDir, (animTime/2f), (float)blockAnimOffset);
 
-            Vector3f anim1 = new Vector3f(
-                    (float)Math.sin((animTime/2f) + blockAnimOffset),
-                    (float)Math.cos((animTime/2f) + blockAnimOffset),
-                    (float)Math.sin((animTime/2f) + blockAnimOffset)
-            );
-            anim1.mul(0.1f);
-            finalSegmentCenter.add(anim1);
+
+            Vec3 N = lerpedDir;
+            Vec3 circleRelativeUp = N.cross(initialDir.subtract(endDir).scale(-1));
+            if(fromDir.getOpposite() == toDir)
+            {
+                circleRelativeUp = new Vec3(fromDir.step()).xRot(1.5708f).zRot(1.5708f);
+            }
+            Vec3 circleRelativeRight = N.cross(circleRelativeUp).normalize();
+            circleRelativeUp = circleRelativeUp.normalize();
 
             for(int r = 0; r < numSegments; r++)
             {
                 float radialScale = (float)r/numSegments;
+                float radialScale2 = (float)(r+1)/numSegments;
                 double radialScaleR = ((float)r/numSegments)*6.2831852;
+                double radialScaleR2 = ((float)(r+1)/numSegments)*6.2831852;
 
-                Vec3 N = new Vec3(lerpedDir);
-                Vec3 circleRelativeUp = N.cross(new Vec3(0, 1, 0.1));
-                Vec3 circleRelativeRight = N.cross(circleRelativeUp).normalize();
-                circleRelativeUp = circleRelativeUp.normalize();
+                //TODO: get better at math and add some radial lumpage that doesnt break on seams :(
+                /*double skinAnim1last = Math.sin(radialScaleR*2 + animTime + blockAnimOffsetLast)*0.1;
+                double skinAnim1     = Math.sin(radialScaleR*2 + animTime + blockAnimOffset)*0.1;
+                Vec3 animMultLast = lastSegmentCenter.add(lCircleRelativeRight).add(lCircleRelativeUp);
+                Vec3 animMult = finalSegmentCenter.add(circleRelativeRight).add(circleRelativeUp);
 
-                Vec3 vertexA = new Vec3(finalSegmentCenter).add(circleRelativeUp.scale(Math.sin(radialScaleR)/2*width)).add(circleRelativeRight.scale(Math.cos(radialScaleR)/2*width));
-                Vec3 vertexB = new Vec3(finalSegmentCenter).add(circleRelativeUp.scale(Math.sin(radialScaleR)/2*width)).add(circleRelativeRight.scale(Math.cos(radialScaleR)/2*width));
-                Vec3 vertexC = new Vec3(finalSegmentCenter).add(circleRelativeUp.scale(Math.sin(radialScaleR)/2*width)).add(circleRelativeRight.scale(Math.cos(radialScaleR)/2*width));
-                Vec3 vertexD = new Vec3(finalSegmentCenter).add(circleRelativeUp.scale(Math.sin(radialScaleR)/2*width)).add(circleRelativeRight.scale(Math.cos(radialScaleR)/2*width));
+                Vec3 anim1Last =    animMultLast.scale(skinAnim1last);
+                Vec3 anim1 =        animMult.scale(skinAnim1);*/
 
+                Vec3 vertexA = finalSegmentCenter.add( circleRelativeUp.scale(Math.sin(radialScaleR )/2*width)).add( circleRelativeRight.scale(Math.cos(radialScaleR)/2*width));
+                Vec3 vertexB = lastSegmentCenter .add(lCircleRelativeUp.scale(Math.sin(radialScaleR )/2*width)).add(lCircleRelativeRight.scale(Math.cos(radialScaleR)/2*width));
+                Vec3 vertexC = lastSegmentCenter .add(lCircleRelativeUp.scale(Math.sin(radialScaleR2)/2*width)).add(lCircleRelativeRight.scale(Math.cos(radialScaleR2)/2*width));
+                Vec3 vertexD = finalSegmentCenter.add( circleRelativeUp.scale(Math.sin(radialScaleR2)/2*width)).add( circleRelativeRight.scale(Math.cos(radialScaleR2)/2*width));
+
+                //vertexA = vertexA.add(anim1);
+                //vertexB = vertexB.add(anim1);
+                //vertexC = vertexC.add(anim1);
+                //vertexD = vertexD.add(anim1);
                 RenderHelper.DoQuad(buffer, poseStack.last().pose(),
                         vertexA, vertexB, vertexC, vertexD,
-                        new Vec2(0, 0),
-                        new Vec2(0, 0.5f),
-                        new Vec2(1, 0.5f),
-                        new Vec2(1, 0), combinedLight);
+                        new Vec2(radialScale*UVXScale + UVXOff,  alongScale*UVYScale/2 + UVYOff),
+                        new Vec2(radialScale*UVXScale + UVXOff,  lastAlongScale*UVYScale/2 + UVYOff),
+                        new Vec2(radialScale2*UVXScale + UVXOff, lastAlongScale*UVYScale/2 + UVYOff),
+                        new Vec2(radialScale2*UVXScale + UVXOff, alongScale*UVYScale/2 + UVYOff),
+                        combinedLight);
             }
+
+            lastDir = lerpedDir;
+            lastSegmentCenter = finalSegmentCenter;
+            lastAlongScale = alongScale;
+
+            lN = N;
+            lCircleRelativeRight = circleRelativeRight;
+            lCircleRelativeUp = circleRelativeUp;
         }
     }
+
+    private Vec3 AnimateCenter(Vec3 center, Vec3 normal, float animTime, float progTotal)
+    {
+        Vec3 anim1 = new Vec3(
+                (float)Math.sin(animTime + progTotal),
+                (float)Math.cos(animTime + progTotal),
+                (float)Math.sin(animTime + progTotal)
+        );
+        Vec3 anim2 = new Vec3(
+                (float)Math.sin(animTime + progTotal*5),
+                (float)Math.cos(animTime + progTotal*5),
+                (float)Math.sin(animTime + progTotal*5)
+        );
+        return  center.add(anim1.scale(0.01f)).add(anim2.scale(0.01f));
+    }
+
     private void DrawEndSegment(VertexConsumer buffer, PoseStack poseStack, int combinedLight, int numRings, int numSegments, long totalTicks, BlockPos blockPos, boolean renderInside, Direction fromDir)
     {
 
