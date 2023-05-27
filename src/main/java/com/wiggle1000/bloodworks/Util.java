@@ -1,26 +1,21 @@
 package com.wiggle1000.bloodworks;
 
-import com.mojang.math.Vector3f;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 @SuppressWarnings("unused")
 public class Util
 {
-    public static float Lerp(float a, float b, float interpolation)
-    {
-        return a + interpolation * (b - a);
-    }
-    public static Vector3f Lerp(Vector3f a, Vector3f b, float interpolation)
-    {
-        return new Vector3f(Lerp(a.x(), b.x(), interpolation), Lerp(a.y(), b.y(), interpolation), Lerp(a.z(), b.z(), interpolation));
-    }
-
+    public static float Lerp(float a, float b, float interpolation)     { return a + interpolation * (b - a); }
     public static double Lerp(double a, double b, double interpolation)
     {
         return a + interpolation * (b - a);
     }
+
+    public static Vec3 Lerp(Vec3 a, Vec3 b, float interpolation) { return new Vec3(Lerp(a.x, b.x, interpolation), Lerp(a.y, b.y, interpolation), Lerp(a.z, b.z, interpolation)); }
+
 
     public static VoxelShape RotateVoxelShapeOnYAxis(Direction from, Direction to, VoxelShape shape)
     {
