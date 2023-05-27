@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector4f;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_BloodTank;
-import com.wiggle1000.bloodworks.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -63,19 +62,9 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
     {
         VertexConsumer vertexBuilder = renderTypeBuffer.getBuffer(RenderType.translucent());
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-        /* @wiggle fucking finally got it, took a whole 18 iterations
-        *   However it still has a bit to go, it's apparent it's rendering too much*/
-        //ForgeRegistries.FLUIDS.getDelegate(fluidStack.getRawFluid()).get().key().registry()
-//        ResourceLocation TEXTURE = ForgeRegistries.FLUIDS.getDelegate(fluidStack.getRawFluid()).get().key().location();
-//        String[] starr = ForgeRegistries.FLUIDS.getKey(fluidStack.getFluid()).toString().split(":");
-//        ResourceLocation TEXTURE2 = Minecraft.getInstance().getBlockRenderer().getBlockModel(fluidStack.getFluid().defaultFluidState().createLegacyBlock()).getQuads().get(0).getSprite().getName();
-//        System.out.println(fluidStack.getFluid().defaultFluidState().createLegacyBlock().getBlock().builtInRegistryHolder().key().location().getPath());
-//        ResourceLocation TEXTURE = new ResourceLocation(starr[0], "textures/block" + (starr[0].equals("minecraft") ? "" : "s") + "/" + starr[1].replace("_source", "") + "_still.png");
-//        TextureAtlasSprite sprite = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getTexture(fluidStack.getFluid().defaultFluidState().createLegacyBlock(), Minecraft.getInstance().level, blockPos);
-//        ResourceLocation TEXTURE2 = sprite.getName();
-//        ResourceLocation TEXTURE3 = new ResourceLocation("bloodworks:textures/blocks/fluid_still.png");
         String[] strArr = fluidTypeExtensions.getTextures().findFirst().get().toString().split(":");
         ResourceLocation TEXTURE4 = new ResourceLocation(strArr[0], "textures/" + strArr[1] + ".png");
+//        if (strArr[1].contains("blood")) System.out.printf("Blood Tint = 0x%08X", fluidTypeExtensions.getTintColor());
         int color = fluidTypeExtensions.getTintColor();
         alpha *= (color >> 24 & 255) / 255f;
         float red = (color >> 16 & 255) / 255f;
@@ -93,7 +82,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
         float minV = MIN_Y + frameVOff;
         float maxV = minV + (((height)/NUM_FLUID_FRAMES));
         float maxVFlat = (1f/NUM_FLUID_FRAMES) + frameVOff;
-        Globals.LogInfo(heightPercentage + "");
+//        Globals.LogInfo(heightPercentage + "");
         Vec3 BL = new Vec3(SIDE_MARGIN, MIN_Y, SIDE_MARGIN);
         Vec3 BR = new Vec3(1-SIDE_MARGIN, MIN_Y, SIDE_MARGIN);
         Vec3 FL = new Vec3(SIDE_MARGIN, MIN_Y, 1-SIDE_MARGIN);
