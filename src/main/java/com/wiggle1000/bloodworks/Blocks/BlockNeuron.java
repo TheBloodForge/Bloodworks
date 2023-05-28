@@ -31,7 +31,7 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get().create(pos, state);
+        return BlockRegistry.BLOCK_NEURON.blockEntity().get().create(pos, state);
     }
 
     @Nullable

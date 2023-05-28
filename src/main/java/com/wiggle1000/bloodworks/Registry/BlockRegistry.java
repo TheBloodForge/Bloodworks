@@ -67,13 +67,6 @@ public class BlockRegistry
         return new RegistryPair(bro, iro);
     }
 
-    /*private static BlockEntityRegister createBlockEntity(String name, Supplier<Block> o, BlockEntityType<?> o2)
-    {
-        RegistryObject<Block> bro = BLOCKS.register("block_" + name, o);
-        RegistryObject<Item> iro = ItemRegistry.ITEMS.register(name, () -> new BloodworksBlockItem(bro.get()));
-        return new BlockEntityRegister(bro, o2, iro);
-    }*/
-
     private static BlockEntityRegister createBlockEntity2(String name, Supplier<Block> o, Class<? extends BlockEntity> o2)
     {
         RegistryObject<Block> bro = BLOCKS.register("block_" + name, o);
@@ -106,6 +99,4 @@ public class BlockRegistry
         RegistryPair blockWall = createBlock(name + "_wall", BlockBloodyWallBase::new);
         return new BlockFamily(block, blockStair, blockSlab, blockWall);
     }
-
-//    public static final RegistryObject<Block> BLOCK_NEURON                  = BLOCKS.register("block_neuron",               BlockNeuron::new);
 }

@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class BER_Intestine implements BlockEntityRenderer<BE_Intestine> //TODO: specify blockentity
+public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
 {
 
     private final BlockEntityRendererProvider.Context context;

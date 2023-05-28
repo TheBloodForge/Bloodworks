@@ -20,7 +20,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class BER_Neuron implements BlockEntityRenderer<BE_Neuron> //TODO: specify blockentity
+public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
 {
 
     public static final float NEURON_SIZE = 0.5f;
