@@ -2,6 +2,7 @@ package com.wiggle1000.bloodworks.Blocks;
 
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_Neuron;
 import com.wiggle1000.bloodworks.Registry.BlockRegistry;
+import com.wiggle1000.bloodworks.Registry.ItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -66,6 +67,11 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock
     {
         if(level.isClientSide()) {
             System.out.println(cState.getValue(WATERLOGGED));
+        }
+        if (player.getItemInHand(interactionHand).is(ItemRegistry.ITEM_AXON.get())) {
+            if (level.getBlockEntity(pos) instanceof BE_Neuron neuron) {
+                BE_Neuron.doConnection(pos, level);
+            }
         }
 
         return super.use(cState, level, pos, player, interactionHand, blockHitResult);

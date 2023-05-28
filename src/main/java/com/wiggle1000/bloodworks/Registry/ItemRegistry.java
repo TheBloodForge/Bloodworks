@@ -17,4 +17,5 @@ public class ItemRegistry
     public static final RegistryObject<Item> ITEM_STABILIZER                = ITEMS.register("item_stabilizer", ItemGeneric::new);
     public static final RegistryObject<Item> ITEM_COAGULATED_BLOOD          = ITEMS.register("item_coagulated_blood", ItemGeneric::new);
     public static final RegistryObject<Item> ITEM_SINEW                     = ITEMS.register("item_sinew", ItemGeneric::new);
+    public static final RegistryObject<Item> ITEM_AXON                     = ITEMS.register("item_axon", ItemGeneric::new);
 }
