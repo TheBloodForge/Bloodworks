@@ -10,9 +10,12 @@ import com.wiggle1000.bloodworks.Items.BloodworksBlockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -36,6 +39,15 @@ public class BlockRegistry
     public static final RegistryPair BLOCK_FLESH_LIGHT_LARGE     = createBlock("flesh_light_large",  () -> new BlockFleshLight(true));
     public static final RegistryPair BLOCK_FLESH_PORTHOLE        = createBlock("flesh_porthole",     () -> new BlockBloodyTransparentBase("Flesh with a window embedded.", "Used for decoration."));
 
+    public static final RegistryPair BLOCK_BRAINCASE            = createBlock("braincase",        () ->
+            new GenericBlockBase("A clean, metal block.", "Used for braincase construction.",
+                    BlockBehaviour.Properties.of(Material.METAL).strength(3f, 7f).sound(SoundType.METAL)
+            ));
+
+    public static final RegistryPair BLOCK_BRAINCASE_WINDOW     = createBlock("braincase_window",        () ->
+        new GenericBlockBase("A clean, metal-framed window.", "Used for braincase construction.",
+                BlockBehaviour.Properties.of(Material.METAL).strength(3f, 4f).sound(SoundType.GLASS).noOcclusion().isSuffocating((a, b, c)->false).isViewBlocking((a, b, c)->false)
+        ).withGlasslikeProperties());
 
     public static final BlockEntityRegister BLOCK_INFUSION_CHAMBER = createBlockEntity2(
             "infusion_chamber",

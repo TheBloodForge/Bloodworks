@@ -41,7 +41,7 @@ public class FluidRegistry
                             "fluid_cranial"
                     ).fogColor(0.1f, 0.2f, 0.2f).tint(0xAA00AAAA)
                     , 0xAA00AAAA),
-            Block.Properties.of(MATERIAL_CRANIAL).noCollission().strength(100.0F).noLootTable().color(MATERIAL_CRANIAL.getColor()).randomTicks(),
+            Block.Properties.of(MATERIAL_CRANIAL).noCollission().strength(100.0F).noLootTable().color(MATERIAL_CRANIAL.getColor()).randomTicks().isViewBlocking((a,b,c)->false),
             new Item.Properties()
                     .tab(Globals.CREATIVE_TAB)
                     .stacksTo(1)

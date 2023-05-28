@@ -21,6 +21,9 @@
   "bloodworks.block_entity.infusion_chamber": "Infusion Chamber",
   "bloodworks.infusion_chamber": "Infusion Chamber",
 
+  "block.bloodworks.block_braincase": "Braincase Block",
+  "block.bloodworks.block_braincase_window": "Braincase Window",
+
 
   "_comment": "-------------------------------------------ITEMS----------------------------------------------------",
   "item.bloodworks.item_stabilizer": "Stabilizer",

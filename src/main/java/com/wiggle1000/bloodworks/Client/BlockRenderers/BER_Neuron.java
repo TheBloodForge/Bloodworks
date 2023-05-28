@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector4f;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_Neuron;
-import com.wiggle1000.bloodworks.Config.BloodworksCommonConfig;
 import com.wiggle1000.bloodworks.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -47,18 +46,6 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
         {
             return;
         }
-        if( BloodworksCommonConfig.DO_OCCLUSION_CULLING.get() &&
-            !checkLOS(blockPos, new Vec3(0, 0, 0)) &&
-            !checkLOS(blockPos, new Vec3(1, 0, 0)) &&
-            !checkLOS(blockPos, new Vec3(0, 1, 0)) &&
-            !checkLOS(blockPos, new Vec3(0, 0, 1)) &&
-            !checkLOS(blockPos, new Vec3(1, 1, 0)) &&
-            !checkLOS(blockPos, new Vec3(1, 0, 1)) &&
-            !checkLOS(blockPos, new Vec3(0, 1, 1)) &&
-            !checkLOS(blockPos, new Vec3(1, 1, 1)) )
-        {
-            return;
-        }
 
 
         poseStack.pushPose();
@@ -66,7 +53,7 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
         long totalTicks = Minecraft.getInstance().level.getGameTime();
 
         //TODO: why no transparent :(
-        VertexConsumer buffer = RenderHelper.StartRenderingTranslucentEmissive(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_neuron.png"));
+        VertexConsumer buffer = RenderHelper.StartRenderingTranslucent(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_neuron.png"));
         poseStack.translate(0.5,0.5,0.5);
 
         DrawNeuron(buffer, poseStack, totalTicks, combinedLight, blockPos);
