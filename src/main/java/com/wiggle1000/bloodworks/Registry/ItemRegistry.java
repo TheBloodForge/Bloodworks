@@ -23,6 +23,7 @@ public class ItemRegistry
     public static final RegistryObject<Item> BLOCK_INFUSION_CHAMBER         = ITEMS.register("block_infusion_chamber", () -> new BlockItem(BlockRegistry.BLOCK_INFUSION_CHAMBER.get(), new Item.Properties().tab(CREATIVE_TAB)));
     public static final RegistryObject<Item> BLOCK_BLOOD_TANK               = ITEMS.register("block_blood_tank", () -> new TankItem(BlockRegistry.BLOCK_BLOOD_TANK.get()));
     public static final RegistryObject<Item> BLOCK_INTESTINE                = ITEMS.register("block_intestine", () -> new BlockItem(BlockRegistry.BLOCK_INTESTINE.get(), new Item.Properties().tab(CREATIVE_TAB)));
+    public static final RegistryObject<Item> BLOCK_NEURON                   = ITEMS.register("block_neuron", () -> new BlockItem(BlockRegistry.BLOCK_NEURON.get(), new Item.Properties().tab(CREATIVE_TAB)));
 
     public static final RegistryObject<Item> BLOCK_FLESH_LIGHT              = ITEMS.register("block_flesh_light", () -> new BlockItem(BlockRegistry.BLOCK_FLESH_LIGHT.get(), new Item.Properties().tab(CREATIVE_TAB)));
     public static final RegistryObject<Item> BLOCK_FLESH_LIGHT_LARGE        = ITEMS.register("block_flesh_light_large", () -> new BlockItem(BlockRegistry.BLOCK_FLESH_LIGHT_LARGE.get(), new Item.Properties().tab(CREATIVE_TAB)));

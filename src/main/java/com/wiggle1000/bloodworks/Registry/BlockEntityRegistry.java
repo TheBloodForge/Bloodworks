@@ -3,6 +3,7 @@ package com.wiggle1000.bloodworks.Registry;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_BloodTank;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_InfusionChamber;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_Intestine;
+import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_Neuron;
 import com.wiggle1000.bloodworks.Globals;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -29,5 +30,11 @@ public class BlockEntityRegistry
             () -> BlockEntityType.Builder.of(
                     BE_BloodTank::new,
                     BlockRegistry.BLOCK_BLOOD_TANK.get()
+            ).build(null));
+
+    public static final RegistryObject<BlockEntityType<BE_Neuron>> BE_NEURON = BLOCK_ENTITIES.register("be_neuron",
+            () -> BlockEntityType.Builder.of(
+                    BE_Neuron::new,
+                    BlockRegistry.BLOCK_NEURON.get()
             ).build(null));
 }
