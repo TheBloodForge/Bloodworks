@@ -15,7 +15,7 @@ public class FluidMechanics
         if(level.isClientSide) return;
         if (FluidRegistry.FLUID_BLOOD.source.get().getSource() == fluidBlock.getFluid().getSource())
         {
-            if(Globals.RAND.nextFloat() > 0.6f) level.setBlockAndUpdate(pos, BlockRegistry.BLOCK_COAGULATED_BLOOD.get().defaultBlockState());
+            if(Globals.RAND.nextFloat() > 0.6f) level.setBlockAndUpdate(pos, BlockRegistry.BLOCK_COAGULATED.blockBase().block().get().defaultBlockState());
         }
         else if (FluidRegistry.FLUID_CRANIAL.source.get().getSource() == fluidBlock.getFluid().getSource())
         {

@@ -1,10 +1,10 @@
 package com.wiggle1000.bloodworks;
 
 import com.mojang.logging.LogUtils;
-import com.wiggle1000.bloodworks.Registry.ItemRegistry;
+import com.wiggle1000.bloodworks.Registry.BlockRegistry;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.synth.SimplexNoise;
 import org.slf4j.Logger;
 
@@ -26,7 +26,7 @@ public class Globals
         @Override
         public ItemStack makeIcon()
         {
-            return new ItemStack(ItemRegistry.BLOCK_COAGULATED_BLOOD.get());
+            return new ItemStack(BlockRegistry.BLOCK_COAGULATED.blockBase().item().get());
         }
     };
 

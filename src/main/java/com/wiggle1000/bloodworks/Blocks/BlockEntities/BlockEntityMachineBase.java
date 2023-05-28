@@ -1,100 +1,106 @@
 package com.wiggle1000.bloodworks.Blocks.BlockEntities;
 
 import com.wiggle1000.bloodworks.Globals;
+import com.wiggle1000.bloodworks.Networking.FluidSyncS2CPacket;
+import com.wiggle1000.bloodworks.Networking.PacketManager;
+import com.wiggle1000.bloodworks.Registry.FluidRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Containers;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public class BlockEntityMachineBase extends BaseContainerBlockEntity
+public class BlockEntityMachineBase extends BlockEntity implements IFluidHandler
 {
 
-    private final ItemStackHandler itemHandler = new ItemStackHandler(3)
+    public static final Component TITLE = Component.translatable(Globals.MODID + ".genericMachine");
+    public LazyOptional<IFluidHandler> lazyFluidHandler = LazyOptional.empty();
+
+    public int progress = 0;
+
+    public final ContainerData data = new ContainerData()
     {
         @Override
-        protected void onContentsChanged(int slot)
+        public int get(int index)
         {
-            super.onContentsChanged(slot);
-            setChanged();
+            return getContainerData(index);
+        }
+
+        @Override
+        public void set(int index, int value)
+        {
+            setContainerData(index, value);
+        }
+
+        @Override
+        public int getCount()
+        {
+            return getContainerCount();
         }
     };
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
-
-    public static final int INPUT_SLOT_INDEX = 1;
-    public static final int OUTPUT_SLOT_INDEX = 2;
-
-
-    protected final ContainerData data;
-    private final int progress = 0;
-    private final int processingTicks = 40;
 
     public BlockEntityMachineBase(BlockEntityType block, BlockPos pos, BlockState state)
     {
         super(block, pos, state);
-        this.data = new ContainerData()
+    }
+
+    public ContainerData getContainerData()
+    {
+        return this.data;
+    }
+
+    /**
+     * this is the data accessor for the game to save the data
+     */
+    public int getContainerData(int index)
+    {
+        return switch (index)
+                {
+                    case 0 -> this.FLUID_TANK.getFluidAmount();
+                    case 1 -> this.FLUID_TANK.getCapacity();
+                    default -> 0;
+                };
+    }
+
+    /**
+     * this sets the values relevant on loading
+     */
+    public void setContainerData(int index, int value)
+    {
+        switch (index)
         {
-            @Override
-            public int get(int index)
-            {
-                return 0;
-            }
-
-            @Override
-            public void set(int index, int value)
-            {
-            }
-
-            @Override
-            public int getCount()
-            {
-                return 2;
-            }
-        };
+            case 0 -> this.FLUID_TANK.getFluid().setAmount(value);
+            default -> { }
+        }
     }
 
-    @Override
-    protected Component getDefaultName()
+    /**
+     * this returns the number of data entries to be saved
+     */
+    public int getContainerCount()
     {
-        return Component.translatable(Globals.MODID + ".block_entity.machine_base");
-    }
-
-    @Override
-    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
-    {
-        return null; // @Keldon come back here, right now mister.
-    }
-
-    @Override
-    protected AbstractContainerMenu createMenu(int p_58627_, Inventory p_58628_)
-    {
-        return null; // @Keldon come back here, right now mister.
+        return 3;
     }
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side)
     {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
+        if (cap == ForgeCapabilities.FLUID_HANDLER)
         {
-            return lazyItemHandler.cast();
+            return lazyFluidHandler.cast();
         }
         return super.getCapability(cap, side);
     }
@@ -103,92 +109,106 @@ public class BlockEntityMachineBase extends BaseContainerBlockEntity
     public void onLoad()
     {
         super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> itemHandler);
+        lazyFluidHandler = LazyOptional.of(() -> FLUID_TANK);
     }
 
     @Override
     public void invalidateCaps()
     {
         super.invalidateCaps();
-        lazyItemHandler.invalidate();
+        lazyFluidHandler.invalidate();
     }
 
     @Override
     protected void saveAdditional(CompoundTag nbt)
     {
-        nbt.put("inventory", itemHandler.serializeNBT());
+        nbt.putInt("progress", this.progress);
+        nbt = FLUID_TANK.writeToNBT(nbt);
         super.saveAdditional(nbt);
     }
 
     @Override
     public void load(CompoundTag nbt)
     {
-        itemHandler.deserializeNBT(nbt.getCompound("inventory"));
+        progress = nbt.getInt("progress");
+        FLUID_TANK.readFromNBT(nbt);
         super.load(nbt);
     }
 
-    public void dropInventoryContents()
+    public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_InfusionChamber entity)
     {
-        if (this.level == null) return;
+    }
 
-        SimpleContainer inv = new SimpleContainer(itemHandler.getSlots());
-        for (int i = 0; i < itemHandler.getSlots(); i++)
+    private final FluidTank FLUID_TANK = new FluidTank(6000)
+    {
+        @Override
+        public boolean isFluidValid(FluidStack stack)
         {
-            inv.setItem(i, itemHandler.getStackInSlot(i));
+            return stack.getFluid() == FluidRegistry.FLUID_BLOOD.source.get().getSource();
         }
-        Containers.dropContents(this.level, this.worldPosition, inv);
-    }
 
-    public static void tick(Level level, BlockPos blockPos, BlockState blockState, BlockEntityMachineBase entity)
+        @Override
+        protected void onContentsChanged()
+        {
+            setChanged();
+            syncFluid();
+//            super.onContentsChanged();
+        }
+    };
+
+    @Override
+    public int getTanks()
     {
-        if (level.isClientSide()) return;
+        return 1;
     }
 
     @Override
-    public int getContainerSize()
+    public @NotNull FluidStack getFluidInTank(int tank)
     {
-        return 0;
+        return FLUID_TANK.getFluid();
     }
 
     @Override
-    public boolean isEmpty()
+    public int getTankCapacity(int tank)
     {
-        return false;
+        return FLUID_TANK.getCapacity();
     }
 
     @Override
-    public ItemStack getItem(int p_18941_)
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack)
     {
-        return null;
+        return FLUID_TANK.isFluidValid(stack);
     }
 
     @Override
-    public ItemStack removeItem(int p_18942_, int p_18943_)
+    public int fill(FluidStack resource, IFluidHandler.FluidAction action)
     {
-        return null;
+        if (!isFluidValid(1, resource) || resource.getAmount() <= 0)
+        {
+            return 0;
+        }
+        return FLUID_TANK.fill(resource, action);
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int p_18951_)
+    public @NotNull FluidStack drain(int maxDrain, IFluidHandler.FluidAction action)
     {
-        return null;
+        return FLUID_TANK.drain(maxDrain, action);
     }
 
     @Override
-    public void setItem(int p_18944_, ItemStack p_18945_)
+    public @NotNull FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action)
     {
-
+        return FLUID_TANK.drain(resource, action);
     }
 
-    @Override
-    public boolean stillValid(Player p_18946_)
+    public void setFluid(FluidStack fluidStack)
     {
-        return false;
+        FLUID_TANK.setFluid(fluidStack);
     }
 
-    @Override
-    public void clearContent()
+    public void syncFluid()
     {
-
+        PacketManager.sendToClients(new FluidSyncS2CPacket(getFluidInTank(0), getBlockPos()));
     }
 }

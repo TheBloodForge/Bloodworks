@@ -10,6 +10,8 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.fluids.FluidStack;
 
 public class RenderHelper
 {
@@ -21,6 +23,19 @@ public class RenderHelper
 
     public static void FinishRendering(VertexConsumer buffer)
     {
+    }
+
+    public static ResourceLocation getResourceForFluid(FluidStack fluidStack)
+    {
+        IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+        String[] strArr = fluidTypeExtensions.getTextures().findFirst().get().toString().split(":");
+        return new ResourceLocation(strArr[0], "textures/" + strArr[1] + ".png");
+    }
+
+    public static int getColorFromFluid(FluidStack fluidStack)
+    {
+        IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+        return fluidTypeExtensions.getTintColor();
     }
 
     public static void DoTriangle(VertexConsumer builder, Matrix4f matrix, Vec3 a, Vec3 b, Vec3 c, Vec2 uvA, Vec2 uvB, Vec2 uvC, int lightLevel)

@@ -3,14 +3,13 @@ package com.wiggle1000.bloodworks.Blocks.BlockEntities;
 import com.wiggle1000.bloodworks.Items.TankItem;
 import com.wiggle1000.bloodworks.Networking.FluidSyncS2CPacket;
 import com.wiggle1000.bloodworks.Networking.PacketManager;
-import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
+import com.wiggle1000.bloodworks.Registry.BlockRegistry;
 import com.wiggle1000.bloodworks.Registry.FluidRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -24,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BE_BloodTank extends BlockEntity implements IFluidHandler
+public class BE_BloodTank extends BlockEntityMachineBase
 {
     static int DEFAULT_CAPACITY = 10000;
     private LazyOptional<IFluidHandler> lazyFluidHandler = LazyOptional.empty();
@@ -55,12 +54,11 @@ public class BE_BloodTank extends BlockEntity implements IFluidHandler
 
     public BE_BloodTank(BlockPos pos, BlockState state)
     {
-        super(BlockEntityRegistry.BE_BLOOD_TANK.get(), pos, state);
+        super(BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), pos, state);
     }
     public BE_BloodTank(TankItem titem, BlockPos pos, BlockState state)
     {
-        super(BlockEntityRegistry.BE_BLOOD_TANK.get(), pos, state);
-//        titem.get
+        super(BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), pos, state);
     }
 
 

@@ -1,7 +1,7 @@
 package com.wiggle1000.bloodworks.Blocks;
 
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_InfusionChamber;
-import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
+import com.wiggle1000.bloodworks.Registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -34,14 +34,14 @@ public class BlockInfusionChamber extends BlockMachineBase
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return BlockEntityRegistry.BE_INFUSION_CHAMBER.get().create(pos, state);
+        return BlockRegistry.BLOCK_INFUSION_CHAMBER.blockEntity().get().create(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212level, BlockState state, BlockEntityType<T> type)
     {
-        return createTickerHelper(type, BlockEntityRegistry.BE_INFUSION_CHAMBER.get(), BE_InfusionChamber::tick);
+        return createTickerHelper(type, (BlockEntityType<BE_InfusionChamber>) BlockRegistry.BLOCK_INFUSION_CHAMBER.blockEntity().get(), BE_InfusionChamber::tick);
     }
 
     @Override

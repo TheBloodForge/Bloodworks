@@ -4,7 +4,7 @@ import com.wiggle1000.bloodworks.Crafting.RecipeBloodInfusion;
 import com.wiggle1000.bloodworks.Globals;
 import com.wiggle1000.bloodworks.Networking.FluidSyncS2CPacket;
 import com.wiggle1000.bloodworks.Networking.PacketManager;
-import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
+import com.wiggle1000.bloodworks.Registry.BlockRegistry;
 import com.wiggle1000.bloodworks.Registry.FluidRegistry;
 import com.wiggle1000.bloodworks.Registry.ItemRegistry;
 import com.wiggle1000.bloodworks.Registry.RecipeRegistry;
@@ -23,7 +23,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -37,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings({"unused", "SameReturnValue"})
-public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFluidHandler, MenuProvider
+public class BE_InfusionChamber extends BlockEntityMachineBase implements IItemHandler, MenuProvider
 {
 
     public static final Component TITLE = Component.translatable(Globals.MODID + ".infusion_chamber");
@@ -124,7 +123,7 @@ public class BE_InfusionChamber extends BlockEntity implements IItemHandler, IFl
 
     public BE_InfusionChamber(BlockPos pos, BlockState state)
     {
-        super(BlockEntityRegistry.BE_INFUSION_CHAMBER.get(), pos, state);
+        super(BlockRegistry.BLOCK_INFUSION_CHAMBER.blockEntity().get(), pos, state);
     }
 
     public ContainerData getContainerData() {

@@ -3,7 +3,7 @@ package com.wiggle1000.bloodworks.Blocks;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_BloodTank;
 import com.wiggle1000.bloodworks.Networking.MessageS2CPacket;
 import com.wiggle1000.bloodworks.Networking.PacketManager;
-import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
+import com.wiggle1000.bloodworks.Registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -30,6 +30,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unchecked")
 public class BlockBloodTank extends BlockMachineBase
 {
 
@@ -52,14 +53,14 @@ public class BlockBloodTank extends BlockMachineBase
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return BlockEntityRegistry.BE_BLOOD_TANK.get().create(pos, state);
+        return BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get().create(pos, state);
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212level, BlockState state, BlockEntityType<T> type)
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
     {
-        return createTickerHelper(type, BlockEntityRegistry.BE_BLOOD_TANK.get(), BE_BloodTank::tick);
+        return createTickerHelper(type, (BlockEntityType<BE_BloodTank>) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), BE_BloodTank::tick);
     }
 
     @Override

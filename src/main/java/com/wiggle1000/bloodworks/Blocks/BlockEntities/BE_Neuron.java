@@ -1,6 +1,6 @@
 package com.wiggle1000.bloodworks.Blocks.BlockEntities;
 
-import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
+import com.wiggle1000.bloodworks.Registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -12,7 +12,7 @@ public class BE_Neuron extends BlockEntity
 {
     public BE_Neuron(BlockPos pos, BlockState blockState)
     {
-        super(BlockEntityRegistry.BE_NEURON.get(), pos, blockState);
+        super(BlockRegistry.BLOCK_NEURON.blockEntity().get(), pos, blockState);
     }
 
 

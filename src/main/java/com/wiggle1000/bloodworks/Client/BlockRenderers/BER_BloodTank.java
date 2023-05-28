@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
@@ -61,17 +60,14 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
     private static void renderFluid(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, FluidStack fluidStack, float alpha, float heightPercentage, int combinedLight, BlockPos blockPos)
     {
         VertexConsumer vertexBuilder = renderTypeBuffer.getBuffer(RenderType.translucent());
-        IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-        String[] strArr = fluidTypeExtensions.getTextures().findFirst().get().toString().split(":");
-        ResourceLocation TEXTURE4 = new ResourceLocation(strArr[0], "textures/" + strArr[1] + ".png");
-//        if (strArr[1].contains("blood")) System.out.printf("Blood Tint = 0x%08X", fluidTypeExtensions.getTintColor());
-        int color = fluidTypeExtensions.getTintColor();
+        ResourceLocation fluidResource = RenderHelper.getResourceForFluid(fluidStack);
+        int color = RenderHelper.getColorFromFluid(fluidStack);
         alpha *= (color >> 24 & 255) / 255f;
         float red = (color >> 16 & 255) / 255f;
         float green = (color >> 8 & 255) / 255f;
         float blue = (color & 255) / 255f;
 
-        renderQuads(matrixStack.last().pose(), renderTypeBuffer.getBuffer(RenderType.entityTranslucent(TEXTURE4)), red, green, blue, alpha, heightPercentage, combinedLight, blockPos);
+        renderQuads(matrixStack.last().pose(), renderTypeBuffer.getBuffer(RenderType.entityTranslucent(fluidResource)), red, green, blue, alpha, heightPercentage, combinedLight, blockPos);
     }
 
     private static void renderQuads(Matrix4f matrix, VertexConsumer vertexBuilder, float r, float g, float b, float alpha, float heightPercentage, int light, BlockPos blockPos)

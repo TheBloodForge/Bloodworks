@@ -2,7 +2,7 @@ package com.wiggle1000.bloodworks.Blocks;
 
 import com.wiggle1000.bloodworks.ClientUtils;
 import com.wiggle1000.bloodworks.Particles.ParticleHelper;
-import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
+import com.wiggle1000.bloodworks.Registry.BlockRegistry;
 import com.wiggle1000.bloodworks.Registry.FluidRegistry;
 import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
 import net.minecraft.core.BlockPos;
@@ -122,7 +122,7 @@ public class BlockBrainInteriorBase extends BaseEntityBlock implements SimpleWat
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return BlockEntityRegistry.BE_NEURON.get().create(pos, state);
+        return BlockRegistry.BLOCK_NEURON.blockEntity().get().create(pos, state);
     }
 
     @Override

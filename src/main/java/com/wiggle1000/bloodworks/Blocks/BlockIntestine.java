@@ -4,9 +4,7 @@ import com.wiggle1000.bloodworks.ClientUtils;
 import com.wiggle1000.bloodworks.Networking.MessageS2CPacket;
 import com.wiggle1000.bloodworks.Networking.PacketManager;
 import com.wiggle1000.bloodworks.Particles.ParticleHelper;
-import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
 import com.wiggle1000.bloodworks.Registry.BlockRegistry;
-import com.wiggle1000.bloodworks.Registry.ItemRegistry;
 import com.wiggle1000.bloodworks.Registry.ParticleRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -72,7 +70,7 @@ public class BlockIntestine extends BaseEntityBlock
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return BlockEntityRegistry.BE_INTESTINE.get().create(pos, state);
+        return BlockRegistry.BLOCK_INTESTINE.blockEntity().get().create(pos, state);
     }
 
     @Override
@@ -110,14 +108,14 @@ public class BlockIntestine extends BaseEntityBlock
     {
         if(level.isClientSide()) return InteractionResult.sidedSuccess(level.isClientSide());
         PacketManager.sendToClients(new MessageS2CPacket(Component.literal("to = " + state.getValue(FACING_TO) + " from = " + state.getValue(FACING_FROM) + " ID = " + state.getValue(INTESTINE_ID)), false));
-        if (!player.getItemInHand(interactedHand).is(ItemRegistry.BLOCK_INTESTINE.get())) {
+        if (!player.getItemInHand(interactedHand).is(BlockRegistry.BLOCK_INTESTINE.item().get())) {
             return super.use(state, level, blockPos, player, interactedHand, hitResult);
         }
         if (state.getBlock() instanceof BlockIntestine) {
             BlockState newState = this.defaultBlockState().setValue(FACING_FROM, state.getValue(FACING_FROM)).setValue(FACING_TO, hitResult.getDirection()).setValue(INTESTINE_ID, state.getValue(INTESTINE_ID));
             level.setBlocksDirty(blockPos, state, newState);
             level.setBlockAndUpdate(blockPos, newState);
-            player.level.setBlockAndUpdate(blockPos.relative(hitResult.getDirection()), BlockRegistry.BLOCK_INTESTINE.get().defaultBlockState().setValue(FACING_FROM, hitResult.getDirection().getOpposite()).setValue(INTESTINE_ID, state.getValue(INTESTINE_ID) + 1));
+            player.level.setBlockAndUpdate(blockPos.relative(hitResult.getDirection()), BlockRegistry.BLOCK_INTESTINE.block().get().defaultBlockState().setValue(FACING_FROM, hitResult.getDirection().getOpposite()).setValue(INTESTINE_ID, state.getValue(INTESTINE_ID) + 1));
             return InteractionResult.sidedSuccess(!level.isClientSide);
         }
         return super.use(state, level, blockPos, player, interactedHand, hitResult);

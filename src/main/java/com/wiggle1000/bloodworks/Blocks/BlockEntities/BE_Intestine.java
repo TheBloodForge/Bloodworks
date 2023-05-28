@@ -1,6 +1,6 @@
 package com.wiggle1000.bloodworks.Blocks.BlockEntities;
 
-import com.wiggle1000.bloodworks.Registry.BlockEntityRegistry;
+import com.wiggle1000.bloodworks.Registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -11,7 +11,7 @@ public class BE_Intestine extends BlockEntity
 {
     public BE_Intestine(BlockPos pos, BlockState blockState)
     {
-        super(BlockEntityRegistry.BE_INTESTINE.get(), pos, blockState);
+        super(BlockRegistry.BLOCK_INTESTINE.blockEntity().get(), pos, blockState);
     }
 
     @Override
