@@ -29,7 +29,7 @@ public class BlockRegistry
     public record BlockEntityRegister(RegistryObject<Block> block, RegistryObject<BlockEntityType<?>> blockEntity, RegistryObject<Item> item){}
     public record BlockFamily(RegistryPair blockBase, RegistryPair blockStair, RegistryPair blockSlab, RegistryPair blockWall){}
 
-    public static final BlockFamily BLOCK_COAGULATED             = registerAllTypes("block_coagulated_blood");
+    public static final BlockFamily BLOCK_COAGULATED             = registerAllTypes("coagulated_blood");
     public static final BlockFamily BLOCK_FLESH                  = registerAllTypes("flesh");
 
     public static final RegistryPair BLOCK_FLESH_LIGHT           = createBlock("flesh_light",        () -> new BlockFleshLight(false));
@@ -63,14 +63,14 @@ public class BlockRegistry
     private static RegistryPair createBlock(String name, Supplier<Block> o)
     {
         RegistryObject<Block> bro = BLOCKS.register("block_" + name, o);
-        RegistryObject<Item> iro = ItemRegistry.ITEMS.register(name, () -> new BloodworksBlockItem(bro.get()));
+        RegistryObject<Item> iro = ItemRegistry.ITEMS.register("block_" + name, () -> new BloodworksBlockItem(bro.get()));
         return new RegistryPair(bro, iro);
     }
 
     private static BlockEntityRegister createBlockEntity2(String name, Supplier<Block> o, Class<? extends BlockEntity> o2)
     {
         RegistryObject<Block> bro = BLOCKS.register("block_" + name, o);
-        RegistryObject<Item> iro = ItemRegistry.ITEMS.register(name, () -> new BloodworksBlockItem(bro.get()));
+        RegistryObject<Item> iro = ItemRegistry.ITEMS.register("block_" + name, () -> new BloodworksBlockItem(bro.get()));
 
         RegistryObject<BlockEntityType<?>> bero = BLOCK_ENTITIES.register("be_" + name,
                 () -> BlockEntityType.Builder.of(
@@ -93,7 +93,6 @@ public class BlockRegistry
 
     private static BlockFamily registerAllTypes(String name)
     {
-        name = "block_" + name;
         RegistryPair block = createBlock(name, BlockBloodyBase::new);
         RegistryPair blockStair = createBlock(name + "_stairs", BlockBloodyStairsBase::new);
         RegistryPair blockSlab = createBlock(name + "_slab", BlockBloodySlabBase::new);
