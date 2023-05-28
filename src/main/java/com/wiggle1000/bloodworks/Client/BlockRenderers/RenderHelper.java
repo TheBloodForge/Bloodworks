@@ -16,9 +16,17 @@ import net.minecraftforge.fluids.FluidStack;
 public class RenderHelper
 {
 
-    public static VertexConsumer StartRendering(MultiBufferSource bufferSource, ResourceLocation texture)
+    public static VertexConsumer StartRenderingCutout(MultiBufferSource bufferSource, ResourceLocation texture)
     {
         return bufferSource.getBuffer(RenderType.entityCutout(texture));
+    }
+    public static VertexConsumer StartRenderingTranslucent(MultiBufferSource bufferSource, ResourceLocation texture)
+    {
+        return bufferSource.getBuffer(RenderType.entityTranslucent(texture));
+    }
+    public static VertexConsumer StartRenderingTranslucentEmissive(MultiBufferSource bufferSource, ResourceLocation texture)
+    {
+        return bufferSource.getBuffer(RenderType.entityTranslucentEmissive(texture));
     }
 
     public static void FinishRendering(VertexConsumer buffer)

@@ -66,7 +66,7 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
 
         long totalTicks = Minecraft.getInstance().level.getGameTime();
 
-        VertexConsumer buffer = RenderHelper.StartRendering(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_intestine.png"));
+        VertexConsumer buffer = RenderHelper.StartRenderingCutout(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_intestine.png"));
 
         int numRings = 20;
         int numSegments = 20;

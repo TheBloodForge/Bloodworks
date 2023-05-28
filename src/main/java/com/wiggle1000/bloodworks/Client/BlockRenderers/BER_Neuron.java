@@ -64,7 +64,7 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
 
         long totalTicks = Minecraft.getInstance().level.getGameTime();
 
-        VertexConsumer buffer = RenderHelper.StartRendering(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_neuron.png"));
+        VertexConsumer buffer = RenderHelper.StartRenderingTranslucentEmissive(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_neuron.png"));
 
         poseStack.translate(0.5,0.5,0.5);
 
@@ -89,9 +89,9 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
 
             Vec3 neuronCenter = Vec3.ZERO;//new Vec3(center.getX(), center.getY(), center.getZ()).add(0.5, 0.5, 0.5);
             Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-            Vec3 up = new Vec3(0, 1, 0);//cameraEntity.getUpVector(1.0F);
+            Vec3 up = cameraEntity.getUpVector(1.0F);
             Vec3 forward = cameraEntity.getViewVector(1.0F);
-            Vec3 right = new Vec3(1, 0, 0);//forward.cross(up).normalize();
+            Vec3 right = forward.cross(up).normalize().scale(-1);
 
             Vec3 vertexA = neuronCenter.add(up.scale(- NEURON_SIZE/2)).add(right.scale( NEURON_SIZE/2));
             Vec3 vertexB = neuronCenter.add(up.scale( NEURON_SIZE/2)).add(right.scale( NEURON_SIZE/2));
@@ -104,7 +104,7 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
                     new Vec2(1,  1),
                     new Vec2(1, 0),
                     new Vec2(0, 0),
-                    combinedLight);
+                    0xFFFFFF);
 
         }
         poseStack.popPose();
