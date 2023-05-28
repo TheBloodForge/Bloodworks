@@ -23,7 +23,7 @@ import net.minecraft.world.phys.Vec3;
 public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
 {
 
-    public static final float NEURON_SIZE = 0.5f;
+    public static final float NEURON_SIZE = 1f;
     private final BlockEntityRendererProvider.Context context;
     public BER_Neuron(BlockEntityRendererProvider.Context context)
     {
@@ -64,8 +64,8 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
 
         long totalTicks = Minecraft.getInstance().level.getGameTime();
 
-        VertexConsumer buffer = RenderHelper.StartRenderingTranslucentEmissive(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_neuron.png"));
-
+        //TODO: why no transparent :(
+        VertexConsumer buffer = RenderHelper.StartRenderingTranslucent(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_neuron.png"));
         poseStack.translate(0.5,0.5,0.5);
 
         DrawNeuron(buffer, poseStack, totalTicks, combinedLight, blockPos);
@@ -83,27 +83,28 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
 
     private void DrawNeuron(VertexConsumer buffer, PoseStack poseStack, long animTime, int combinedLight, BlockPos center)
     {
+        int neuronFrame = (int)(animTime/10f)%4;
         poseStack.pushPose();
         for(int i = 1; i <= 5; i++)
         {
 
             Vec3 neuronCenter = Vec3.ZERO;//new Vec3(center.getX(), center.getY(), center.getZ()).add(0.5, 0.5, 0.5);
             Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-            Vec3 up = cameraEntity.getUpVector(1.0F);
-            Vec3 forward = cameraEntity.getViewVector(1.0F);
-            Vec3 right = forward.cross(up).normalize().scale(-1);
+            Vec3 up             = cameraEntity.getUpVector(1.0F);
+            Vec3 forward        = cameraEntity.getViewVector(1.0F);
+            Vec3 right          = forward.cross(up).normalize().scale(-1);
 
-            Vec3 vertexA = neuronCenter.add(up.scale(- NEURON_SIZE/2)).add(right.scale( NEURON_SIZE/2));
+            Vec3 vertexA = neuronCenter.add(up.scale(-NEURON_SIZE/2)).add(right.scale( NEURON_SIZE/2));
             Vec3 vertexB = neuronCenter.add(up.scale( NEURON_SIZE/2)).add(right.scale( NEURON_SIZE/2));
             Vec3 vertexC = neuronCenter.add(up.scale( NEURON_SIZE/2)).add(right.scale(-NEURON_SIZE/2));
             Vec3 vertexD = neuronCenter.add(up.scale(-NEURON_SIZE/2)).add(right.scale(-NEURON_SIZE/2));
 
             RenderHelper.DoQuad(buffer, poseStack.last().pose(),
                     vertexA, vertexB, vertexC, vertexD,
-                    new Vec2(0,  1),
-                    new Vec2(1,  1),
-                    new Vec2(1, 0),
-                    new Vec2(0, 0),
+                    new Vec2(1, 0.25f * (neuronFrame+1)),
+                    new Vec2(1, 0.25f * neuronFrame),
+                    new Vec2(0, 0.25f * neuronFrame),
+                    new Vec2(0, 0.25f * (neuronFrame+1)),
                     0xFFFFFF);
 
         }

@@ -41,6 +41,9 @@ public class BlockBrainInteriorBase extends BaseEntityBlock implements SimpleWat
                         .of(Material.STONE)
                         .strength(3f, 5f)
                         .sound(SoundType.SLIME_BLOCK)
+                        .noCollission()
+                        .noOcclusion()
+                .isViewBlocking((blockState, blockGetter, blockPos) -> false)
         );
     }
 
