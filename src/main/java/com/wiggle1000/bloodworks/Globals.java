@@ -21,12 +21,12 @@ public class Globals
     //TODO: on world load, reseed this to world seed?
     public static final Random RAND = new Random(System.nanoTime());
     public static final SimplexNoise SIMPLEX_NOISE = new SimplexNoise(RandomSource.create());
-    public static final CreativeModeTab CREATIVE_TAB = new CreativeModeTab("Bloodworks")
+    public static final CreativeModeTab CREATIVE_TAB = new CreativeModeTab("bloodworks")
     {
         @Override
         public ItemStack makeIcon()
         {
-            return new ItemStack(BlockRegistry.BLOCK_COAGULATED.blockBase().item().get());
+            return new ItemStack(BlockRegistry.BLOCK_INTESTINE.item().get());
         }
     };
 

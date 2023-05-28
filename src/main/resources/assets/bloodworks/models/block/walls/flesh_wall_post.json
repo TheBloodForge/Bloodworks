@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/template_wall_post",
   "textures": {
-    "wall": "bloodworks:blocks/block_flesh"
+    "wall": "bloodworks:blocks/block_flesh_wall"
   }
 }

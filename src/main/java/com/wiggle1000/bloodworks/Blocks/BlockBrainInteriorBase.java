@@ -45,16 +45,11 @@ public class BlockBrainInteriorBase extends BaseEntityBlock implements SimpleWat
                         .noOcclusion()
                 .isViewBlocking((blockState, blockGetter, blockPos) -> false)
         );
+        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
     }
 
-    public BlockBrainInteriorBase(String selfQuote, String use)
+    public void SetQuotes(String selfQuote, String use)
     {
-        super(
-                Properties
-                        .of(Material.STONE)
-                        .strength(3f, 5f)
-                        .sound(SoundType.SLIME_BLOCK)
-        );
         if(selfQuoteText != null) selfQuoteText = selfQuote;
         if(useText != null) useText = use;
     }

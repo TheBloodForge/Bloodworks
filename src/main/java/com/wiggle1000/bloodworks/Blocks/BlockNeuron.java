@@ -23,6 +23,7 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock
     public static final BooleanProperty OUTPUT = BooleanProperty.create("output");
     public BlockNeuron()
     {
+        SetQuotes("A living neuron. A bit large, isn't it?", "Must be placed inside a Braincase.");
     }
 
     // -------- Block entity stuff --------
@@ -47,9 +48,10 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock
     public InteractionResult use(BlockState cState, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
         if(!level.isClientSide()) {
-
+            System.out.println(cState.getValue(WATERLOGGED));
         }
 
-        return InteractionResult.sidedSuccess(!level.isClientSide());
+        return super.use(cState, level, pos, player, interactionHand, blockHitResult);
+        //return InteractionResult.sidedSuccess(!level.isClientSide());
     }
 }

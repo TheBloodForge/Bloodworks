@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "bloodworks:blocks/block_flesh2",
+    "top": "bloodworks:blocks/block_flesh2",
+    "side": "bloodworks:blocks/block_flesh2"
+  }
+}

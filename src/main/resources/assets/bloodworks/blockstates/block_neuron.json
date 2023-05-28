@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "bloodworks:block/block_blood_tank"
+      "model": "bloodworks:block/block_neuron"
     }
   }
 }

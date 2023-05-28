@@ -1,0 +1,42 @@
+{
+  "variants": {
+    "type=bottom": [
+      {"model": "bloodworks:block/block_flesh_slab_1", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_1", "y":  90 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_1", "y":  180 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_1", "y":  270 , "weight": 10},
+
+      {"model": "bloodworks:block/block_flesh_slab_2", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_2", "y":  90 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_2", "y":  180 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_2", "y":  270 , "weight": 10}
+    ],
+    "type=double": [
+      {"model": "bloodworks:block/block_flesh_1", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_1", "y":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_1", "x":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_1", "z":  90, "weight": 10},
+
+      {"model": "bloodworks:block/block_flesh_2", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_2", "y":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_2", "x":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_2", "z":  90, "weight": 10},
+
+      {"model": "bloodworks:block/block_flesh_3", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_3", "y":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_3", "x":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_3", "z":  90, "weight": 10}
+    ],
+    "type=top": [
+      {"model": "bloodworks:block/block_flesh_slab_top_1", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_top_1", "y":  90 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_top_1", "y":  180 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_top_1", "y":  270 , "weight": 10},
+
+      {"model": "bloodworks:block/block_flesh_slab_top_2", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_top_2", "y":  90 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_top_2", "y":  180 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_slab_top_2", "y":  270 , "weight": 10}
+    ]
+  }
+}

@@ -2,6 +2,7 @@ package com.wiggle1000.bloodworks.Client.BlockRenderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector4f;
 import com.wiggle1000.bloodworks.Blocks.BlockEntities.BE_Neuron;
 import com.wiggle1000.bloodworks.Config.BloodworksCommonConfig;
 import com.wiggle1000.bloodworks.Globals;
@@ -65,7 +66,7 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
         long totalTicks = Minecraft.getInstance().level.getGameTime();
 
         //TODO: why no transparent :(
-        VertexConsumer buffer = RenderHelper.StartRenderingTranslucent(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_neuron.png"));
+        VertexConsumer buffer = RenderHelper.StartRenderingTranslucentEmissive(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_neuron.png"));
         poseStack.translate(0.5,0.5,0.5);
 
         DrawNeuron(buffer, poseStack, totalTicks, combinedLight, blockPos);
@@ -99,13 +100,14 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
             Vec3 vertexC = neuronCenter.add(up.scale( NEURON_SIZE/2)).add(right.scale(-NEURON_SIZE/2));
             Vec3 vertexD = neuronCenter.add(up.scale(-NEURON_SIZE/2)).add(right.scale(-NEURON_SIZE/2));
 
-            RenderHelper.DoQuad(buffer, poseStack.last().pose(),
+            RenderHelper.DoQuadWithColor(buffer, poseStack.last().pose(),
                     vertexA, vertexB, vertexC, vertexD,
                     new Vec2(1, 0.25f * (neuronFrame+1)),
                     new Vec2(1, 0.25f * neuronFrame),
                     new Vec2(0, 0.25f * neuronFrame),
                     new Vec2(0, 0.25f * (neuronFrame+1)),
-                    0xFFFFFF);
+                    combinedLight,
+                    new Vector4f(1f, 1f, 1f, 0.5f));
 
         }
         poseStack.popPose();
