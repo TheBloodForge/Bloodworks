@@ -29,12 +29,12 @@ public class BlockRegistry
     public record BlockEntityRegister(RegistryObject<Block> block, RegistryObject<BlockEntityType<?>> blockEntity, RegistryObject<Item> item){}
     public record BlockFamily(RegistryPair blockBase, RegistryPair blockStair, RegistryPair blockSlab, RegistryPair blockWall){}
 
-    public static final BlockFamily BLOCK_COAGULATED = registerAllTypes("block_coagulated_blood");
-    public static final BlockFamily BLOCK_FLESH                       = registerAllTypes("block_flesh");
+    public static final BlockFamily BLOCK_COAGULATED             = registerAllTypes("block_coagulated_blood");
+    public static final BlockFamily BLOCK_FLESH                  = registerAllTypes("flesh");
 
-    public static final RegistryPair BLOCK_FLESH_LIGHT                 = createBlock("block_flesh_light",              () -> new BlockFleshLight(false));
-    public static final RegistryPair BLOCK_FLESH_LIGHT_LARGE           = createBlock("block_flesh_light_large",        () -> new BlockFleshLight(true));
-    public static final RegistryPair BLOCK_FLESH_PORTHOLE              = createBlock("block_flesh_porthole",           () -> new BlockBloodyTransparentBase("Flesh with a window embedded.", "Used for decoration."));
+    public static final RegistryPair BLOCK_FLESH_LIGHT           = createBlock("flesh_light",        () -> new BlockFleshLight(false));
+    public static final RegistryPair BLOCK_FLESH_LIGHT_LARGE     = createBlock("flesh_light_large",  () -> new BlockFleshLight(true));
+    public static final RegistryPair BLOCK_FLESH_PORTHOLE        = createBlock("flesh_porthole",     () -> new BlockBloodyTransparentBase("Flesh with a window embedded.", "Used for decoration."));
 
 
     public static final BlockEntityRegister BLOCK_INFUSION_CHAMBER = createBlockEntity2(
@@ -62,7 +62,7 @@ public class BlockRegistry
 
     private static RegistryPair createBlock(String name, Supplier<Block> o)
     {
-        RegistryObject<Block> bro = BLOCKS.register(name, o);
+        RegistryObject<Block> bro = BLOCKS.register("block_" + name, o);
         RegistryObject<Item> iro = ItemRegistry.ITEMS.register(name, () -> new BloodworksBlockItem(bro.get()));
         return new RegistryPair(bro, iro);
     }
@@ -93,6 +93,7 @@ public class BlockRegistry
 
     private static BlockFamily registerAllTypes(String name)
     {
+        name = "block_" + name;
         RegistryPair block = createBlock(name, BlockBloodyBase::new);
         RegistryPair blockStair = createBlock(name + "_stairs", BlockBloodyStairsBase::new);
         RegistryPair blockSlab = createBlock(name + "_slab", BlockBloodySlabBase::new);
