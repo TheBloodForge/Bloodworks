@@ -23,7 +23,6 @@ public class ItemProvidor extends ItemModelProvider
     {
         System.out.println("REGGING MODELS");
         registerBucket(FluidRegistry.FLUID_BLOOD.source);
-        registerBucket(FluidRegistry.FLUID_LEMONADE.source);
         registerBucket(FluidRegistry.FLUID_CRANIAL.source);
         System.out.println("TRIGGERED REGGY MODELS");
     }
