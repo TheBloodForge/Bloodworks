@@ -12,7 +12,7 @@ import java.util.*;
 public class BE_Neuron extends BlockEntity
 {
     List<BlockPos> neuronLocations = new ArrayList<>();
-    private String NEURAL_ID = "";
+    private String NEURAL_ID;
     public BE_Neuron(BlockPos pos, BlockState blockState)
     {
         super(BlockRegistry.BLOCK_NEURON.blockEntity().get(), pos, blockState);
@@ -36,9 +36,7 @@ public class BE_Neuron extends BlockEntity
     {
         nbt.putString("neural_id", NEURAL_ID);
         CompoundTag posTags = new CompoundTag(); //CompoundTag.TAG_LIST
-        neuronMap.forEach((neuronID, neuronPos) -> {
-            posTags.putIntArray(neuronID, getIntArrFromPos(neuronPos));
-        });
+        neuronMap.forEach((neuronID, neuronPos) -> posTags.putIntArray(neuronID, getIntArrFromPos(neuronPos)));
         nbt.put("NeuronPositions", posTags);
         super.saveAdditional(nbt);
     }
