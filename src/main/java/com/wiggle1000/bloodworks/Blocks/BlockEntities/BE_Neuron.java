@@ -12,7 +12,7 @@ import java.util.*;
 public class BE_Neuron extends BlockEntity
 {
     List<BlockPos> neuronLocations = new ArrayList<>();
-    private static String NEURAL_ID = "";
+    private String NEURAL_ID = "";
     public BE_Neuron(BlockPos pos, BlockState blockState)
     {
         super(BlockRegistry.BLOCK_NEURON.blockEntity().get(), pos, blockState);
