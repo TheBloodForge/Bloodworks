@@ -3,15 +3,19 @@ package com.wiggle1000.bloodworks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
 public class ClientUtils
 {
-    public static void AddChatComponents(List<Component> components, String selfQuote, String use)
+    public static void AddChatComponents(List<Component> components, ItemStack stack)
     {
         if (Screen.hasShiftDown())
         {
+            String selfQuote    = Component.translatable(stack.getItem().getDescriptionId() + ".selfquote").getString();
+            String use          = Component.translatable(stack.getItem().getDescriptionId() + ".use"      ).getString();
+
             components.add(Component.literal("\"" + selfQuote + "\"").withStyle(ChatFormatting.DARK_RED));
             String[] useWords = use.split(" ");
             int lineLenLimit = 30;

@@ -35,11 +35,13 @@ public class BlockFleshLight extends BlockOmniBase
     {
         if(isLarge)
         {
-            ClientUtils.AddChatComponents(components, "...No comment.", "Used for decoration.");
+            ClientUtils.AddChatComponents(components, stack);
+            //ClientUtils.AddChatComponents(components, "...No comment.", "Used for decoration.");
         }
         else
         {
-            ClientUtils.AddChatComponents(components, "Wow, this joke is pretty on the nose.", "Used for decoration.");
+            ClientUtils.AddChatComponents(components, stack);
+            //ClientUtils.AddChatComponents(components, "Wow, this joke is pretty on the nose.", "Used for decoration.");
         }
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }

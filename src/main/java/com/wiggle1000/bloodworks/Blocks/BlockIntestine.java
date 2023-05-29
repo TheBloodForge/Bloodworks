@@ -55,7 +55,7 @@ public class BlockIntestine extends BaseEntityBlock
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
     {
-        ClientUtils.AddChatComponents(components, "Some ..Intestines? Smells funny.", "Function: Processes mashed foods to produce blood nutrients.");
+        ClientUtils.AddChatComponents(components, stack);
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }
 

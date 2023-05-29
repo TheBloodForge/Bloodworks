@@ -59,7 +59,7 @@ public class BlockBrainInteriorBase extends BaseEntityBlock implements SimpleCra
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
     {
-        ClientUtils.AddChatComponents(components, selfQuoteText, useText);
+        ClientUtils.AddChatComponents(components, stack);
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }
 

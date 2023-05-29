@@ -21,19 +21,7 @@ import java.util.List;
 @SuppressWarnings({"NullableProblems", "Unused", "unused"})
 public class BlockBloodyTransparentBase extends Block
 {
-    private String selfQuoteText = "Clotted blood. Still a bit mushy..";
-    private String useText = "Used for decoration";
     public BlockBloodyTransparentBase()
-    {
-        super(
-                Properties
-                        .of(Material.STONE)
-                        .strength(3f, 5f)
-                        .sound(SoundType.SLIME_BLOCK)
-        );
-    }
-
-    public BlockBloodyTransparentBase(String selfQuote, String use)
     {
         super(
                 Properties
@@ -42,14 +30,12 @@ public class BlockBloodyTransparentBase extends Block
                         .sound(SoundType.SLIME_BLOCK)
                         .noOcclusion()
         );
-        if(selfQuoteText != null) selfQuoteText = selfQuote;
-        if(useText != null) useText = use;
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
     {
-        ClientUtils.AddChatComponents(components, selfQuoteText, useText);
+        ClientUtils.AddChatComponents(components, stack);
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }
 

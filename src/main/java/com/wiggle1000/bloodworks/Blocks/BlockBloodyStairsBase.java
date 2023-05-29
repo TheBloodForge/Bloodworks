@@ -43,7 +43,7 @@ public class BlockBloodyStairsBase extends StairBlock
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
     {
-        ClientUtils.AddChatComponents(components, "Clotted blood stairs. Still a bit mushy..", "Used for decoration.");
+        ClientUtils.AddChatComponents(components, stack);
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }
 }

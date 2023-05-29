@@ -43,7 +43,7 @@ public class BE_Neuron extends BlockEntity
     {
     }
 
-    HashMap<String, BlockPos> neuronMap = new HashMap<>();
+    public HashMap<String, BlockPos> neuronMap = new HashMap<>();
     @Override
     protected void saveAdditional(CompoundTag nbt)
     {
@@ -77,6 +77,7 @@ public class BE_Neuron extends BlockEntity
             if (level.getBlockEntity(firstNeuronPos) instanceof BE_Neuron firstNeuron && level.getBlockEntity(pos) instanceof BE_Neuron secondNeuron)
             {
                 firstNeuron.neuronMap.put(secondNeuron.getNeuralID(), pos);
+                System.out.println("Made a new friend: " + firstNeuronPos.toShortString() + " <3 " + pos.toShortString());
                 firstNeuronPos = null;
                 firstNeuron.syncNeuron();
             }
@@ -102,11 +103,11 @@ public class BE_Neuron extends BlockEntity
     public void unwrapNBT(CompoundTag nbt)
     {
         neuronMap.clear();
-        CompoundTag posTags = nbt.getCompound("NeuronPositions");
-        Set<String> neuronIds = posTags.getAllKeys();
+        //CompoundTag posTags = nbt.getCompound("NeuronPositions");
+        Set<String> neuronIds = nbt.getAllKeys();
         for (String neuronId : neuronIds)
         {
-            int[] posArr = posTags.getIntArray(neuronId);
+            int[] posArr = nbt.getIntArray(neuronId);
             neuronMap.put(neuronId, new BlockPos(posArr[0], posArr[1], posArr[2]));
         }
     }

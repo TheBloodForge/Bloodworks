@@ -20,21 +20,12 @@ import java.util.List;
 @SuppressWarnings({"NullableProblems", "Unused", "unused"})
 public class GenericBlockBase extends Block
 {
-    private String selfQuoteText = "Clotted blood. Still a bit mushy..";
-    private String useText = "Used for decoration";
 
     private boolean isHalfTransparent = false;
 
     public GenericBlockBase(Properties props)
     {
         super(props);
-    }
-
-    public GenericBlockBase(String selfQuote, String use, Properties props)
-    {
-        super(props);
-        if(selfQuoteText != null) selfQuoteText = selfQuote;
-        if(useText != null) useText = use;
     }
 
     public GenericBlockBase withGlasslikeProperties()
@@ -51,7 +42,7 @@ public class GenericBlockBase extends Block
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
     {
-        ClientUtils.AddChatComponents(components, selfQuoteText, useText);
+        ClientUtils.AddChatComponents(components, stack);
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }
 

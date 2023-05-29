@@ -2,12 +2,17 @@ package com.wiggle1000.bloodworks;
 
 import com.mojang.logging.LogUtils;
 import com.wiggle1000.bloodworks.Registry.BlockRegistry;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.synth.SimplexNoise;
 import org.slf4j.Logger;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings("unused")
@@ -28,6 +33,15 @@ public class Globals
         {
             return new ItemStack(BlockRegistry.BLOCK_INTESTINE.item().get());
         }
+        @Override
+        public void fillItemList(NonNullList<ItemStack> stacksInInv) {
+            List<Item> itemList =  Registry.ITEM.stream().sorted(Comparator.comparing(Item::getDescriptionId)).toList();
+            for(Item item:itemList)
+            {
+                item.fillItemCategory(this, stacksInInv);
+            }
+        }
+
     };
 
     public static void LogInfo(String toLog)

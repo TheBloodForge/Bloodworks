@@ -37,17 +37,13 @@ public class BlockRegistry
 
     public static final RegistryPair BLOCK_FLESH_LIGHT           = createBlock("flesh_light",        () -> new BlockFleshLight(false));
     public static final RegistryPair BLOCK_FLESH_LIGHT_LARGE     = createBlock("flesh_light_large",  () -> new BlockFleshLight(true));
-    public static final RegistryPair BLOCK_FLESH_PORTHOLE        = createBlock("flesh_porthole",     () -> new BlockBloodyTransparentBase("Flesh with a window embedded.", "Used for decoration."));
+    public static final RegistryPair BLOCK_FLESH_PORTHOLE        = createBlock("flesh_porthole",     () -> new BlockBloodyTransparentBase());
 
     public static final RegistryPair BLOCK_BRAINCASE            = createBlock("braincase",        () ->
-            new GenericBlockBase("A clean, metal block.", "Used for braincase construction.",
-                    BlockBehaviour.Properties.of(Material.METAL).strength(3f, 7f).sound(SoundType.METAL)
-            ));
+            new GenericBlockBase(BlockBehaviour.Properties.of(Material.METAL).strength(3f, 7f).sound(SoundType.METAL)));
 
     public static final RegistryPair BLOCK_BRAINCASE_WINDOW     = createBlock("braincase_window",        () ->
-        new GenericBlockBase("A clean, metal-framed window.", "Used for braincase construction.",
-                BlockBehaviour.Properties.of(Material.METAL).strength(3f, 4f).sound(SoundType.GLASS).noOcclusion().isSuffocating((a, b, c)->false).isViewBlocking((a, b, c)->false)
-        ).withGlasslikeProperties());
+        new GenericBlockBase(BlockBehaviour.Properties.of(Material.METAL).strength(3f, 4f).sound(SoundType.GLASS).noOcclusion().isSuffocating((a, b, c)->false).isViewBlocking((a, b, c)->false)).withGlasslikeProperties());
 
     public static final BlockEntityRegister BLOCK_INFUSION_CHAMBER = createBlockEntity2(
             "infusion_chamber",

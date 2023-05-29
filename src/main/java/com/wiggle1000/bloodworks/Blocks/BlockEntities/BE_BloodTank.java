@@ -153,7 +153,8 @@ public class BE_BloodTank extends BlockEntityMachineBase
         if (!isParent)
         {
             int[] posArr = nbt.getIntArray("parentPos");
-            parentPos = new BlockPos(posArr[0], posArr[1], posArr[2]);
+            if(posArr.length == 3)
+                parentPos = new BlockPos(posArr[0], posArr[1], posArr[2]);
         } else {
             createParentTank();
             FLUID_TANK.readFromNBT(nbt);
