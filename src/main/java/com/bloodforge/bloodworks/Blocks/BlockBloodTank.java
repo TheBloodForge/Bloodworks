@@ -5,6 +5,7 @@ import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -78,7 +79,12 @@ public class BlockBloodTank extends BlockMachineBase
     @Override
     public RenderShape getRenderShape(BlockState blockState)
     {
-        return RenderShape.INVISIBLE;
+        return RenderShape.MODEL;
+    }
+
+    @Override
+    public VoxelShape getOcclusionShape(BlockState p_60578_, BlockGetter p_60579_, BlockPos p_60580_) {
+        return Shapes.empty();
     }
 
     @Override
@@ -97,6 +103,10 @@ public class BlockBloodTank extends BlockMachineBase
                 tank.breakTank(blockPos, level);
         }
         super.onRemove(cState, level, blockPos, newState, isMoving);
+    }
+
+    public boolean skipRendering(BlockState thisState, BlockState neighbor, Direction direction) {
+        return neighbor.is(this) ? true : false;
     }
 
     @Override

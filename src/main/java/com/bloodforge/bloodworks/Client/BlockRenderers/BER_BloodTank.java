@@ -1,7 +1,6 @@
 package com.bloodforge.bloodworks.Client.BlockRenderers;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_BloodTank;
-import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -31,7 +30,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
     public static final float TANK_THICKNESS = 0.3f;
     public static final float TANK_HEIGHT = 0.2f;
     public static final float TANK_BOTTOM = 0.0f;
-    private static final float FLUID_SIDE_MARGIN = 0.1f, MIN_Y = 1 / 16f, MAX_Y = 1 - MIN_Y;
+    private static final float FLUID_SIDE_MARGIN = 0.0125f, MIN_Y = 1 / 16f, MAX_Y = 1 - MIN_Y;
     private static final float TANKBLOCK_ALLSIDE_MARGIN = 0.0001f; //to prevent z-fighting
     private static final int NUM_FLUID_FRAMES = 32;
     private static final float WAVE_SIZE = 0.02f;
@@ -49,24 +48,20 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
         boolean connectS = shouldConnectTo(tileEntity.getBlockPos().south());
         boolean connectW = shouldConnectTo(tileEntity.getBlockPos().west());
 
-        renderTankOuter(matrixStack.last().pose(), renderTypeBuffer.getBuffer(RenderType.entityCutout(new ResourceLocation(Globals.MODID, "textures/blocks/block_blood_tank.png"))), 1f, 1f, 1f, 1f, combinedLight, tileEntity.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
-
 
         FluidStack fluidStack = tileEntity.getFluidInTank(0);
-//        if (tileEntity.getBlockPos().getX() == -22 && tileEntity.getBlockPos().getY() == 57 && tileEntity.getBlockPos().getZ() == -6)
-//            System.out.println(tileEntity.parentName + " contains " + fluidStack.getAmount());
-        if (fluidStack.isEmpty())
-            return;
-        float relativeFill = tileEntity.getRelativeFill();
-        if (relativeFill <= 0.0f) return;
-        //TODO: this is currently set by every renderer, which isn't really ideal though it should be _fine_ and the fix would be annoying
-        cFluidFrame = (int)Math.floor(Minecraft.getInstance().level.getGameTime()/3.0) % NUM_FLUID_FRAMES; //don't use individual iterators so animations stay in sync
 
-//        if (fluidStack.getFluid().getFluidType().isLighterThanAir())
-//            renderFluid(matrixStack, renderTypeBuffer, fluidStack, relativeFill, 1, combinedLight, tileEntity.getBlockPos());
-//        else
+        //renderTankOuter(matrixStack.last().pose(), renderTypeBuffer.getBuffer(RenderType.entityCutout(new ResourceLocation(Globals.MODID, "textures/blocks/block_blood_tank.png"))), 1f, 1f, 1f, 1f, combinedLight, tileEntity.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
 
-        renderFluid(matrixStack, renderTypeBuffer, fluidStack, 1, relativeFill, combinedLight, tileEntity.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
+        if (!fluidStack.isEmpty()) {
+            float relativeFill = tileEntity.getRelativeFill();
+            if (relativeFill > 0.0f) {
+                //TODO: this is currently set by every renderer, which isn't really ideal though it should be _fine_ and the fix would be annoying
+                cFluidFrame = (int) Math.floor(Minecraft.getInstance().level.getGameTime() / 3.0) % NUM_FLUID_FRAMES; //don't use individual iterators so animations stay in sync
+                renderFluid(matrixStack, renderTypeBuffer, fluidStack, 1, relativeFill, combinedLight, tileEntity.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
+            }
+        }
+
     }
 
     private static boolean shouldConnectTo(BlockPos target)
@@ -92,7 +87,6 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
     private static void renderLiquidQuads(Matrix4f matrix, VertexConsumer vertexBuilder, float r, float g, float b, float alpha, float heightPercentage, int light, BlockPos blockPos,
                                           boolean connectU, boolean connectD, boolean connectN, boolean connectE, boolean connectS, boolean connectW)
     {
-
 
         float height = MIN_Y + (MAX_Y - MIN_Y) * heightPercentage;
         float minU = 0, maxU = 1;
