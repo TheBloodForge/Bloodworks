@@ -38,10 +38,16 @@ public class PacketManager {
                 .consumerMainThread(FluidSyncS2CPacket::handle)
                 .add();
 
-        net.messageBuilder(FluidSyncRequestC2SPacket.class, id(), QUERY_TO_SERVER)
-                .decoder(FluidSyncRequestC2SPacket::new)
-                .encoder(FluidSyncRequestC2SPacket::toBytes)
-                .consumerMainThread(FluidSyncRequestC2SPacket::handle)
+        net.messageBuilder(TankSyncS2CPacket.class, id(), PAYLOAD_TO_CLIENT)
+                .decoder(TankSyncS2CPacket::new)
+                .encoder(TankSyncS2CPacket::toBytes)
+                .consumerMainThread(TankSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(NeuronSyncS2CPacket.class, id(), PAYLOAD_TO_CLIENT)
+                .decoder(NeuronSyncS2CPacket::new)
+                .encoder(NeuronSyncS2CPacket::toBytes)
+                .consumerMainThread(NeuronSyncS2CPacket::handle)
                 .add();
 
         net.messageBuilder(MessageS2CPacket.class, id(), PAYLOAD_TO_CLIENT)

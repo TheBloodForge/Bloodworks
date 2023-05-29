@@ -1,5 +1,7 @@
 package com.wiggle1000.bloodworks.Blocks.BlockEntities;
 
+import com.wiggle1000.bloodworks.Networking.NeuronSyncS2CPacket;
+import com.wiggle1000.bloodworks.Networking.PacketManager;
 import com.wiggle1000.bloodworks.Registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -24,10 +26,21 @@ public class BE_Neuron extends BlockEntity
         return UUID.randomUUID().toString();
     }
 
+    @Override
+    public CompoundTag getUpdateTag()
+    {
+        return wrapNBT();
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag)
+    {
+        unwrapNBT(tag);
+        super.handleUpdateTag(tag);
+    }
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_Neuron entity)
     {
-
     }
 
     HashMap<String, BlockPos> neuronMap = new HashMap<>();
@@ -35,9 +48,7 @@ public class BE_Neuron extends BlockEntity
     protected void saveAdditional(CompoundTag nbt)
     {
         nbt.putString("neural_id", NEURAL_ID);
-        CompoundTag posTags = new CompoundTag(); //CompoundTag.TAG_LIST
-        neuronMap.forEach((neuronID, neuronPos) -> posTags.putIntArray(neuronID, getIntArrFromPos(neuronPos)));
-        nbt.put("NeuronPositions", posTags);
+        nbt.put("NeuronPositions", wrapNBT());
         super.saveAdditional(nbt);
     }
 
@@ -45,15 +56,10 @@ public class BE_Neuron extends BlockEntity
     @Override
     public void load(CompoundTag nbt)
     {
-        CompoundTag posTags = nbt.getCompound("NeuronPositions");
         NEURAL_ID = nbt.getString("neural_id");
-        Set<String> neuronIds = posTags.getAllKeys();
-        for (String neuronId : neuronIds)
-        {
-            int[] posArr = posTags.getIntArray(neuronId);
-            neuronMap.put(neuronId, new BlockPos(posArr[0], posArr[1], posArr[2]));
-        }
+        unwrapNBT(nbt.getCompound("NeuronPositions"));
         super.load(nbt);
+        syncNeuron();
     }
 
     private int[] getIntArrFromPos(BlockPos neuronPos)
@@ -64,12 +70,15 @@ public class BE_Neuron extends BlockEntity
     private static BlockPos firstNeuronPos = null;
     public static void doConnection(BlockPos pos, Level level)
     {
-        if (firstNeuronPos == null) {
+        if (firstNeuronPos == null)
+        {
             firstNeuronPos = pos;
         } else {
-            if (level.getBlockEntity(firstNeuronPos) instanceof BE_Neuron firstNeuron && level.getBlockEntity(pos) instanceof BE_Neuron secondNeuron) {
+            if (level.getBlockEntity(firstNeuronPos) instanceof BE_Neuron firstNeuron && level.getBlockEntity(pos) instanceof BE_Neuron secondNeuron)
+            {
                 firstNeuron.neuronMap.put(secondNeuron.getNeuralID(), pos);
                 firstNeuronPos = null;
+                firstNeuron.syncNeuron();
             }
         }
     }
@@ -77,5 +86,28 @@ public class BE_Neuron extends BlockEntity
     private String getNeuralID()
     {
         return NEURAL_ID;
+    }
+
+    private void syncNeuron() {
+        PacketManager.sendToClients(new NeuronSyncS2CPacket(getBlockPos(), wrapNBT()));
+    }
+
+    private CompoundTag wrapNBT()
+    {
+        CompoundTag posTags = new CompoundTag(); //CompoundTag.TAG_LIST
+        neuronMap.forEach((neuronID, neuronPos) -> posTags.putIntArray(neuronID, getIntArrFromPos(neuronPos)));
+        return posTags;
+    }
+
+    public void unwrapNBT(CompoundTag nbt)
+    {
+        neuronMap.clear();
+        CompoundTag posTags = nbt.getCompound("NeuronPositions");
+        Set<String> neuronIds = posTags.getAllKeys();
+        for (String neuronId : neuronIds)
+        {
+            int[] posArr = posTags.getIntArray(neuronId);
+            neuronMap.put(neuronId, new BlockPos(posArr[0], posArr[1], posArr[2]));
+        }
     }
 }
