@@ -67,7 +67,7 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock
             System.out.println(cState.getValue(WATERLOGGED));
             return super.use(cState, level, pos, player, interactionHand, blockHitResult);
         }
-        if (player.getItemInHand(interactionHand).is(ItemRegistry.ITEM_AXON.get())) {
+        if (player.getItemInHand(interactionHand).is(ItemRegistry.ITEM_NEURAL_CATALYST.get())) {
             if (level.getBlockEntity(pos) instanceof BE_Neuron) {
                 BE_Neuron.doConnection(pos, level);
             }
