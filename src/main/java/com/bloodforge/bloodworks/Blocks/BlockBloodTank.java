@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
@@ -56,6 +57,17 @@ public class BlockBloodTank extends BlockMachineBase
         return BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get().create(pos, state);
     }
 
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        if(level.getBlockEntity(pos) instanceof BE_BloodTank machine) {
+            FluidStack  fluid = machine.getFluidInTank(0);
+            float lightLevel = fluid.getFluid().getFluidType().getLightLevel();
+            lightLevel *=  machine.getRelativeFill();
+            return (int)lightLevel;
+        }
+        return 0;
+    }
+
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
@@ -66,7 +78,7 @@ public class BlockBloodTank extends BlockMachineBase
     @Override
     public RenderShape getRenderShape(BlockState blockState)
     {
-        return RenderShape.MODEL;
+        return RenderShape.INVISIBLE;
     }
 
     @Override
@@ -102,12 +114,18 @@ public class BlockBloodTank extends BlockMachineBase
                         machine.fill(stack, IFluidHandler.FluidAction.EXECUTE);
                         return InteractionResult.sidedSuccess(!level.isClientSide());
                     }
-                } else {
+                } else if(player.getItemInHand(interactionHand).getItem() instanceof BlockItem) {
+                    return super.use(cState, level, pos, player, interactionHand, blockHitResult);
+                }else{
                     PacketManager.sendToClients(new MessageS2CPacket(Component.literal(Component.translatable(machine.getFluidInTank(0).getTranslationKey()).getString() + " : " + machine.getFluidInTank(0).getAmount() + " | " + machine.getTankCapacity(0)), false));
                 }
             }
         }
-
+        if(level.isClientSide())
+        {
+            level.getLightEngine().checkBlock(pos);
+        }
         return InteractionResult.sidedSuccess(!level.isClientSide());
     }
+
 }

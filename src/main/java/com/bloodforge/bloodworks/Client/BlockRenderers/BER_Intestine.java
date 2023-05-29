@@ -309,7 +309,7 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
         float UVYOff = (uvrand1 % 2) / 2f;
         float UVXScale = 1f;
         float UVYScale = 0.62f;
-        double width = 1.0;
+        double width = 0.9;
         double blockAnimOffsetBase = currentBE.getBlockState().getValue(BlockIntestine.INTESTINE_ID);
         Vec3 initialDir = new Vec3(fromDir.getOpposite().step());
         Vec3 initialPos = new Vec3(fromDir.step()).scale(0.5f);

@@ -330,6 +330,7 @@ public class BE_BloodTank extends BlockEntityMachineBase
     {
         TankData.addChild(parentName, childTank.getBlockPos());
         childTank.parentName = parentName;
+        if(!TankData.tankSizes.containsKey(parentName)) return; //wiggle was here
         if (childTank.getBlockPos().getY() < TankData.tankSizes.get(parentName)[1] || childTank.getBlockPos().getY() > TankData.tankSizes.get(parentName)[2])
             updateTankSize();
     }
@@ -354,10 +355,16 @@ public class BE_BloodTank extends BlockEntityMachineBase
     { TankData.getTankByName(parentName).setFluid(fluidStack); }
 
     public int getRelativeHeight()
-    { return getBlockPos().getY() - TankData.tankSizes.get(parentName)[1]; }
+    {
+        if(!TankData.tankSizes.containsKey(parentName)) return 0; //wiggle was here
+        return getBlockPos().getY() - TankData.tankSizes.get(parentName)[1];
+    }
 
     public int getTotalHeight()
-    { return TankData.tankSizes.get(parentName)[0]; }
+    {
+        if(!TankData.tankSizes.containsKey(parentName)) return 0; //wiggle was here
+        return TankData.tankSizes.get(parentName)[0];
+    }
 
     public void breakTank(BlockPos pos, Level level)
     { removeChild(pos); }
