@@ -34,27 +34,25 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
     private static final float WAVE_SIZE = 0.02f;
 
     private static int cFluidFrame = 0;
-//    private static float milliseconds = -1;
 
     @Override
     public void render(BE_BloodTank tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int combinedLight, int combinedOverlay)
     {
         FluidStack fluidStack = tileEntity.getFluidInTank(0);
-        /*milliseconds += partialTicks * 50;
-        if (milliseconds == -1 || milliseconds >= 750f) {
-            milliseconds = 0;
-            PacketManager.sendToServer(new FluidSyncRequestC2SPacket(tileEntity.getBlockPos()));
-        }*/
+//        if (tileEntity.getBlockPos().getX() == -22 && tileEntity.getBlockPos().getY() == 57 && tileEntity.getBlockPos().getZ() == -6)
+//            System.out.println(tileEntity.parentName + " contains " + fluidStack.getAmount());
         if (fluidStack.isEmpty())
             return;
-
+        float relativeFill = tileEntity.getRelativeFill();
+        if (relativeFill <= 0.0f) return;
         //TODO: this is currently set by every renderer, which isn't really ideal though it should be _fine_ and the fix would be annoying
         cFluidFrame = (int)Math.floor(Minecraft.getInstance().level.getGameTime()/3.0) % NUM_FLUID_FRAMES; //don't use individual iterators so animations stay in sync
-        float fillPercentage = Math.min(1, (float) fluidStack.getAmount() / tileEntity.getTankCapacity(0));
-        if (fluidStack.getFluid().getFluidType().isLighterThanAir())
-            renderFluid(matrixStack, renderTypeBuffer, fluidStack, fillPercentage, 1, combinedLight, tileEntity.getBlockPos());
-        else
-            renderFluid(matrixStack, renderTypeBuffer, fluidStack, 1, fillPercentage, combinedLight, tileEntity.getBlockPos());
+
+//        if (fluidStack.getFluid().getFluidType().isLighterThanAir())
+//            renderFluid(matrixStack, renderTypeBuffer, fluidStack, relativeFill, 1, combinedLight, tileEntity.getBlockPos());
+//        else
+
+        renderFluid(matrixStack, renderTypeBuffer, fluidStack, 1, relativeFill, combinedLight, tileEntity.getBlockPos());
     }
 
     private static void renderFluid(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, FluidStack fluidStack, float alpha, float heightPercentage, int combinedLight, BlockPos blockPos)

@@ -43,6 +43,7 @@ public class Globals
         }
 
     };
+    public static final int DEFAULT_CAPACITY = 5000;
 
     public static void LogInfo(String toLog)
     {

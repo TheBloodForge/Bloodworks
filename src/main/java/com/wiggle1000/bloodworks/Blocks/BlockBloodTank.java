@@ -82,15 +82,7 @@ public class BlockBloodTank extends BlockMachineBase
         {
             BlockEntity ent = level.getBlockEntity(blockPos);
             if (ent instanceof BE_BloodTank tank)
-            {
-//                ItemStack stack = new ItemStack(ItemRegistry.BLOCK_BLOOD_TANK.get());
-//                if (stack.getItem() instanceof IFluidHandlerItem) {
-//                    stack.addTagElement(tank.getTags());
-//                }
-//                ItemEntity entity = new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), stack);
-//                level.addFreshEntity(entity);
                 tank.breakTank(blockPos, level);
-            }
         }
         super.onRemove(cState, level, blockPos, newState, isMoving);
     }

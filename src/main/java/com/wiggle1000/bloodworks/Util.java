@@ -1,5 +1,6 @@
 package com.wiggle1000.bloodworks;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -51,4 +52,8 @@ public class Util
         return buffer[0];
     }
 
+    public static int[] getBlockPosAsIntArr(BlockPos pos)
+    {
+        return new int[]{pos.getX(), pos.getY(), pos.getZ()};
+    }
 }

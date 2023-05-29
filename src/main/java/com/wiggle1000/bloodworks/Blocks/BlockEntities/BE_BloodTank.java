@@ -1,13 +1,15 @@
 package com.wiggle1000.bloodworks.Blocks.BlockEntities;
 
+import com.wiggle1000.bloodworks.Globals;
 import com.wiggle1000.bloodworks.Items.TankItem;
-import com.wiggle1000.bloodworks.Networking.PacketManager;
-import com.wiggle1000.bloodworks.Networking.TankSyncS2CPacket;
 import com.wiggle1000.bloodworks.Registry.BlockRegistry;
 import com.wiggle1000.bloodworks.Registry.FluidRegistry;
+import com.wiggle1000.bloodworks.Server.TankData;
+import com.wiggle1000.bloodworks.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,7 +18,6 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,12 +26,20 @@ import java.util.List;
 
 public class BE_BloodTank extends BlockEntityMachineBase
 {
-    static int DEFAULT_CAPACITY = 10000;
     private LazyOptional<IFluidHandler> lazyFluidHandler = LazyOptional.empty();
-    boolean isParent = false;
-    BlockPos parentPos = null;
+    public String parentName = "";
 
-    public final List<BlockPos> children = new ArrayList<>();
+    public BE_BloodTank(BlockPos pos, BlockState state)
+    {
+        super(BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), pos, state);
+    }
+    public BE_BloodTank(TankItem titem, BlockPos pos, BlockState state)
+    {
+        super(BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), pos, state);
+    }
+
+    // ####################### FORGE CAPABILITIES #######################
+
     protected final ContainerData data = new ContainerData()
     {
         @Override
@@ -52,16 +61,6 @@ public class BE_BloodTank extends BlockEntityMachineBase
         }
     };
 
-    public BE_BloodTank(BlockPos pos, BlockState state)
-    {
-        super(BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), pos, state);
-    }
-    public BE_BloodTank(TankItem titem, BlockPos pos, BlockState state)
-    {
-        super(BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), pos, state);
-    }
-
-
     public ContainerData getContainerData()
     { return this.data; }
 
@@ -72,8 +71,8 @@ public class BE_BloodTank extends BlockEntityMachineBase
     {
         return switch (index)
                 {
-                    case 0 -> this.FLUID_TANK.getFluidAmount();
-                    case 1 -> this.FLUID_TANK.getCapacity();
+                    case 0 -> TankData.getTankByName(parentName).getFluidAmount();
+                    case 1 -> TankData.getTankByName(parentName).getCapacity();
                     default -> 0;
                 };
     }
@@ -109,9 +108,9 @@ public class BE_BloodTank extends BlockEntityMachineBase
     public void onLoad()
     {
         super.onLoad();
-        lazyFluidHandler = LazyOptional.of(() -> FLUID_TANK);
-        if (!getLevel().isClientSide)
-            syncFluid();
+        lazyFluidHandler = LazyOptional.of(() -> TankData.getTankByName(parentName));
+        if (getLevel() != null && !getLevel().isClientSide)
+            TankData.syncFluid(parentName);
     }
 
     @Override
@@ -121,128 +120,125 @@ public class BE_BloodTank extends BlockEntityMachineBase
         lazyFluidHandler.invalidate();
     }
 
-    //  NBT STUFF
+// ####################### END OF FORGE CAPABILITIES #######################
+
+    public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_BloodTank entity)
+    {
+        if (level.isClientSide()) {
+            if (entity.parentName.isEmpty())
+                entity.setTank(blockPos, level);
+            return;
+        }
+        if (!entity.ensureTank()) return;
+
+        setChanged(level, blockPos, blockState);
+
+        List<IFluidHandler> fluidConsumers = getNeighborFluidHandlers(blockPos, level);
+        if (fluidConsumers.isEmpty()) return;
+
+        for (IFluidHandler fluidConsumer : fluidConsumers)
+            fluidConsumer.fill(entity.drain(Math.min(1000, fluidConsumer.getTankCapacity(0) - fluidConsumer.getFluidInTank(0).getAmount()), FluidAction.EXECUTE), FluidAction.EXECUTE);
+    }
+
+// ####################### NBT STUFF #######################
+
+    public void readData(CompoundTag nbt)
+    {
+        createParentTank();
+        TankData.getTankByName(parentName).readFromNBT(nbt);
+    }
+
     @Override
     protected void saveAdditional(CompoundTag nbt)
     {
-        if (FLUID_TANK != null)
-            nbt = FLUID_TANK.writeToNBT(nbt);
-        nbt.putBoolean("isParent", isParent);
-        if (!isParent && parentPos != null)
-            nbt.putIntArray("parentPos", new int[]{parentPos.getX(), parentPos.getY(), parentPos.getZ()});
-        if (isParent)
-        {
-            nbt.put("children", getChildrenTag());
-        }
+        if (level != null && level.isClientSide) return;
+        nbt.putString("tankName", parentName);
+        saveTankToWorld();
         super.saveAdditional(nbt);
     }
 
-    private CompoundTag getChildrenTag() {
+    private void saveTankToWorld()
+    {
+        CompoundTag tankTag = new CompoundTag();
+        CompoundTag localTankTag = new CompoundTag();
+        localTankTag = TankData.getTankByName(parentName).writeToNBT(localTankTag);
+        localTankTag.put("children", wrapTag());
+        tankTag.put(parentName, localTankTag);
+        TankData.TankTags.remove(parentName);
+        TankData.TankTags.put(parentName, localTankTag);
+        if (level != null)
+            TankData.save(level);
+    }
+
+    private CompoundTag wrapTag() {
+        if (TankData.children.isEmpty() || parentName.isEmpty() || !TankData.children.containsKey(parentName))
+            return new CompoundTag();
         CompoundTag childrenTags = new CompoundTag();
-        for (BlockPos child : children)
-        {
-            childrenTags.putIntArray(child.toShortString(), getBlockPosAsIntArr(child));
-        }
+        childrenTags.putIntArray(getBlockPos().toShortString(), Util.getBlockPosAsIntArr(getBlockPos()));
+        for (BlockPos child : TankData.children.get(parentName))
+            childrenTags.putIntArray(child.toShortString(), Util.getBlockPosAsIntArr(child));
         return childrenTags;
     }
 
     @Override
     public void load(CompoundTag nbt)
     {
-        isParent = nbt.getBoolean("isParent");
-        if (!isParent)
+        parentName = nbt.getString("tankName");
+        if (!parentName.isEmpty() && level != null)
         {
-            int[] posArr = nbt.getIntArray("parentPos");
-            if(posArr.length == 3)
-                parentPos = new BlockPos(posArr[0], posArr[1], posArr[2]);
-        } else {
-            createParentTank();
-            FLUID_TANK.readFromNBT(nbt);
-            loadChildrenTagCompound(nbt.getCompound("children"));
+            TankData.read(level);
+            CompoundTag tag = TankData.TankTags.getCompound(parentName);
+            CompoundTag childrenTags = tag.getCompound("children");
+            TankData.getTankByName(parentName).readFromNBT(tag);
+            unwrapTag(childrenTags);
         }
+        TankData.syncFluid(parentName);
         super.load(nbt);
     }
 
-    public void loadChildrenTagCompound(CompoundTag childrenTag)
+    public void unwrapTag(CompoundTag childrenTag)
     {
-        CompoundTag childrenTags = childrenTag.getCompound("children");
-        for (String childPos : childrenTags.getAllKeys())
+        for (String childPos : childrenTag.getAllKeys())
         {
-            int[] childPosAsIntArr = childrenTags.getIntArray(childPos);
-            children.add(new BlockPos(childPosAsIntArr[0], childPosAsIntArr[1], childPosAsIntArr[2]));
+            int[] childPosAsIntArr = childrenTag.getIntArray(childPos);
+            if (childPosAsIntArr.length == 3)
+                TankData.addChild(parentName, new BlockPos(childPosAsIntArr[0], childPosAsIntArr[1], childPosAsIntArr[2]));
         }
-        adoptChildren(children);
     }
+// ####################### END NBT #######################
 
-    public void readData(CompoundTag nbt)
-    {
-        createParentTank();
-        FLUID_TANK.readFromNBT(nbt);
-    }
-
-    private int tickCounter = 5;
-    public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_BloodTank entity)
-    {
-        if (level.isClientSide())
-        { return; }
-
-        if (!entity.ensureTank()) return;
-
-        setChanged(level, blockPos, blockState);
-        List<IFluidHandler> fluidConsumers = getNeighborFluidHandlers(blockPos, level);
-        if (fluidConsumers.isEmpty()) return;
-
-        for (IFluidHandler fluidConsumer : fluidConsumers)
-            fluidConsumer.fill(new FluidStack(entity.FLUID_TANK.getFluid().getRawFluid(), 1000), FluidAction.EXECUTE);
-    }
-
-    private FluidTank FLUID_TANK = null;
-
+// ####################### FLUID TANK #######################
     @Override
     public int getTanks()
-    {
-        return 1;
-    }
+    { return 1; }
 
     @Override
     public @NotNull FluidStack getFluidInTank(int tank)
-    {
-        return FLUID_TANK == null ? FluidStack.EMPTY : FLUID_TANK.getFluid();
-    }
+    { return !TankData.hasTankByName(parentName) ? FluidStack.EMPTY : TankData.getTankByName(parentName).getFluid(); }
 
     @Override
     public int getTankCapacity(int tank)
-    {
-        return FLUID_TANK == null ? 0 : FLUID_TANK.getCapacity();
-    }
+    { return !TankData.hasTankByName(parentName) ? 0 : TankData.getTankByName(parentName).getCapacity(); }
 
     @Override
     public boolean isFluidValid(int tank, @NotNull FluidStack stack)
-    {
-        return FLUID_TANK != null && FLUID_TANK.isFluidValid(stack);
-    }
+    { return TankData.hasTankByName(parentName) && TankData.getTankByName(parentName).isFluidValid(stack); }
 
     @Override
     public int fill(FluidStack resource, IFluidHandler.FluidAction action)
     {
         if (!isFluidValid(1, resource) || resource.getAmount() <= 0)
-        {
             return 0;
-        }
-        return FLUID_TANK.fill(resource, action);
+        return TankData.getTankByName(parentName).fill(resource, action);
     }
 
     @Override
     public @NotNull FluidStack drain(int maxDrain, IFluidHandler.FluidAction action)
-    {
-        return FLUID_TANK.drain(maxDrain, action);
-    }
+    { return TankData.getTankByName(parentName).drain(maxDrain, action); }
 
     @Override
     public @NotNull FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action)
-    {
-        return FLUID_TANK.drain(resource, action);
-    }
+    { return TankData.getTankByName(parentName).drain(resource, action); }
 
     private static List<BE_BloodTank> getNeighborTanks(BlockPos blockPos, Level level)
     {
@@ -263,193 +259,106 @@ public class BE_BloodTank extends BlockEntityMachineBase
         return handlers;
     }
 
+// ####################### END OF FLUID TANK #######################
+
+
+
+// ######################## CUSTOM STUFF ########################
+
     @Override
     public CompoundTag getUpdateTag()
     {
-        CompoundTag syncTag = new CompoundTag();
-        syncTag.putBoolean("isParent", isParent);
-        if (isParent)
-        {
-            syncTag.put("children", getChildrenTag());
-            syncTag = FLUID_TANK.writeToNBT(syncTag);
-        }
-        return syncTag;
+        TankData.read(level);
+        CompoundTag clientPackage = new CompoundTag();
+        clientPackage.put("TankTags", TankData.TankTags);
+        clientPackage.putString("parentName", parentName);
+        return TankData.TankTags;
     }
 
     @Override
     public void handleUpdateTag(CompoundTag tag)
     {
-        isParent = tag.getBoolean("isParent");
-        if (isParent)
-        {
-            if (FLUID_TANK == null) createParentTank();
-            FLUID_TANK.readFromNBT(tag);
-            loadChildrenTagCompound((CompoundTag) tag.get("children"));
-        }
-        super.handleUpdateTag(tag);
+        parentName = tag.getString("parentName");
+        TankData.TankTags = tag.getCompound("TankTags");
+        createParentTank();
     }
 
-    public void breakTank(BlockPos pos, Level level)
-    {
-        if (isParent && !getNeighborTanks(pos, level).isEmpty())
-        { // @Keldon manage odd case of parent breaking connected groups
-            getNeighborTanks(pos, level).get(0).adoptChildren(getChildren());
-        }
-        if (FLUID_TANK != null && !FLUID_TANK.getFluid().isEmpty())
-        {
-            int numTanks = getParent().children.size() + 1;
-            int relativeStorage = FLUID_TANK.getFluidAmount() / numTanks;
-            getParent().removeChild(pos);
-            FLUID_TANK.drain(relativeStorage, FluidAction.EXECUTE);
-        }
+    public float getRelativeFill() {
+        float fillPercentage = Math.min(1, (float) TankData.getTankByName(parentName).getFluidAmount() / TankData.getTankByName(parentName).getCapacity());
+        return Mth.clamp((fillPercentage * getTotalHeight()) - getRelativeHeight(), 0f, 1f);
+    }
+
+    public int getFluidContained() {
+        if (getRelativeFill() == 0) return 0;
+        if (getRelativeFill() == 1) return Globals.DEFAULT_CAPACITY;
+        return Math.round(getRelativeFill() * Globals.DEFAULT_CAPACITY);
     }
 
     private void removeChild(BlockPos pos)
     {
-        children.remove(pos);
-        updateTankCapacity();
+        if (parentName.isEmpty() || !TankData.children.containsKey(parentName)) return;
+        TankData.removeChild(parentName, pos);
+        TankData.getTankByName(parentName).drain(getFluidContained(), FluidAction.EXECUTE);
+        if (pos.getY() == TankData.tankSizes.get(parentName)[1] || pos.getY() == TankData.tankSizes.get(parentName)[2])
+            updateTankSize();
     }
 
     private boolean ensureTank()
     {
-        if (FLUID_TANK == null)
+        if (!TankData.hasTankByName(parentName))
             setTank(getBlockPos(), level);
-        return FLUID_TANK != null;
-    }
-
-    private int[] getBlockPosAsIntArr(BlockPos pos)
-    {
-        return new int[]{pos.getX(), pos.getY(), pos.getZ()};
+        return TankData.hasTankByName(parentName);
     }
 
     private void setTank(BlockPos blockPos, Level level)
     {
-        if (!isParent && parentPos != null)
+        List<BE_BloodTank> tanks;
+        if ((tanks = getNeighborTanks(blockPos, level)).isEmpty())
+        { createParentTank(); return; }
+
+        for (BE_BloodTank neighbor : tanks)
+            if (!neighbor.parentName.isEmpty())
+            { neighbor.addChild(this); break; }
+        if (!level.isClientSide && TankData.hasTankByName(parentName))
         {
-            FLUID_TANK = getParentTank();
-            syncFluid();
-            return;
-        }
-        if (!getNeighborTanks(blockPos, level).isEmpty())
-        {
-            for (BE_BloodTank neighborTank : getNeighborTanks(blockPos, level))
-            {
-                if (!neighborTank.isParent && neighborTank.parentPos != null)
-                {
-                    addTank(this, neighborTank.getParent());
-                } else if (neighborTank.isParent) {
-                    addTank(this, neighborTank);
-                }
-            }
-            syncFluid();
-        } else {
-            createParentTank();
-            syncFluid();
+            TankData.syncTankName(blockPos, parentName);
+            TankData.syncFluid(parentName);
         }
     }
 
-    public FluidTank createParentTank()
+    public void addChild(BE_BloodTank childTank)
     {
-        if (FLUID_TANK != null)
-            return FLUID_TANK;
-
-        isParent = true;
-        return FLUID_TANK = new FluidTank(DEFAULT_CAPACITY)
-        {
-            @Override
-            public boolean isFluidValid(FluidStack stack)
-            {
-                return getFluid().getAmount() == 0 || stack.getFluid() == getFluid().getFluid();
-            }
-
-            @Override
-            protected void onContentsChanged()
-            {
-                syncFluid();
-                setChanged();
-                super.onContentsChanged();
-            }
-
-            @Override
-            public int getCapacity()
-            {
-                return super.getCapacity();
-            }
-        };
+        TankData.addChild(parentName, childTank.getBlockPos());
+        childTank.parentName = parentName;
+        if (childTank.getBlockPos().getY() < TankData.tankSizes.get(parentName)[1] || childTank.getBlockPos().getY() > TankData.tankSizes.get(parentName)[2])
+            updateTankSize();
     }
 
-    public void syncFluid()
+    public void createParentTank()
     {
-        if (isParent)
-            PacketManager.sendToClients(new TankSyncS2CPacket(getFluidInTank(0), getChildrenTag(), getParent().getBlockPos()));
+        if (parentName.isEmpty()) parentName = TankData.createNewParent(getBlockPos());
+
+        TankData.syncFluid(parentName);
     }
 
-    public static void addTank(BE_BloodTank tank, BE_BloodTank parent)
+    private void updateTankSize()
     {
-        if (tank == null || parent == null) return;
-        tank.FLUID_TANK = parent.FLUID_TANK;
-        tank.parentPos = parent.getBlockPos();
-        parent.addChild(tank);
+        for (BlockPos child : TankData.children.get(parentName))
+            if (child.getY() > TankData.tankSizes.get(parentName)[2]) TankData.tankSizes.get(parentName)[2] = child.getY();
+            else if (child.getY() < TankData.tankSizes.get(parentName)[1]) TankData.tankSizes.get(parentName)[1] = child.getY();
+
+        TankData.tankSizes.get(parentName)[0] = (TankData.tankSizes.get(parentName)[2] - TankData.tankSizes.get(parentName)[1]) + 1;
     }
-
-    private void adoptChildren(List<BlockPos> childPoses)
-    {
-        isParent = true;
-        children.clear();
-        children.addAll(childPoses);
-
-        for (BlockPos child : children)
-            if (getLevel().getBlockEntity(child) instanceof BE_BloodTank childTank)
-            {
-                childTank.parentPos = getBlockPos();
-                childTank.FLUID_TANK = FLUID_TANK;
-                childTank.isParent = false;
-            } else {
-                System.out.println("PANIK NO CHILD FOUND!");
-            }
-        updateTankCapacity();
-    }
-
-    public void addChild(BE_BloodTank be_bloodTank)
-    {
-        if (isParent)
-        {
-            children.add(be_bloodTank.getBlockPos());
-            updateTankCapacity();
-        }
-    }
-
-    private void updateTankCapacity()
-    {
-        FLUID_TANK.setCapacity(DEFAULT_CAPACITY + (DEFAULT_CAPACITY * children.size()));
-    }
-
-    private FluidTank getParentTank()
-    { return getParent() == null ? createParentTank() : getParent().FLUID_TANK; }
-
-    public List<BlockPos> getChildren()
-    { return children; }
-
-    public BE_BloodTank getParent()
-    { return isParent ? this : getTankAtPos(parentPos, getLevel()); }
-
-    private FluidTank getTank()
-    { return FLUID_TANK; }
 
     public void setFluid(FluidStack fluidStack)
-    { if (FLUID_TANK == null) createParentTank(); FLUID_TANK.setFluid(fluidStack); }
+    { TankData.getTankByName(parentName).setFluid(fluidStack); }
 
-    private BE_BloodTank getTankAtPos(BlockPos tankPos, Level level)
-    {
-        if (tankPos == null)
-        {
-            System.out.println("PANIK");
-            return null;
-        }
+    public int getRelativeHeight()
+    { return getBlockPos().getY() - TankData.tankSizes.get(parentName)[1]; }
 
-        if (level.getBlockEntity(tankPos) instanceof BE_BloodTank bloodTank)
-            return bloodTank;
+    public int getTotalHeight()
+    { return TankData.tankSizes.get(parentName)[0]; }
 
-        return null;
-    }
+    public void breakTank(BlockPos pos, Level level)
+    { removeChild(pos); }
 }

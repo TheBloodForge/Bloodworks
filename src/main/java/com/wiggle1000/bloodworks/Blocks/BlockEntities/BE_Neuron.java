@@ -3,6 +3,7 @@ package com.wiggle1000.bloodworks.Blocks.BlockEntities;
 import com.wiggle1000.bloodworks.Networking.NeuronSyncS2CPacket;
 import com.wiggle1000.bloodworks.Networking.PacketManager;
 import com.wiggle1000.bloodworks.Registry.BlockRegistry;
+import com.wiggle1000.bloodworks.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -62,11 +63,6 @@ public class BE_Neuron extends BlockEntity
         syncNeuron();
     }
 
-    private int[] getIntArrFromPos(BlockPos neuronPos)
-    {
-        return new int[]{neuronPos.getX(), neuronPos.getY(), neuronPos.getZ()};
-    }
-
     private static BlockPos firstNeuronPos = null;
     public static void doConnection(BlockPos pos, Level level)
     {
@@ -96,7 +92,7 @@ public class BE_Neuron extends BlockEntity
     private CompoundTag wrapNBT()
     {
         CompoundTag posTags = new CompoundTag(); //CompoundTag.TAG_LIST
-        neuronMap.forEach((neuronID, neuronPos) -> posTags.putIntArray(neuronID, getIntArrFromPos(neuronPos)));
+        neuronMap.forEach((neuronID, neuronPos) -> posTags.putIntArray(neuronID, Util.getBlockPosAsIntArr(neuronPos)));
         return posTags;
     }
 
