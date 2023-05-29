@@ -1,14 +1,11 @@
 package com.bloodforge.bloodworks.Blocks;
 
+import com.bloodforge.bloodworks.Particles.ParticleHelper;
 import com.bloodforge.bloodworks.Registry.ParticleRegistry;
 import com.bloodforge.bloodworks.Util;
-import com.bloodforge.bloodworks.Particles.ParticleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -18,9 +15,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 @SuppressWarnings({"NullableProblems", "Unused", "deprecation"})
 public class BlockOmniBase extends FaceAttachedHorizontalDirectionalBlock
@@ -45,13 +39,6 @@ public class BlockOmniBase extends FaceAttachedHorizontalDirectionalBlock
         WEST_AABB   = Util.RotateVoxelShapeOnYAxis(1, SOUTH_AABB);
         CEILING_AABB_X = Util.RotateVoxelShapeOnZAxis(2, FLOOR_AABB_X);
         CEILING_AABB_Z = Util.RotateVoxelShapeOnYAxis(1, CEILING_AABB_X);
-    }
-
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
-    {
-        super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }
 
     @Override

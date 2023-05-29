@@ -1,18 +1,13 @@
 package com.bloodforge.bloodworks.Blocks;
 
-import com.bloodforge.bloodworks.ClientUtils;
+import com.bloodforge.bloodworks.Particles.ParticleHelper;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.bloodforge.bloodworks.Registry.FluidRegistry;
 import com.bloodforge.bloodworks.Registry.ParticleRegistry;
-import com.bloodforge.bloodworks.Particles.ParticleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -27,8 +22,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 @SuppressWarnings({"NullableProblems", "Unused", "unused"})
 public class BlockBrainInteriorBase extends BaseEntityBlock implements SimpleCranialFluidLoggedBlock
@@ -48,19 +41,6 @@ public class BlockBrainInteriorBase extends BaseEntityBlock implements SimpleCra
                 .isViewBlocking((blockState, blockGetter, blockPos) -> false)
         );
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
-    }
-
-    public void SetQuotes(String selfQuote, String use)
-    {
-        if(selfQuoteText != null) selfQuoteText = selfQuote;
-        if(useText != null) useText = use;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
-    {
-        ClientUtils.AddChatComponents(components, stack);
-        super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }
 
     @Override

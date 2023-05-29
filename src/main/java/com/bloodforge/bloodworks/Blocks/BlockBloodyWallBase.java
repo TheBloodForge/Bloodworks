@@ -17,4 +17,5 @@ public class BlockBloodyWallBase extends WallBlock
                         .sound(SoundType.SLIME_BLOCK)
         );
     }
+
 }

@@ -28,7 +28,6 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock
     public static final BooleanProperty OUTPUT = BooleanProperty.create("output");
     public BlockNeuron()
     {
-        SetQuotes("A living neuron. A bit large, isn't it?", "Must be placed inside a Braincase.");
     }
 
     // -------- Block entity stuff --------

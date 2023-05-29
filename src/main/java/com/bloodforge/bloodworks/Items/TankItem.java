@@ -1,8 +1,8 @@
 package com.bloodforge.bloodworks.Items;
 
-import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_BloodTank;
 import com.bloodforge.bloodworks.Client.ItemRenderers.TankRenderer;
+import com.bloodforge.bloodworks.Globals;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -30,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class TankItem extends BlockItem
+public class TankItem extends BloodworksBlockItem
 {
     public final int tankCapacity = 10000;
     public TankItem(Block block)
