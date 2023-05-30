@@ -1,10 +1,12 @@
 package com.bloodforge.bloodworks;
 
-import com.bloodforge.bloodworks.Client.BlockRenderers.BER_BloodTank;
-import com.bloodforge.bloodworks.Client.BlockRenderers.BER_Intestine;
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_BloodTank;
+import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Braincase_Controller;
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Intestine;
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Neuron;
+import com.bloodforge.bloodworks.Client.BlockRenderers.BER_BloodTank;
+import com.bloodforge.bloodworks.Client.BlockRenderers.BER_Braincase_Controller;
+import com.bloodforge.bloodworks.Client.BlockRenderers.BER_Intestine;
 import com.bloodforge.bloodworks.Client.BlockRenderers.BER_Neuron;
 import com.bloodforge.bloodworks.Client.Screens.InfusionChamberScreen;
 import com.bloodforge.bloodworks.Particles.FleshStepParticle;
@@ -47,6 +49,7 @@ public class ClientProxy
         registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_Intestine>) BlockRegistry.BLOCK_INTESTINE.blockEntity().get(), BER_Intestine::new);
         registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_BloodTank>) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), BER_BloodTank::new);
         registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_Neuron>) BlockRegistry.BLOCK_NEURON.blockEntity().get(), BER_Neuron::new);
+        registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_Braincase_Controller>) BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.blockEntity().get(), BER_Braincase_Controller::new);
 
         ItemBlockRenderTypes.setRenderLayer(FluidRegistry.FLUID_BLOOD.source.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(FluidRegistry.FLUID_BLOOD.flowing.get(), RenderType.translucent());

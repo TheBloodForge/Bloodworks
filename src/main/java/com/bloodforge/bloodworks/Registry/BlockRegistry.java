@@ -1,10 +1,7 @@
 package com.bloodforge.bloodworks.Registry;
 
 import com.bloodforge.bloodworks.Blocks.*;
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_BloodTank;
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_InfusionChamber;
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Intestine;
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Neuron;
+import com.bloodforge.bloodworks.Blocks.BlockEntities.*;
 import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Items.BloodworksBlockItem;
 import net.minecraft.core.BlockPos;
@@ -49,6 +46,12 @@ public class BlockRegistry
             "infusion_chamber",
             BlockInfusionChamber::new,
             BE_InfusionChamber.class
+    );
+
+    public static final BlockEntityRegister BLOCK_BRAINCASE_CONTROLLER = createBlockEntity2(
+            "braincase_controller",
+            BlockBraincaseController::new,
+            BE_Braincase_Controller.class
     );
 
     public static final BlockEntityRegister BLOCK_INTESTINE = createBlockEntity2(

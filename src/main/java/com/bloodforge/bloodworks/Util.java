@@ -56,4 +56,14 @@ public class Util
     {
         return new int[]{pos.getX(), pos.getY(), pos.getZ()};
     }
+
+    public static BlockPos getBlockPosFromIntArr(int[] minCorners)
+    {
+        if(minCorners.length != 3)
+        {
+            Globals.LogError("Is this what dying feels like?");
+            return null;
+        }
+        return new BlockPos(minCorners[0], minCorners[1], minCorners[2]);
+    }
 }
