@@ -1,6 +1,6 @@
 package com.bloodforge.bloodworks.Client.BlockRenderers;
 
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank3;
+import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 
-public class BER_BloodTank implements BlockEntityRenderer<BE_Tank3>
+public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
 {
 
     private final BlockEntityRendererProvider.Context context;
@@ -39,7 +39,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank3>
     private static int cFluidFrame = 0;
 
     @Override
-    public void render(BE_Tank3 tank, float partialTicks, PoseStack poseStack, MultiBufferSource MBR, int cLight, int cOverlay)
+    public void render(BE_Tank tank, float partialTicks, PoseStack poseStack, MultiBufferSource MBR, int cLight, int cOverlay)
     {
         boolean connectU = shouldConnectTo(tank.getBlockPos().above());
         boolean connectD = shouldConnectTo(tank.getBlockPos().below());

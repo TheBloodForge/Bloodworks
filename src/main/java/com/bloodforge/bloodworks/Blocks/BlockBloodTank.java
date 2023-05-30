@@ -1,6 +1,6 @@
 package com.bloodforge.bloodworks.Blocks;
 
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank3;
+import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank;
 import com.bloodforge.bloodworks.ClientUtils;
 import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
@@ -65,16 +65,16 @@ public class BlockBloodTank extends BlockMachineBase
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        BE_Tank3 tank = (BE_Tank3) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get().create(pos, state);
-        List<BE_Tank3> tanks;
+        BE_Tank tank = (BE_Tank) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get().create(pos, state);
+        List<BE_Tank> tanks;
         if ((tanks = getNeighborTanks(pos, ServerLifecycleHooks.getCurrentServer().overworld())).isEmpty())
             tank.setID(TankDataProxy.createNewParent(pos));
         if (tank.getID().isEmpty())
-            for (BE_Tank3 be_tank3 : tanks)
-                if (!be_tank3.getID().isEmpty())
+            for (BE_Tank be_tank : tanks)
+                if (!be_tank.getID().isEmpty())
                 {
-                    tank.setID(be_tank3.getID());
-                    TankDataProxy.addChild(be_tank3.getID(), pos, ServerLifecycleHooks.getCurrentServer().overworld());
+                    tank.setID(be_tank.getID());
+                    TankDataProxy.addChild(be_tank.getID(), pos, ServerLifecycleHooks.getCurrentServer().overworld());
                 }
         return tank;
     }
@@ -89,7 +89,7 @@ public class BlockBloodTank extends BlockMachineBase
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos)
     {
-        if (level.getBlockEntity(pos) instanceof BE_Tank3 tank)
+        if (level.getBlockEntity(pos) instanceof BE_Tank tank)
         {
             FluidStack fluid = tank.getFluidInTank(0);
             float lightLevel = fluid.getFluid().getFluidType().getLightLevel();
@@ -103,7 +103,7 @@ public class BlockBloodTank extends BlockMachineBase
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
     {
-        return createTickerHelper(type, (BlockEntityType<BE_Tank3>) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), BE_Tank3::tick);
+        return createTickerHelper(type, (BlockEntityType<BE_Tank>) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), BE_Tank::tick);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class BlockBloodTank extends BlockMachineBase
         if (cState.getBlock() != newState.getBlock())
         {
             BlockEntity ent = level.getBlockEntity(blockPos);
-            if (ent instanceof BE_Tank3 tank)
+            if (ent instanceof BE_Tank tank)
                 tank.breakTank(blockPos, level);
         }
         super.onRemove(cState, level, blockPos, newState, isMoving);
@@ -147,7 +147,7 @@ public class BlockBloodTank extends BlockMachineBase
     {
         if (!level.isClientSide())
         {
-            if (level.getBlockEntity(pos) instanceof BE_Tank3 machine)
+            if (level.getBlockEntity(pos) instanceof BE_Tank machine)
             {
                 FluidStack stack = FluidStack.EMPTY;
                 ItemStack heldItem;
@@ -180,11 +180,11 @@ public class BlockBloodTank extends BlockMachineBase
         return InteractionResult.sidedSuccess(!level.isClientSide());
     }
 
-    private static List<BE_Tank3> getNeighborTanks(BlockPos blockPos, Level level)
+    private static List<BE_Tank> getNeighborTanks(BlockPos blockPos, Level level)
     {
-        List<BE_Tank3> tanks = new ArrayList<>();
+        List<BE_Tank> tanks = new ArrayList<>();
         for (Direction value : Direction.values())
-            if (level.getBlockEntity(blockPos.relative(value)) instanceof BE_Tank3 tank)
+            if (level.getBlockEntity(blockPos.relative(value)) instanceof BE_Tank tank)
                 tanks.add(tank);
         return tanks;
     }

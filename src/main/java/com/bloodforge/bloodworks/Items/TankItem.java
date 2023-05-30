@@ -1,6 +1,6 @@
 package com.bloodforge.bloodworks.Items;
 
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank3;
+import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank;
 import com.bloodforge.bloodworks.Client.ItemRenderers.TankRenderer;
 import com.bloodforge.bloodworks.Globals;
 import net.minecraft.ChatFormatting;
@@ -199,8 +199,8 @@ public class TankItem extends BloodworksBlockItem
         }
     }
 
-    public BE_Tank3 createTileEntity(BlockPos pos, BlockState state)
+    public BE_Tank createTileEntity(BlockPos pos, BlockState state)
     {
-        return new BE_Tank3(this, pos, state);
+        return new BE_Tank(this, pos, state);
     }
 }

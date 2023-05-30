@@ -73,7 +73,7 @@ public class BlockRegistry
     public static final BlockEntityRegister BLOCK_BLOOD_TANK = createBlockEntity2(
             "blood_tank",
             BlockBloodTank::new,
-            BE_Tank3.class
+            BE_Tank.class
     );
     public static final BlockEntityRegister BLOCK_NEURON = createBlockEntity2(
             "neuron",

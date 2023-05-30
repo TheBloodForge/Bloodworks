@@ -26,15 +26,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BE_Tank3 extends BlockEntity implements IFluidHandler
+public class BE_Tank extends BlockEntity implements IFluidHandler
 {
     private String tank_id = "";
-    public BE_Tank3(BlockPos pos, BlockState state)
+    public BE_Tank(BlockPos pos, BlockState state)
     {
         super(BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), pos, state);
     }
 
-    public BE_Tank3(TankItem titem, BlockPos pos, BlockState state)
+    public BE_Tank(TankItem titem, BlockPos pos, BlockState state)
     {
         super(BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), pos, state);
     }
@@ -103,11 +103,11 @@ public class BE_Tank3 extends BlockEntity implements IFluidHandler
 //                           BELOW IS UTILITIES                         \\
 //######################################################################\\
 
-    private static List<BE_Tank3> getNeighborTanks(BlockPos blockPos, Level level)
+    private static List<BE_Tank> getNeighborTanks(BlockPos blockPos, Level level)
     {
-        List<BE_Tank3> tanks = new ArrayList<>();
+        List<BE_Tank> tanks = new ArrayList<>();
         for (Direction value : Direction.values())
-            if (level.getBlockEntity(blockPos.relative(value)) instanceof BE_Tank3 tank)
+            if (level.getBlockEntity(blockPos.relative(value)) instanceof BE_Tank tank)
                 tanks.add(tank);
         return tanks;
     }
@@ -117,7 +117,7 @@ public class BE_Tank3 extends BlockEntity implements IFluidHandler
         List<IFluidHandler> handlers = new ArrayList<>();
         for (Direction value : Direction.values())
             if (level.getBlockEntity(blockPos.relative(value)) instanceof IFluidHandler handler
-                    && !(level.getBlockEntity(blockPos.relative(value)) instanceof BE_Tank3))
+                    && !(level.getBlockEntity(blockPos.relative(value)) instanceof BE_Tank))
                 handlers.add(handler);
         return handlers;
     }
@@ -131,7 +131,7 @@ public class BE_Tank3 extends BlockEntity implements IFluidHandler
 //                     BELOW IS MANDATORY DEFAULTS                      \\
 //                   DO NOT TOUCH, SHOULD NOT HAVE TO                   \\
 //######################################################################\\
-    public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_Tank3 entity)
+    public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_Tank entity)
     {
         if (level == null || level.isClientSide || entity.tank_id.isEmpty() || entity.getTank().getCapacity() == 404) return;
         entity.tick();
