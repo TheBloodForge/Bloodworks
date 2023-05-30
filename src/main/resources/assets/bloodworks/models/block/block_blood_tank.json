@@ -22,8 +22,8 @@
 		},
 		{
 			"name": "innerCube",
-			"from": [15.9999, 0.0005, 0.0001],
-			"to": [0.0001, 16, 15.9999],
+			"from": [15.999, 0.001, 0.001],
+			"to": [0.001, 15.999, 15.999],
 			"faces": {
 				"north": {"uv": [0, 0, 8, 8], "texture": "#0", "cullface": "north", "tintindex": 0},
 				"east": {"uv": [0, 0, 8, 8], "texture": "#0", "cullface": "west", "tintindex": 0},
