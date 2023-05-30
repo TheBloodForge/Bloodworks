@@ -80,10 +80,9 @@ public class BlockEntityMachineBase extends BlockEntity implements IFluidHandler
      */
     public void setContainerData(int index, int value)
     {
-        switch (index)
+        if (index == 0)
         {
-            case 0 -> this.FLUID_TANK.getFluid().setAmount(value);
-            default -> { }
+            this.FLUID_TANK.getFluid().setAmount(value);
         }
     }
 

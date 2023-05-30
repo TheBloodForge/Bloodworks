@@ -1,14 +1,14 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
+import com.bloodforge.bloodworks.Crafting.RecipeBloodInfusion;
 import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Networking.FluidSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
-import com.bloodforge.bloodworks.Registry.ItemRegistry;
-import com.bloodforge.bloodworks.Server.Menus.InfusionChamberMenu;
-import com.bloodforge.bloodworks.Crafting.RecipeBloodInfusion;
 import com.bloodforge.bloodworks.Registry.FluidRegistry;
+import com.bloodforge.bloodworks.Registry.ItemRegistry;
 import com.bloodforge.bloodworks.Registry.RecipeRegistry;
+import com.bloodforge.bloodworks.Server.Menus.InfusionChamberMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -58,11 +58,12 @@ public class BE_InfusionChamber extends BlockEntityMachineBase implements IItemH
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack)
         {
-            return switch (slot){
-                case 0 -> stack.is(ItemRegistry.ITEM_STABILIZER.get());
-                case 1 -> true;
-                default -> activeRecipe != null && activeRecipe.getResultItem().is(stack.getItem());
-            };
+            return switch (slot)
+                    {
+                        case 0 -> stack.is(ItemRegistry.ITEM_STABILIZER.get());
+                        case 1 -> true;
+                        default -> activeRecipe != null && activeRecipe.getResultItem().is(stack.getItem());
+                    };
         }
     };
     private final ItemStackHandler automationItemHandler = new ItemStackHandler(3)
@@ -106,15 +107,21 @@ public class BE_InfusionChamber extends BlockEntityMachineBase implements IItemH
     {
         @Override
         public int get(int index)
-        { return getContainerData(index); }
+        {
+            return getContainerData(index);
+        }
 
         @Override
         public void set(int index, int value)
-        { setContainerData(index, value); }
+        {
+            setContainerData(index, value);
+        }
 
         @Override
         public int getCount()
-        { return getContainerCount(); }
+        {
+            return getContainerCount();
+        }
     };
 
     private int progress = 0;
@@ -126,40 +133,56 @@ public class BE_InfusionChamber extends BlockEntityMachineBase implements IItemH
         super(BlockRegistry.BLOCK_INFUSION_CHAMBER.blockEntity().get(), pos, state);
     }
 
-    public ContainerData getContainerData() {
+    public ContainerData getContainerData()
+    {
         return this.data;
     }
 
-    /** this is the data accessor for the game to save the data */
-    public int getContainerData(int index) {
-        return switch (index) {
-            case 0 -> this.progress;
-            case 1 -> this.activeRecipe != null ? this.activeRecipe.getTicksRequired() : 10000;
-            case 2 -> this.FLUID_TANK.getFluidAmount();
-            default -> 0;
-        };
+    /**
+     * this is the data accessor for the game to save the data
+     */
+    public int getContainerData(int index)
+    {
+        return switch (index)
+                {
+                    case 0 -> this.progress;
+                    case 1 -> this.activeRecipe != null ? this.activeRecipe.getTicksRequired() : 10000;
+                    case 2 -> this.FLUID_TANK.getFluidAmount();
+                    default -> 0;
+                };
     }
 
-    /** this sets the values relevant on loading */
+    /**
+     * this sets the values relevant on loading
+     */
     public void setContainerData(int index, int value)
     {
-        switch(index) {
+        switch (index)
+        {
             case 0 -> this.progress = value;
-            case 2 -> this.fill(new FluidStack(FluidRegistry.FLUID_BLOOD.source.get().getSource(), value), FluidAction.EXECUTE);
-            default -> {}
+            case 2 ->
+                    this.fill(new FluidStack(FluidRegistry.FLUID_BLOOD.source.get().getSource(), value), FluidAction.EXECUTE);
+            default ->
+            {
+            }
         }
     }
 
-    /** this returns the number of data entries to be saved */
+    /**
+     * this returns the number of data entries to be saved
+     */
     public int getContainerCount()
-    { return 3; }
+    {
+        return 3;
+    }
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side)
     {
         if (cap == ForgeCapabilities.ITEM_HANDLER)
         {
-            if (side != null) {
+            if (side != null)
+            {
                 return lazyAutomationItemHandler.cast();
             }
             return lazyItemHandler.cast();
@@ -226,7 +249,8 @@ public class BE_InfusionChamber extends BlockEntityMachineBase implements IItemH
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_InfusionChamber entity)
     {
         if (level.isClientSide()) return;
-        if (!entity.isCrafting()) {
+        if (!entity.isCrafting())
+        {
             entity.resetProgress();
             return;
         }
@@ -268,7 +292,8 @@ public class BE_InfusionChamber extends BlockEntityMachineBase implements IItemH
         return wasChanged;
     }
 
-    private final FluidTank FLUID_TANK = new FluidTank(6000) {
+    private final FluidTank FLUID_TANK = new FluidTank(6000)
+    {
         @Override
         public boolean isFluidValid(FluidStack stack)
         {
@@ -371,7 +396,8 @@ public class BE_InfusionChamber extends BlockEntityMachineBase implements IItemH
         return itemHandler.getStackInSlot(slot);
     }
 
-    public ItemStackHandler getInventory() {
+    public ItemStackHandler getInventory()
+    {
         return itemHandler;
     }
 

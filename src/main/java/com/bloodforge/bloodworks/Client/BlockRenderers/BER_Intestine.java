@@ -1,12 +1,12 @@
 package com.bloodforge.bloodworks.Client.BlockRenderers;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Intestine;
 import com.bloodforge.bloodworks.Blocks.BlockIntestine;
 import com.bloodforge.bloodworks.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Util;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -25,6 +25,7 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
 {
 
     private final BlockEntityRendererProvider.Context context;
+
     public BER_Intestine(BlockEntityRendererProvider.Context context)
     {
         this.context = context;
@@ -39,24 +40,25 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
     }
 
     private BE_Intestine currentBE;
+
     @Override
     public void render(BE_Intestine ent, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay)
     {
         currentBE = ent;
         BlockPos blockPos = ent.getBlockPos();
-        if(Minecraft.getInstance().cameraEntity.blockPosition().distSqr(blockPos) > 80*80)
+        if (Minecraft.getInstance().cameraEntity.blockPosition().distSqr(blockPos) > 80 * 80)
         {
             return;
         }
-        if( BloodworksCommonConfig.DO_OCCLUSION_CULLING.get() &&
-            !checkLOS(blockPos, new Vec3(0, 0, 0)) &&
-            !checkLOS(blockPos, new Vec3(1, 0, 0)) &&
-            !checkLOS(blockPos, new Vec3(0, 1, 0)) &&
-            !checkLOS(blockPos, new Vec3(0, 0, 1)) &&
-            !checkLOS(blockPos, new Vec3(1, 1, 0)) &&
-            !checkLOS(blockPos, new Vec3(1, 0, 1)) &&
-            !checkLOS(blockPos, new Vec3(0, 1, 1)) &&
-            !checkLOS(blockPos, new Vec3(1, 1, 1)) )
+        if (BloodworksCommonConfig.DO_OCCLUSION_CULLING.get() &&
+                !checkLOS(blockPos, new Vec3(0, 0, 0)) &&
+                !checkLOS(blockPos, new Vec3(1, 0, 0)) &&
+                !checkLOS(blockPos, new Vec3(0, 1, 0)) &&
+                !checkLOS(blockPos, new Vec3(0, 0, 1)) &&
+                !checkLOS(blockPos, new Vec3(1, 1, 0)) &&
+                !checkLOS(blockPos, new Vec3(1, 0, 1)) &&
+                !checkLOS(blockPos, new Vec3(0, 1, 1)) &&
+                !checkLOS(blockPos, new Vec3(1, 1, 1)))
         {
             return;
         }
@@ -74,30 +76,26 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
 
         int dist = Minecraft.getInstance().cameraEntity.blockPosition().distManhattan(blockPos);
 
-        if(dist > 50)
+        if (dist > 50)
         {
             numRings = 1;
             numSegments = 3;
             renderInside = false;
-        }
-        else if(dist > 40)
+        } else if (dist > 40)
         {
             numRings = 2;
             numSegments = 4;
             renderInside = false;
-        }
-        else if(dist > 30)
+        } else if (dist > 30)
         {
             numRings = 3;
             numSegments = 6;
             renderInside = false;
-        }
-        else if(dist > 20)
+        } else if (dist > 20)
         {
             numRings = 5;
             numSegments = 8;
-        }
-        else if(dist > 10)
+        } else if (dist > 10)
         {
             numRings = 10;
             numSegments = 10;
@@ -105,7 +103,7 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
 
         Direction from = ent.getBlockState().getValue(BlockIntestine.FACING_FROM);
         Direction to = ent.getBlockState().getValue(BlockIntestine.FACING_TO);
-        poseStack.translate(0.5,0.5,0.5);
+        poseStack.translate(0.5, 0.5, 0.5);
 
         DrawIntestineSegmentAdvanced(buffer, poseStack, combinedLight, numRings, numSegments, totalTicks, from, to);
         /*if(from.getOpposite() == to)
@@ -304,7 +302,7 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
     private void DrawIntestineSegmentAdvanced(VertexConsumer buffer, PoseStack poseStack, int combinedLight, int numRings, int numSegments, long animTime, Direction fromDir, Direction toDir)
     {
         int uvrand1 = Integer.reverse(Integer.reverseBytes(currentBE.getBlockPos().getX() + currentBE.getBlockPos().getY() + currentBE.getBlockPos().getZ()));
-        uvrand1 = (int)Math.floor((uvrand1 << 3) * 0.1f);
+        uvrand1 = (int) Math.floor((uvrand1 << 3) * 0.1f);
         float UVXOff = (uvrand1 % 4) / 4f;
         float UVYOff = (uvrand1 % 2) / 2f;
         float UVXScale = 1f;
@@ -322,19 +320,19 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
         Vec3 lastBezA = Util.Lerp(initialPos, middleCurvePoint, lastAlongScale);
         Vec3 lastBezB = Util.Lerp(middleCurvePoint, endPos, lastAlongScale);
         Vec3 lastSegmentCenter = Util.Lerp(lastBezA, lastBezB, lastAlongScale);
-        lastSegmentCenter = AnimateCenter(lastSegmentCenter, lastDir, (animTime/2f), (float)blockAnimOffsetBase);
+        lastSegmentCenter = AnimateCenter(lastSegmentCenter, lastDir, (animTime / 2f), (float) blockAnimOffsetBase);
 
         Vec3 lN = lastDir;
         Vec3 lCircleRelativeUp = lN.cross(initialDir.subtract(endDir).scale(-1));
-        if(fromDir.getOpposite() == toDir)
+        if (fromDir.getOpposite() == toDir)
         {
             lCircleRelativeUp = new Vec3(fromDir.step()).xRot(1.5708f).zRot(1.5708f);
         }
         Vec3 lCircleRelativeRight = lN.cross(lCircleRelativeUp).normalize();
         lCircleRelativeUp = lCircleRelativeUp.normalize();
-        for(int i = 1; i <= numRings; i++)
+        for (int i = 1; i <= numRings; i++)
         {
-            float alongScale = (float)i/numRings;
+            float alongScale = (float) i / numRings;
             double blockAnimOffset = blockAnimOffsetBase + alongScale;
             double blockAnimOffsetLast = blockAnimOffsetBase + alongScale - 1;
 
@@ -342,24 +340,24 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
             Vec3 lerpedBezA = Util.Lerp(initialPos, middleCurvePoint, alongScale);
             Vec3 lerpedBezB = Util.Lerp(middleCurvePoint, endPos, alongScale);
             Vec3 finalSegmentCenter = Util.Lerp(lerpedBezA, lerpedBezB, alongScale);
-            finalSegmentCenter = AnimateCenter(finalSegmentCenter, lerpedDir, (animTime/2f), (float)blockAnimOffset);
+            finalSegmentCenter = AnimateCenter(finalSegmentCenter, lerpedDir, (animTime / 2f), (float) blockAnimOffset);
 
 
             Vec3 N = lerpedDir;
             Vec3 circleRelativeUp = N.cross(initialDir.subtract(endDir).scale(-1));
-            if(fromDir.getOpposite() == toDir)
+            if (fromDir.getOpposite() == toDir)
             {
                 circleRelativeUp = new Vec3(fromDir.step()).xRot(1.5708f).zRot(1.5708f);
             }
             Vec3 circleRelativeRight = N.cross(circleRelativeUp).normalize();
             circleRelativeUp = circleRelativeUp.normalize();
 
-            for(int r = 0; r < numSegments; r++)
+            for (int r = 0; r < numSegments; r++)
             {
-                float radialScale = (float)r/numSegments;
-                float radialScale2 = (float)(r+1)/numSegments;
-                double radialScaleR = ((float)r/numSegments)*6.2831852;
-                double radialScaleR2 = ((float)(r+1)/numSegments)*6.2831852;
+                float radialScale = (float) r / numSegments;
+                float radialScale2 = (float) (r + 1) / numSegments;
+                double radialScaleR = ((float) r / numSegments) * 6.2831852;
+                double radialScaleR2 = ((float) (r + 1) / numSegments) * 6.2831852;
 
                 //TODO: get better at math and add some radial lumpage that doesnt break on seams :(
                 /*double skinAnim1last = Math.sin(radialScaleR*2 + animTime + blockAnimOffsetLast)*0.1;
@@ -370,10 +368,10 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
                 Vec3 anim1Last =    animMultLast.scale(skinAnim1last);
                 Vec3 anim1 =        animMult.scale(skinAnim1);*/
 
-                Vec3 vertexA = finalSegmentCenter.add( circleRelativeUp.scale(Math.sin(radialScaleR )/2*width)).add( circleRelativeRight.scale(Math.cos(radialScaleR)/2*width));
-                Vec3 vertexB = lastSegmentCenter .add(lCircleRelativeUp.scale(Math.sin(radialScaleR )/2*width)).add(lCircleRelativeRight.scale(Math.cos(radialScaleR)/2*width));
-                Vec3 vertexC = lastSegmentCenter .add(lCircleRelativeUp.scale(Math.sin(radialScaleR2)/2*width)).add(lCircleRelativeRight.scale(Math.cos(radialScaleR2)/2*width));
-                Vec3 vertexD = finalSegmentCenter.add( circleRelativeUp.scale(Math.sin(radialScaleR2)/2*width)).add( circleRelativeRight.scale(Math.cos(radialScaleR2)/2*width));
+                Vec3 vertexA = finalSegmentCenter.add(circleRelativeUp.scale(Math.sin(radialScaleR) / 2 * width)).add(circleRelativeRight.scale(Math.cos(radialScaleR) / 2 * width));
+                Vec3 vertexB = lastSegmentCenter.add(lCircleRelativeUp.scale(Math.sin(radialScaleR) / 2 * width)).add(lCircleRelativeRight.scale(Math.cos(radialScaleR) / 2 * width));
+                Vec3 vertexC = lastSegmentCenter.add(lCircleRelativeUp.scale(Math.sin(radialScaleR2) / 2 * width)).add(lCircleRelativeRight.scale(Math.cos(radialScaleR2) / 2 * width));
+                Vec3 vertexD = finalSegmentCenter.add(circleRelativeUp.scale(Math.sin(radialScaleR2) / 2 * width)).add(circleRelativeRight.scale(Math.cos(radialScaleR2) / 2 * width));
 
                 //vertexA = vertexA.add(anim1);
                 //vertexB = vertexB.add(anim1);
@@ -381,10 +379,10 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
                 //vertexD = vertexD.add(anim1);
                 RenderHelper.DoQuad(buffer, poseStack.last().pose(),
                         vertexA, vertexB, vertexC, vertexD,
-                        new Vec2(radialScale*UVXScale + UVXOff,  alongScale*UVYScale/2 + UVYOff),
-                        new Vec2(radialScale*UVXScale + UVXOff,  lastAlongScale*UVYScale/2 + UVYOff),
-                        new Vec2(radialScale2*UVXScale + UVXOff, lastAlongScale*UVYScale/2 + UVYOff),
-                        new Vec2(radialScale2*UVXScale + UVXOff, alongScale*UVYScale/2 + UVYOff),
+                        new Vec2(radialScale * UVXScale + UVXOff, alongScale * UVYScale / 2 + UVYOff),
+                        new Vec2(radialScale * UVXScale + UVXOff, lastAlongScale * UVYScale / 2 + UVYOff),
+                        new Vec2(radialScale2 * UVXScale + UVXOff, lastAlongScale * UVYScale / 2 + UVYOff),
+                        new Vec2(radialScale2 * UVXScale + UVXOff, alongScale * UVYScale / 2 + UVYOff),
                         combinedLight);
             }
 
@@ -401,16 +399,16 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
     private Vec3 AnimateCenter(Vec3 center, Vec3 normal, float animTime, float progTotal)
     {
         Vec3 anim1 = new Vec3(
-                (float)Math.sin(animTime + progTotal),
-                (float)Math.cos(animTime + progTotal),
-                (float)Math.sin(animTime + progTotal)
+                (float) Math.sin(animTime + progTotal),
+                (float) Math.cos(animTime + progTotal),
+                (float) Math.sin(animTime + progTotal)
         );
         Vec3 anim2 = new Vec3(
-                (float)Math.sin(animTime + progTotal*5),
-                (float)Math.cos(animTime + progTotal*5),
-                (float)Math.sin(animTime + progTotal*5)
+                (float) Math.sin(animTime + progTotal * 5),
+                (float) Math.cos(animTime + progTotal * 5),
+                (float) Math.sin(animTime + progTotal * 5)
         );
-        return  center.add(anim1.scale(0.01f)).add(anim2.scale(0.01f));
+        return center.add(anim1.scale(0.01f)).add(anim2.scale(0.01f));
     }
 
     private void DrawEndSegment(VertexConsumer buffer, PoseStack poseStack, int combinedLight, int numRings, int numSegments, long totalTicks, BlockPos blockPos, boolean renderInside, Direction fromDir)

@@ -1,8 +1,8 @@
 package com.bloodforge.bloodworks.Server.Menus;
 
-import com.bloodforge.bloodworks.Registry.ItemRegistry;
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_InfusionChamber;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
+import com.bloodforge.bloodworks.Registry.ItemRegistry;
 import com.bloodforge.bloodworks.Registry.MenuRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,7 +22,8 @@ public class InfusionChamberMenu extends AbstractContainerMenu
     private final ContainerData data;
     private FluidStack fluidStack;
 
-    public InfusionChamberMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
+    public InfusionChamberMenu(int id, Inventory inv, FriendlyByteBuf extraData)
+    {
         this(id, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(3));
     }
 
@@ -45,42 +46,50 @@ public class InfusionChamberMenu extends AbstractContainerMenu
         this.addDataSlots(this.data);
     }
 
-    public boolean isCrafting() {
+    public boolean isCrafting()
+    {
         return data.get(0) > 0;
     }
 
-    public void setFluid(FluidStack fluidStack) {
+    public void setFluid(FluidStack fluidStack)
+    {
         this.fluidStack = fluidStack;
     }
 
-    public FluidStack getFluidStack() {
+    public FluidStack getFluidStack()
+    {
         return fluidStack;
     }
 
-    public BE_InfusionChamber getBlockEntity() {
+    public BE_InfusionChamber getBlockEntity()
+    {
         return this.blockEntity;
     }
 
-    public int getProgress() {
+    public int getProgress()
+    {
         int progress = this.data.get(0);
         return progress;
     }
 
-    public int getScaledProgressArrow() {
+    public int getScaledProgressArrow()
+    {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);  // Max Progress
         int progressArrowSize = 44; // This is the height in pixels of your arrow
         return getScaledProgressOffsetBy(Math.max(0, progress - 20), maxProgress - 20, progressArrowSize);
     }
 
-    public int getScaledProgressBlood() {
+    public int getScaledProgressBlood()
+    {
         int progress = this.data.get(0);
         int maxProgress = 20;  // Max Progress
         int progressBloodSize = 17; // This is the height in pixels of your arrow
         return getScaledProgressOffsetBy(Math.min(20, progress), maxProgress, progressBloodSize);
     }
 
-    public int getScaledProgressOffsetBy(int progress, int maxProgress, int progressArrowSize) {
+    public int getScaledProgressOffsetBy(int progress, int maxProgress, int progressArrowSize)
+    {
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
 
@@ -104,32 +113,40 @@ public class InfusionChamberMenu extends AbstractContainerMenu
     private static final int TE_INVENTORY_SLOT_COUNT = 3;  // must be the number of slots you have!
 
     @Override
-    public ItemStack quickMoveStack(Player playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index)
+    {
         Slot sourceSlot = slots.get(index);
         if (!sourceSlot.hasItem()) return ItemStack.EMPTY;  //EMPTY_ITEM
         ItemStack sourceStack = sourceSlot.getItem();
         ItemStack copyOfSourceStack = sourceStack.copy();
 
         // Check if the slot clicked is one of the vanilla container slots
-        if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
+        if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT)
+        {
             // This is a vanilla container slot so merge the stack into the tile inventory
             if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
-                    + TE_INVENTORY_SLOT_COUNT, false)) {
+                    + TE_INVENTORY_SLOT_COUNT, false))
+            {
                 return ItemStack.EMPTY;  // EMPTY_ITEM
             }
-        } else if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
+        } else if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT)
+        {
             // This is a TE slot so merge the stack into the players inventory
-            if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
+            if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false))
+            {
                 return ItemStack.EMPTY;
             }
-        } else {
+        } else
+        {
             System.out.println("Invalid slotIndex:" + index);
             return ItemStack.EMPTY;
         }
         // If stack size == 0 (the entire stack was moved) set slot contents to null
-        if (sourceStack.getCount() == 0) {
+        if (sourceStack.getCount() == 0)
+        {
             sourceSlot.set(ItemStack.EMPTY);
-        } else {
+        } else
+        {
             sourceSlot.setChanged();
         }
         sourceSlot.onTake(playerIn, sourceStack);
@@ -137,21 +154,27 @@ public class InfusionChamberMenu extends AbstractContainerMenu
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(Player player)
+    {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
                 player, BlockRegistry.BLOCK_INFUSION_CHAMBER.block().get());
     }
 
-    private void addPlayerInventory(Inventory playerInventory) {
-        for (int i = 0; i < 3; ++i) {
-            for (int l = 0; l < 9; ++l) {
+    private void addPlayerInventory(Inventory playerInventory)
+    {
+        for (int i = 0; i < 3; ++i)
+        {
+            for (int l = 0; l < 9; ++l)
+            {
                 this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 90 + i * 18));
             }
         }
     }
 
-    private void addPlayerHotbar(Inventory playerInventory) {
-        for (int i = 0; i < 9; ++i) {
+    private void addPlayerHotbar(Inventory playerInventory)
+    {
+        for (int i = 0; i < 9; ++i)
+        {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 148));
         }
     }

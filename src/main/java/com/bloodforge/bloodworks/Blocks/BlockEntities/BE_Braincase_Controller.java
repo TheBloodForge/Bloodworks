@@ -33,7 +33,8 @@ public class BE_Braincase_Controller extends BlockEntityMachineBase
         multiblockCoordMax = pos;
     }
 
-    public ContainerData getContainerData() {
+    public ContainerData getContainerData()
+    {
         return this.data;
     }
 
@@ -66,14 +67,16 @@ public class BE_Braincase_Controller extends BlockEntityMachineBase
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_Braincase_Controller entity)
     {
-        if (level.isClientSide()) return;
+        if (level.isClientSide())
+        {
+        }
 
     }
 
     public void use(Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
-        BlockPos found = MULTIBLOCK_BRAINCASE_GETTER.tryFindLastCornerWithFirstCorner(player.level, multiblockCoordMin, new BlockPos(4,3,4), new BlockPos(5,4,5));
-        if(found != null)
+        BlockPos found = MULTIBLOCK_BRAINCASE_GETTER.tryFindLastCornerWithFirstCorner(player.level, multiblockCoordMin, new BlockPos(4, 3, 4), new BlockPos(5, 4, 5));
+        if (found != null)
             PacketManager.sendToClients(new MessageS2CPacket(Component.literal(found.toString()), false));
         else
             PacketManager.sendToClients(new MessageS2CPacket(Component.literal("Not found"), false));

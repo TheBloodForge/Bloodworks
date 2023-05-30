@@ -1,9 +1,9 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
-import com.bloodforge.bloodworks.Registry.BlockRegistry;
-import com.bloodforge.bloodworks.Util;
 import com.bloodforge.bloodworks.Networking.NeuronSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
+import com.bloodforge.bloodworks.Registry.BlockRegistry;
+import com.bloodforge.bloodworks.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -16,6 +16,7 @@ public class BE_Neuron extends BlockEntity
 {
     List<BlockPos> neuronLocations = new ArrayList<>();
     private String NEURAL_ID;
+
     public BE_Neuron(BlockPos pos, BlockState blockState)
     {
         super(BlockRegistry.BLOCK_NEURON.blockEntity().get(), pos, blockState);
@@ -45,6 +46,7 @@ public class BE_Neuron extends BlockEntity
     }
 
     public HashMap<String, BlockPos> neuronMap = new HashMap<>();
+
     @Override
     protected void saveAdditional(CompoundTag nbt)
     {
@@ -64,12 +66,14 @@ public class BE_Neuron extends BlockEntity
     }
 
     private static BlockPos firstNeuronPos = null;
+
     public static void doConnection(BlockPos pos, Level level)
     {
         if (firstNeuronPos == null)
         {
             firstNeuronPos = pos;
-        } else {
+        } else
+        {
             if (level.getBlockEntity(firstNeuronPos) instanceof BE_Neuron firstNeuron && level.getBlockEntity(pos) instanceof BE_Neuron secondNeuron)
             {
                 firstNeuron.neuronMap.put(secondNeuron.getNeuralID(), pos);
@@ -85,7 +89,8 @@ public class BE_Neuron extends BlockEntity
         return NEURAL_ID;
     }
 
-    private void syncNeuron() {
+    private void syncNeuron()
+    {
         PacketManager.sendToClients(new NeuronSyncS2CPacket(getBlockPos(), wrapNBT()));
     }
 

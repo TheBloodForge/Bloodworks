@@ -63,10 +63,13 @@ public class BlockInfusionChamber extends BlockMachineBase
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState cState, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
-        if(!level.isClientSide()) {
-            if(level.getBlockEntity(pos) instanceof BE_InfusionChamber machine) {
+        if (!level.isClientSide())
+        {
+            if (level.getBlockEntity(pos) instanceof BE_InfusionChamber machine)
+            {
                 FluidStack stack;
-                if (player.getItemInHand(interactionHand).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent()) {
+                if (player.getItemInHand(interactionHand).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent())
+                {
                     stack = FluidUtil.getFluidContained(player.getItemInHand(interactionHand)).get();
                     if (machine.isFluidValid(0, stack))
                     {

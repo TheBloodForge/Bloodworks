@@ -17,13 +17,15 @@ public class ItemGeneric extends Item
     {
         super(new Item.Properties().tab(Globals.CREATIVE_TAB));
     }
+
     public ItemGeneric(Properties props)
     {
         super(props.tab(Globals.CREATIVE_TAB));
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag tooltipFlag)
+    {
         ClientUtils.AddChatComponents(components, itemStack);
         super.appendHoverText(itemStack, level, components, tooltipFlag);
     }

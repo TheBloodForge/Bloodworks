@@ -1,6 +1,6 @@
 package com.bloodforge.bloodworks.Networking;
 
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_BloodTank;
+import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -37,8 +37,8 @@ public class TankNameSyncS2CPacket
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() ->
         {
-            if (Minecraft.getInstance().level.getBlockEntity(childPos) instanceof BE_BloodTank bloodTank)
-                bloodTank.parentName = parentName;
+            if (Minecraft.getInstance().level.getBlockEntity(childPos) instanceof BE_Tank bloodTank)
+                bloodTank.setID(parentName);
         });
         return true;
     }

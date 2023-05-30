@@ -16,6 +16,7 @@ public class BlockBloodyBase extends Block
 {
     private String selfQuoteText = "Clotted blood. Still a bit mushy..";
     private String useText = "Used for decoration";
+
     public BlockBloodyBase()
     {
         super(
@@ -34,8 +35,8 @@ public class BlockBloodyBase extends Block
                         .strength(3f, 5f)
                         .sound(SoundType.SLIME_BLOCK)
         );
-        if(selfQuoteText != null) selfQuoteText = selfQuote;
-        if(useText != null) useText = use;
+        if (selfQuoteText != null) selfQuoteText = selfQuote;
+        if (useText != null) useText = use;
     }
 
     @Override

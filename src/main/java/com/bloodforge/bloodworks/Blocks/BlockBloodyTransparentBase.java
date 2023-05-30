@@ -36,12 +36,14 @@ public class BlockBloodyTransparentBase extends Block
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState p_60578_, BlockGetter p_60579_, BlockPos p_60580_) {
+    public VoxelShape getOcclusionShape(BlockState p_60578_, BlockGetter p_60579_, BlockPos p_60580_)
+    {
         return Shapes.empty();
     }
 
     @Override
-    public boolean skipRendering(BlockState myState, BlockState neighborState, Direction direction) {
+    public boolean skipRendering(BlockState myState, BlockState neighborState, Direction direction)
+    {
         return neighborState.is(myState.getBlock());
     }
 

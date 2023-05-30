@@ -25,22 +25,32 @@ public class BlockRegistry
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Globals.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Globals.MODID);
 
-    public record RegistryPair(RegistryObject<Block> block, RegistryObject<Item> item){}
-    public record BlockEntityRegister(RegistryObject<Block> block, RegistryObject<BlockEntityType<?>> blockEntity, RegistryObject<Item> item){}
-    public record BlockFamily(RegistryPair blockBase, RegistryPair blockStair, RegistryPair blockSlab, RegistryPair blockWall){}
+    public record RegistryPair(RegistryObject<Block> block, RegistryObject<Item> item)
+    {
+    }
 
-    public static final BlockFamily BLOCK_COAGULATED             = registerAllTypes("coagulated_blood");
-    public static final BlockFamily BLOCK_FLESH                  = registerAllTypes("flesh");
+    public record BlockEntityRegister(RegistryObject<Block> block, RegistryObject<BlockEntityType<?>> blockEntity,
+                                      RegistryObject<Item> item)
+    {
+    }
 
-    public static final RegistryPair BLOCK_FLESH_LIGHT           = createBlock("flesh_light",        () -> new BlockFleshLight(false));
-    public static final RegistryPair BLOCK_FLESH_LIGHT_LARGE     = createBlock("flesh_light_large",  () -> new BlockFleshLight(true));
-    public static final RegistryPair BLOCK_FLESH_PORTHOLE        = createBlock("flesh_porthole",     () -> new BlockBloodyTransparentBase());
+    public record BlockFamily(RegistryPair blockBase, RegistryPair blockStair, RegistryPair blockSlab,
+                              RegistryPair blockWall)
+    {
+    }
 
-    public static final RegistryPair BLOCK_BRAINCASE            = createBlock("braincase",        () ->
+    public static final BlockFamily BLOCK_COAGULATED = registerAllTypes("coagulated_blood");
+    public static final BlockFamily BLOCK_FLESH = registerAllTypes("flesh");
+
+    public static final RegistryPair BLOCK_FLESH_LIGHT = createBlock("flesh_light", () -> new BlockFleshLight(false));
+    public static final RegistryPair BLOCK_FLESH_LIGHT_LARGE = createBlock("flesh_light_large", () -> new BlockFleshLight(true));
+    public static final RegistryPair BLOCK_FLESH_PORTHOLE = createBlock("flesh_porthole", BlockBloodyTransparentBase::new);
+
+    public static final RegistryPair BLOCK_BRAINCASE = createBlock("braincase", () ->
             new GenericBlockBase(BlockBehaviour.Properties.of(Material.METAL).strength(3f, 7f).sound(SoundType.METAL)));
 
-    public static final RegistryPair BLOCK_BRAINCASE_WINDOW     = createBlock("braincase_window",        () ->
-        new GenericBlockBase(BlockBehaviour.Properties.of(Material.METAL).strength(3f, 4f).sound(SoundType.GLASS).noOcclusion().isSuffocating((a, b, c)->false).isViewBlocking((a, b, c)->false)).withGlasslikeProperties());
+    public static final RegistryPair BLOCK_BRAINCASE_WINDOW = createBlock("braincase_window", () ->
+            new GenericBlockBase(BlockBehaviour.Properties.of(Material.METAL).strength(3f, 4f).sound(SoundType.GLASS).noOcclusion().isSuffocating((a, b, c) -> false).isViewBlocking((a, b, c) -> false)).withGlasslikeProperties());
 
     public static final BlockEntityRegister BLOCK_INFUSION_CHAMBER = createBlockEntity2(
             "infusion_chamber",
@@ -63,7 +73,7 @@ public class BlockRegistry
     public static final BlockEntityRegister BLOCK_BLOOD_TANK = createBlockEntity2(
             "blood_tank",
             BlockBloodTank::new,
-            BE_BloodTank.class
+            BE_Tank.class
     );
     public static final BlockEntityRegister BLOCK_NEURON = createBlockEntity2(
             "neuron",
@@ -90,7 +100,8 @@ public class BlockRegistry
                             try
                             {
                                 return o2.getDeclaredConstructor(BlockPos.class, BlockState.class).newInstance(pos, state);
-                            } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e)
+                            } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
+                                     IllegalAccessException e)
                             {
                                 throw new RuntimeException(e);
                             }

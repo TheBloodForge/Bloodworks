@@ -1,10 +1,11 @@
 package com.bloodforge.bloodworks.Blocks;
 
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_BloodTank;
+import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank;
 import com.bloodforge.bloodworks.ClientUtils;
 import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
+import com.bloodforge.bloodworks.Server.TankDataProxy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -13,6 +14,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -33,16 +35,19 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "deprecation"})
 public class BlockBloodTank extends BlockMachineBase
 {
 
-//    public static final BlockShape SHAPE = BlockShape.createBlockShape(2.5, 0, 2.5, 13.5, 16, 13.5);
+    //    public static final BlockShape SHAPE = BlockShape.createBlockShape(2.5, 0, 2.5, 13.5, 16, 13.5);
     public static final BooleanProperty OUTPUT = BooleanProperty.create("output");
+
     public BlockBloodTank()
     {
         super(
@@ -60,22 +65,36 @@ public class BlockBloodTank extends BlockMachineBase
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get().create(pos, state);
+        BE_Tank tank = (BE_Tank) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get().create(pos, state);
+        List<BE_Tank> tanks;
+        if ((tanks = getNeighborTanks(pos, ServerLifecycleHooks.getCurrentServer().overworld())).isEmpty())
+            tank.setID(TankDataProxy.createNewParent(pos));
+        if (tank.getID().isEmpty())
+            for (BE_Tank be_tank : tanks)
+                if (!be_tank.getID().isEmpty())
+                {
+                    tank.setID(be_tank.getID());
+                    TankDataProxy.addChild(be_tank.getID(), pos, ServerLifecycleHooks.getCurrentServer().overworld());
+                }
+        return tank;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
+    {
         ClientUtils.AddAdditionalShiftInfo(components, "Fill level: Unimplemented!");
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }
 
     @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        if(level.getBlockEntity(pos) instanceof BE_BloodTank machine) {
-            FluidStack  fluid = machine.getFluidInTank(0);
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos)
+    {
+        if (level.getBlockEntity(pos) instanceof BE_Tank tank)
+        {
+            FluidStack fluid = tank.getFluidInTank(0);
             float lightLevel = fluid.getFluid().getFluidType().getLightLevel();
-            lightLevel *=  machine.getRelativeFill();
-            return (int)lightLevel;
+            lightLevel *= tank.getRelativeFill();
+            return (int) lightLevel;
         }
         return 0;
     }
@@ -84,7 +103,7 @@ public class BlockBloodTank extends BlockMachineBase
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
     {
-        return createTickerHelper(type, (BlockEntityType<BE_BloodTank>) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), BE_BloodTank::tick);
+        return createTickerHelper(type, (BlockEntityType<BE_Tank>) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), BE_Tank::tick);
     }
 
     @Override
@@ -94,7 +113,8 @@ public class BlockBloodTank extends BlockMachineBase
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState p_60578_, BlockGetter p_60579_, BlockPos p_60580_) {
+    public VoxelShape getOcclusionShape(BlockState p_60578_, BlockGetter p_60579_, BlockPos p_60580_)
+    {
         return Shapes.empty();
     }
 
@@ -103,31 +123,36 @@ public class BlockBloodTank extends BlockMachineBase
     {
         return Shapes.box(0.01, 0.01, 0.01, 0.99, 0.99, 0.99);
     }
+
     @Override
-    @SuppressWarnings("deprecation")
     public void onRemove(BlockState cState, Level level, BlockPos blockPos, BlockState newState, boolean isMoving)
     {
         if (cState.getBlock() != newState.getBlock())
         {
             BlockEntity ent = level.getBlockEntity(blockPos);
-            if (ent instanceof BE_BloodTank tank)
+            if (ent instanceof BE_Tank tank)
                 tank.breakTank(blockPos, level);
         }
         super.onRemove(cState, level, blockPos, newState, isMoving);
     }
 
-    public boolean skipRendering(BlockState thisState, BlockState neighbor, Direction direction) {
-        return neighbor.is(this) ? true : false;
+    public boolean skipRendering(BlockState thisState, BlockState neighbor, Direction direction)
+    {
+        return neighbor.is(this);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState cState, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
-        if(!level.isClientSide()) {
-            if(level.getBlockEntity(pos) instanceof BE_BloodTank machine) {
+        if (!level.isClientSide())
+        {
+            if (level.getBlockEntity(pos) instanceof BE_Tank machine)
+            {
                 FluidStack stack = FluidStack.EMPTY;
-                if (player.getItemInHand(interactionHand).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent()) {
+                ItemStack heldItem;
+                if ((heldItem = player.getItemInHand(interactionHand)).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent())
+                {
                     if (FluidUtil.getFluidContained(player.getItemInHand(interactionHand)).isPresent())
                         stack = FluidUtil.getFluidContained(player.getItemInHand(interactionHand)).get();
                     if (machine.isFluidValid(0, stack))
@@ -135,18 +160,32 @@ public class BlockBloodTank extends BlockMachineBase
                         machine.fill(stack, IFluidHandler.FluidAction.EXECUTE);
                         return InteractionResult.sidedSuccess(!level.isClientSide());
                     }
-                } else if(player.getItemInHand(interactionHand).getItem() instanceof BlockItem) {
+                } else if (heldItem.is(Items.DEBUG_STICK))
+                {
+                    machine.changeTier(player.isCrouching() ? -1 : 1);
+                    return InteractionResult.CONSUME;
+                } else if (heldItem.getItem() instanceof BlockItem)
+                {
                     return super.use(cState, level, pos, player, interactionHand, blockHitResult);
-                }else{
-                    PacketManager.sendToClients(new MessageS2CPacket(Component.literal(Component.translatable(machine.getFluidInTank(0).getTranslationKey()).getString() + " : " + machine.getFluidInTank(0).getAmount() + " | " + machine.getTankCapacity(0)), false));
+                } else
+                {
+                    PacketManager.sendToClients(new MessageS2CPacket(Component.literal(Component.translatable(machine.getFluidInTank(0).getTranslationKey()).getString() + " : " + machine.getFluidInTank(0).getAmount() + " | " + machine.getTankCapacity(0) + " -- " + machine.getID()), false));
                 }
             }
         }
-        if(level.isClientSide())
+        if (level.isClientSide())
         {
             level.getLightEngine().checkBlock(pos);
         }
         return InteractionResult.sidedSuccess(!level.isClientSide());
     }
 
+    private static List<BE_Tank> getNeighborTanks(BlockPos blockPos, Level level)
+    {
+        List<BE_Tank> tanks = new ArrayList<>();
+        for (Direction value : Direction.values())
+            if (level.getBlockEntity(blockPos.relative(value)) instanceof BE_Tank tank)
+                tanks.add(tank);
+        return tanks;
+    }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 public class ItemProvidor extends ItemModelProvider
 {
     public static List<RegistryObject<ForgeFlowingFluid.Source>> Buckets;
+
     public ItemProvidor(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper)
     {
         super(generator, modid, existingFileHelper);
@@ -27,7 +28,8 @@ public class ItemProvidor extends ItemModelProvider
         System.out.println("TRIGGERED REGGY MODELS");
     }
 
-    protected void registerBucket(RegistryObject<ForgeFlowingFluid.Source> fluidRO) {
+    protected void registerBucket(RegistryObject<ForgeFlowingFluid.Source> fluidRO)
+    {
         withExistingParent("forge:item/bucket", new ResourceLocation("forge", "item/bucket"))
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
                 .fluid(fluidRO.get());

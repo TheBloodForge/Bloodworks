@@ -1,11 +1,11 @@
 package com.bloodforge.bloodworks.Blocks.Fluids;
 
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
+import com.bloodforge.bloodworks.Registry.FluidRegistry;
 import com.bloodforge.bloodworks.Registry.ItemRegistry;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Vector3f;
-import com.bloodforge.bloodworks.Registry.FluidRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -74,7 +74,8 @@ public class FluidRegistryContainer
                     .slopeFindDistance(additionalProperties.slopeFindDistance).tickRate(additionalProperties.tickRate);
         }
 
-        this.block = BlockRegistry.BLOCKS.register(name, () -> new LiquidBlock(this.source, blockProperties){
+        this.block = BlockRegistry.BLOCKS.register(name, () -> new LiquidBlock(this.source, blockProperties)
+        {
             @Override
             public boolean isRandomlyTicking(BlockState p_54732_)
             {

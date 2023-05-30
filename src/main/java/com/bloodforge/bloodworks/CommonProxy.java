@@ -17,5 +17,4 @@ public class CommonProxy
         RecipeRegistry.init();
         PacketManager.register();
     }
-
 }

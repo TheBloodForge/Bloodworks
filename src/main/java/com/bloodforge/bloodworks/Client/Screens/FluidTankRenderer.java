@@ -31,7 +31,8 @@ import java.util.List;
 // Includes major rewrites and methods from:
 // https://github.com/mezz/JustEnoughItems/blob/1.19/Forge/src/main/java/mezz/jei/forge/platform/FluidHelper.java
 @SuppressWarnings({"SameParameterValue", "unused"})
-public class FluidTankRenderer {
+public class FluidTankRenderer
+{
     private static final Logger LOGGER = LogManager.getLogger();
 
     private static final NumberFormat nf = NumberFormat.getIntegerInstance();
@@ -45,21 +46,25 @@ public class FluidTankRenderer {
     private int tint = 0;
 
     @SuppressWarnings("unused")
-    enum TooltipMode {
+    enum TooltipMode
+    {
         SHOW_AMOUNT,
         SHOW_AMOUNT_AND_CAPACITY,
         ITEM_LIST
     }
 
-    public FluidTankRenderer(long capacity, boolean showCapacity, int width, int height) {
+    public FluidTankRenderer(long capacity, boolean showCapacity, int width, int height)
+    {
         this(capacity, showCapacity ? TooltipMode.SHOW_AMOUNT_AND_CAPACITY : TooltipMode.SHOW_AMOUNT, width, height);
     }
 
-    public FluidTankRenderer(long capacity, boolean showCapacity, int width, int height, int tint) {
+    public FluidTankRenderer(long capacity, boolean showCapacity, int width, int height, int tint)
+    {
         this(capacity, showCapacity ? TooltipMode.SHOW_AMOUNT_AND_CAPACITY : TooltipMode.SHOW_AMOUNT, width, height, tint);
     }
 
-    private FluidTankRenderer(long capacity, TooltipMode tooltipMode, int width, int height) {
+    private FluidTankRenderer(long capacity, TooltipMode tooltipMode, int width, int height)
+    {
         Preconditions.checkArgument(capacity > 0, "capacity must be > 0");
         Preconditions.checkArgument(width > 0, "width must be > 0");
         Preconditions.checkArgument(height > 0, "height must be > 0");
@@ -70,7 +75,8 @@ public class FluidTankRenderer {
         this.height = height;
     }
 
-    private FluidTankRenderer(long capacity, TooltipMode tooltipMode, int width, int height, int tint) {
+    private FluidTankRenderer(long capacity, TooltipMode tooltipMode, int width, int height, int tint)
+    {
         Preconditions.checkArgument(capacity > 0, "capacity must be > 0");
         Preconditions.checkArgument(width > 0, "width must be > 0");
         Preconditions.checkArgument(height > 0, "height must be > 0");
@@ -82,7 +88,8 @@ public class FluidTankRenderer {
         this.tint = tint;
     }
 
-    public void render(PoseStack poseStack, int x, int y, FluidStack fluidStack) {
+    public void render(PoseStack poseStack, int x, int y, FluidStack fluidStack)
+    {
         RenderSystem.enableBlend();
         poseStack.pushPose();
         {
@@ -94,9 +101,11 @@ public class FluidTankRenderer {
         RenderSystem.disableBlend();
     }
 
-    private void drawFluid(PoseStack poseStack, final int width, final int height, FluidStack fluidStack) {
+    private void drawFluid(PoseStack poseStack, final int width, final int height, FluidStack fluidStack)
+    {
         Fluid fluid = fluidStack.getFluid();
-        if (fluid.isSame(Fluids.EMPTY)) {
+        if (fluid.isSame(Fluids.EMPTY))
+        {
             return;
         }
 
@@ -106,17 +115,20 @@ public class FluidTankRenderer {
         long amount = fluidStack.getAmount();
         long scaledAmount = (amount * height) / capacity;
 
-        if (amount > 0 && scaledAmount < MIN_FLUID_HEIGHT) {
+        if (amount > 0 && scaledAmount < MIN_FLUID_HEIGHT)
+        {
             scaledAmount = MIN_FLUID_HEIGHT;
         }
-        if (scaledAmount > height) {
+        if (scaledAmount > height)
+        {
             scaledAmount = height;
         }
 
         drawTiledSprite(poseStack, width, height, fluidColor, scaledAmount, fluidStillSprite);
     }
 
-    private TextureAtlasSprite getStillFluidSprite(FluidStack fluidStack) {
+    private TextureAtlasSprite getStillFluidSprite(FluidStack fluidStack)
+    {
         Fluid fluid = fluidStack.getFluid();
         IClientFluidTypeExtensions renderProperties = IClientFluidTypeExtensions.of(fluid);
         ResourceLocation fluidStill = renderProperties.getStillTexture(fluidStack);
@@ -125,14 +137,16 @@ public class FluidTankRenderer {
         return minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
     }
 
-    private int getColorTint(FluidStack ingredient) {
+    private int getColorTint(FluidStack ingredient)
+    {
         if (tint != 0) return tint;
         Fluid fluid = ingredient.getFluid();
         IClientFluidTypeExtensions renderProperties = IClientFluidTypeExtensions.of(fluid);
         return renderProperties.getTintColor(ingredient);
     }
 
-    private static void drawTiledSprite(PoseStack poseStack, final int tiledWidth, final int tiledHeight, int color, long scaledAmount, TextureAtlasSprite sprite) {
+    private static void drawTiledSprite(PoseStack poseStack, final int tiledWidth, final int tiledHeight, int color, long scaledAmount, TextureAtlasSprite sprite)
+    {
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         Matrix4f matrix = poseStack.last().pose();
         setGLColorFromInt(color);
@@ -144,13 +158,16 @@ public class FluidTankRenderer {
 
         @SuppressWarnings("UnnecessaryLocalVariable") final int yStart = tiledHeight;
 
-        for (int xTile = 0; xTile <= xTileCount; xTile++) {
-            for (int yTile = 0; yTile <= yTileCount; yTile++) {
+        for (int xTile = 0; xTile <= xTileCount; xTile++)
+        {
+            for (int yTile = 0; yTile <= yTileCount; yTile++)
+            {
                 int width = (xTile == xTileCount) ? xRemainder : TEXTURE_SIZE;
                 long height = (yTile == yTileCount) ? yRemainder : TEXTURE_SIZE;
                 int x = (xTile * TEXTURE_SIZE);
                 int y = yStart - ((yTile + 1) * TEXTURE_SIZE);
-                if (width > 0 && height > 0) {
+                if (width > 0 && height > 0)
+                {
                     long maskTop = TEXTURE_SIZE - height;
                     int maskRight = TEXTURE_SIZE - width;
 
@@ -160,7 +177,8 @@ public class FluidTankRenderer {
         }
     }
 
-    private static void setGLColorFromInt(int color) {
+    private static void setGLColorFromInt(int color)
+    {
         float red = (color >> 16 & 0xFF) / 255.0F;
         float green = (color >> 8 & 0xFF) / 255.0F;
         float blue = (color & 0xFF) / 255.0F;
@@ -169,7 +187,8 @@ public class FluidTankRenderer {
         RenderSystem.setShaderColor(red, green, blue, alpha);
     }
 
-    private static void drawTextureWithMasking(Matrix4f matrix, float xCoord, float yCoord, TextureAtlasSprite textureSprite, long maskTop, long maskRight, float zLevel) {
+    private static void drawTextureWithMasking(Matrix4f matrix, float xCoord, float yCoord, TextureAtlasSprite textureSprite, long maskTop, long maskRight, float zLevel)
+    {
         float uMin = textureSprite.getU0();
         float uMax = textureSprite.getU1();
         float vMin = textureSprite.getV0();
@@ -189,12 +208,15 @@ public class FluidTankRenderer {
         tessellator.end();
     }
 
-    public List<Component> getTooltip(FluidStack fluidStack, TooltipFlag tooltipFlag) {
+    public List<Component> getTooltip(FluidStack fluidStack, TooltipFlag tooltipFlag)
+    {
         List<Component> tooltip = new ArrayList<>();
 
         Fluid fluidType = fluidStack.getFluid();
-        try {
-            if (fluidType.isSame(Fluids.EMPTY)) {
+        try
+        {
+            if (fluidType.isSame(Fluids.EMPTY))
+            {
                 return tooltip;
             }
 
@@ -204,25 +226,30 @@ public class FluidTankRenderer {
             long amount = fluidStack.getAmount();
             long milliBuckets = (amount * 1000) / FluidType.BUCKET_VOLUME;
 
-            if (tooltipMode == TooltipMode.SHOW_AMOUNT_AND_CAPACITY) {
+            if (tooltipMode == TooltipMode.SHOW_AMOUNT_AND_CAPACITY)
+            {
                 MutableComponent amountString = Component.translatable(Globals.MODID + ".tooltip.liquid.amount.with.capacity", nf.format(milliBuckets), nf.format(capacity));
                 tooltip.add(amountString.withStyle(ChatFormatting.GRAY));
-            } else if (tooltipMode == TooltipMode.SHOW_AMOUNT) {
+            } else if (tooltipMode == TooltipMode.SHOW_AMOUNT)
+            {
                 MutableComponent amountString = Component.translatable(Globals.MODID + ".tooltip.liquid.amount", nf.format(milliBuckets));
                 tooltip.add(amountString.withStyle(ChatFormatting.GRAY));
             }
-        } catch (RuntimeException e) {
+        } catch (RuntimeException e)
+        {
             LOGGER.error("Failed to get tooltip for fluid: " + e);
         }
 
         return tooltip;
     }
 
-    public int getWidth() {
+    public int getWidth()
+    {
         return width;
     }
 
-    public int getHeight() {
+    public int getHeight()
+    {
         return height;
     }
 }

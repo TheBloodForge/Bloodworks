@@ -9,13 +9,20 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 @SuppressWarnings("unused")
 public class Util
 {
-    public static float Lerp(float a, float b, float interpolation)     { return a + interpolation * (b - a); }
+    public static float Lerp(float a, float b, float interpolation)
+    {
+        return a + interpolation * (b - a);
+    }
+
     public static double Lerp(double a, double b, double interpolation)
     {
         return a + interpolation * (b - a);
     }
 
-    public static Vec3 Lerp(Vec3 a, Vec3 b, float interpolation) { return new Vec3(Lerp(a.x, b.x, interpolation), Lerp(a.y, b.y, interpolation), Lerp(a.z, b.z, interpolation)); }
+    public static Vec3 Lerp(Vec3 a, Vec3 b, float interpolation)
+    {
+        return new Vec3(Lerp(a.x, b.x, interpolation), Lerp(a.y, b.y, interpolation), Lerp(a.z, b.z, interpolation));
+    }
 
 
     public static VoxelShape RotateVoxelShapeOnYAxis(Direction from, Direction to, VoxelShape shape)
@@ -59,11 +66,16 @@ public class Util
 
     public static BlockPos getBlockPosFromIntArr(int[] minCorners)
     {
-        if(minCorners.length != 3)
+        if (minCorners.length != 3)
         {
             Globals.LogError("Is this what dying feels like?");
             return null;
         }
         return new BlockPos(minCorners[0], minCorners[1], minCorners[2]);
+    }
+
+    public static boolean isBlockPosSame(BlockPos p1, BlockPos p2)
+    {
+        return p1.toShortString().equalsIgnoreCase(p2.toShortString());
     }
 }

@@ -9,7 +9,8 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 @SuppressWarnings("unused")
-public class PacketManager {
+public class PacketManager
+{
     private static SimpleChannel INSTANCE;
     /* Stupid fucking names */
     private static final NetworkDirection PAYLOAD_TO_SERVER = NetworkDirection.PLAY_TO_SERVER;
@@ -18,11 +19,14 @@ public class PacketManager {
     private static final NetworkDirection QUERY_TO_CLIENT = NetworkDirection.LOGIN_TO_CLIENT;
 
     private static int packetId = 0;
-    private static int id() {
+
+    private static int id()
+    {
         return packetId++;
     }
 
-    public static void register() {
+    public static void register()
+    {
         SimpleChannel net = NetworkRegistry.ChannelBuilder
                 .named(new ResourceLocation(Globals.MODID, "messages"))
                 .networkProtocolVersion(() -> "1.0")
@@ -69,15 +73,18 @@ public class PacketManager {
                 .add();
     }
 
-    public static <MSG> void sendToServer(MSG message) {
+    public static <MSG> void sendToServer(MSG message)
+    {
         INSTANCE.sendToServer(message);
     }
 
-    public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
+    public static <MSG> void sendToPlayer(MSG message, ServerPlayer player)
+    {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 
-    public static <MSG> void sendToClients(MSG message) {
+    public static <MSG> void sendToClients(MSG message)
+    {
         INSTANCE.send(PacketDistributor.ALL.noArg(), message);
     }
 }

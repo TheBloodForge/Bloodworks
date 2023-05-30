@@ -20,7 +20,8 @@ public class MenuRegistry
             registerMenuType(InfusionChamberMenu::new, "infusion_chamber");
 
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory,
-                                                                                                  String name) {
+                                                                                                  String name)
+    {
         return MENUS.register(name, () -> IForgeMenuType.create(factory));
     }
 }

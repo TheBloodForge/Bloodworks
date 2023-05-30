@@ -1,8 +1,7 @@
 package com.bloodforge.bloodworks.Networking;
 
-import com.bloodforge.bloodworks.Server.Menus.InfusionChamberMenu;
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_BloodTank;
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_InfusionChamber;
+import com.bloodforge.bloodworks.Server.Menus.InfusionChamberMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -49,10 +48,6 @@ public class FluidSyncS2CPacket
                 {
                     menu.setFluid(this.fluidStack);
                 }
-            }
-            if (Minecraft.getInstance().level.getBlockEntity(pos) instanceof BE_BloodTank blockEntity)
-            {
-                blockEntity.setFluid(this.fluidStack);
             }
         });
         return true;

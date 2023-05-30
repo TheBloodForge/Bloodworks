@@ -36,6 +36,7 @@ public class BlockIntestine extends BaseEntityBlock
 {
     public static final DirectionProperty FACING_TO = DirectionProperty.create("facing_to"), FACING_FROM = DirectionProperty.create("facing_from");
     public static final IntegerProperty INTESTINE_ID = IntegerProperty.create("intestine_id", 0, 800);
+
     public BlockIntestine()
     {
         super(
@@ -94,12 +95,14 @@ public class BlockIntestine extends BaseEntityBlock
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos blockPos, Player player, InteractionHand interactedHand, BlockHitResult hitResult)
     {
-        if(level.isClientSide()) return InteractionResult.sidedSuccess(level.isClientSide());
+        if (level.isClientSide()) return InteractionResult.sidedSuccess(level.isClientSide());
         PacketManager.sendToClients(new MessageS2CPacket(Component.literal("to = " + state.getValue(FACING_TO) + " from = " + state.getValue(FACING_FROM) + " ID = " + state.getValue(INTESTINE_ID)), false));
-        if (!player.getItemInHand(interactedHand).is(BlockRegistry.BLOCK_INTESTINE.item().get())) {
+        if (!player.getItemInHand(interactedHand).is(BlockRegistry.BLOCK_INTESTINE.item().get()))
+        {
             return super.use(state, level, blockPos, player, interactedHand, hitResult);
         }
-        if (state.getBlock() instanceof BlockIntestine) {
+        if (state.getBlock() instanceof BlockIntestine)
+        {
             BlockState newState = this.defaultBlockState().setValue(FACING_FROM, state.getValue(FACING_FROM)).setValue(FACING_TO, hitResult.getDirection()).setValue(INTESTINE_ID, state.getValue(INTESTINE_ID));
             level.setBlocksDirty(blockPos, state, newState);
             level.setBlockAndUpdate(blockPos, newState);

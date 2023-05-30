@@ -9,10 +9,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class RecipeBloodInfusion
 {
-    @NotNull private final Ingredient ingredient;
-    @NotNull private final ItemStack output;
-    @NotNull private final int bloodRequired, requiredTicks;
-    @NotNull private final boolean coagulatedBlood;
+    @NotNull
+    private final Ingredient ingredient;
+    @NotNull
+    private final ItemStack output;
+    @NotNull
+    private final int bloodRequired, requiredTicks;
+    @NotNull
+    private final boolean coagulatedBlood;
 
     public RecipeBloodInfusion(int bloodVolumeRequired, Ingredient ingredient, ItemStack output, boolean isCoagulated, int requiredTicks)
     {
@@ -32,17 +36,27 @@ public class RecipeBloodInfusion
     }
 
     public ItemStack getResultItem()
-    { return output; }
+    {
+        return output;
+    }
 
     public int getBloodRequired()
-    { return bloodRequired; }
+    {
+        return bloodRequired;
+    }
 
     public boolean isCoagulatedBlood()
-    { return coagulatedBlood; }
+    {
+        return coagulatedBlood;
+    }
 
     public int getTicksRequired()
-    { return requiredTicks; }
+    {
+        return requiredTicks;
+    }
 
     public Ingredient getIngredient()
-    { return ingredient; }
+    {
+        return ingredient;
+    }
 }
