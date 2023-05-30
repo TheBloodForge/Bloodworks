@@ -10,6 +10,9 @@ import java.util.HashMap;
 
 public class StructureDetectionUtils
 {
+    //#################################################
+    //              Utility Functions
+    //#################################################
     public static BlockPos getMinCorner(BlockPos corner1, BlockPos corner2)
     {
         return new BlockPos(
@@ -28,7 +31,6 @@ public class StructureDetectionUtils
         );
     }
 
-
     public static boolean blockMatches(Level level, BlockMask blockMask, BlockPos pos, HashMap<Block, ArrayList<BlockPos>> specialBlocks) {
         BlockState blockState = level.getBlockState(pos);
         BlockMask.BlockMaskCompareResult res = blockMask.Compare(blockState);
@@ -43,6 +45,10 @@ public class StructureDetectionUtils
         }
         return res.OK();
     }
+
+    //#################################################
+    //     Generic Shape-scan Helpers, not currently in use
+    //#################################################
 
     public static MultiBlockScanResult isCuboidOf(Level level, BlockMask blockMask, HashMap<Block, ArrayList<BlockPos>> specialBlocks, BlockPos corner1, BlockPos corner2)
     {
@@ -64,8 +70,6 @@ public class StructureDetectionUtils
         }
         return new MultiBlockScanResult(true, null, null, null);
     }
-
-
     public static MultiBlockScanResult isWallsOf(Level level, BlockMask blockMask, HashMap<Block, ArrayList<BlockPos>> specialBlocks, BlockPos corner1, BlockPos corner2)
     {
         BlockPos cornerLow = getMinCorner(corner1, corner2);
@@ -88,7 +92,6 @@ public class StructureDetectionUtils
         }
         return new MultiBlockScanResult(true, null, null, null);
     }
-
     public static MultiBlockScanResult isHollowCuboidOf(Level level, BlockMask blockMask, HashMap<Block, ArrayList<BlockPos>> specialBlocks, BlockPos corner1, BlockPos corner2)
     {
         BlockPos cornerLow = getMinCorner(corner1, corner2);
@@ -112,7 +115,6 @@ public class StructureDetectionUtils
         }
         return new MultiBlockScanResult(true, null, null, null);
     }
-
     public static MultiBlockScanResult isFacesOf(Level level, BlockMask blockMask, HashMap<Block, ArrayList<BlockPos>> specialBlocks, BlockPos corner1, BlockPos corner2)
     {
         BlockPos cornerLow = getMinCorner(corner1, corner2);
@@ -163,7 +165,6 @@ public class StructureDetectionUtils
         }
         return new MultiBlockScanResult(true, null, null, null);
     }
-
     public static MultiBlockScanResult isEdgesOf(Level level, BlockMask blockMask, HashMap<Block, ArrayList<BlockPos>> specialBlocks, BlockPos corner1, BlockPos corner2)
     {
         BlockPos cornerLow = getMinCorner(corner1, corner2);
@@ -190,8 +191,57 @@ public class StructureDetectionUtils
         }
         return new MultiBlockScanResult(true, null, null, null);
     }
+    public static MultiBlockScanResult isCornersOf(Level level, BlockMask blockMask, HashMap<Block, ArrayList<BlockPos>> specialBlocks, BlockPos corner1, BlockPos corner2)
+    {
+        BlockPos cornerLow = getMinCorner(corner1, corner2);
+        BlockPos cornerHigh = getMaxCorner(corner1, corner2);
+
+        if (!blockMatches(level, blockMask, cornerHigh, specialBlocks))
+        {
+            return new MultiBlockScanResult(false, cornerHigh, blockMask, null);
+        }
+        if (!blockMatches(level, blockMask, cornerHigh, specialBlocks))
+        {
+            return new MultiBlockScanResult(false, cornerHigh, blockMask, null);
+        }
+        BlockPos toCheck = new BlockPos(cornerLow.getX(), cornerLow.getY(), cornerHigh.getZ());
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
+        {
+            return new MultiBlockScanResult(false, toCheck, blockMask, null);
+        }
+        toCheck = new BlockPos(cornerLow.getX(), cornerHigh.getY(), cornerLow.getZ());
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
+        {
+            return new MultiBlockScanResult(false, toCheck, blockMask, null);
+        }
+        toCheck = new BlockPos(cornerLow.getX(), cornerHigh.getY(), cornerHigh.getZ());
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
+        {
+            return new MultiBlockScanResult(false, toCheck, blockMask, null);
+        }
+        toCheck = new BlockPos(cornerHigh.getX(), cornerLow.getY(), cornerLow.getZ());
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
+        {
+            return new MultiBlockScanResult(false, toCheck, blockMask, null);
+        }
+        toCheck = new BlockPos(cornerHigh.getX(), cornerLow.getY(), cornerHigh.getZ());
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
+        {
+            return new MultiBlockScanResult(false, toCheck, blockMask, null);
+        }
+        toCheck = new BlockPos(cornerHigh.getX(), cornerHigh.getY(), cornerLow.getZ());
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
+        {
+            return new MultiBlockScanResult(false, toCheck, blockMask, null);
+        }
+
+        return new MultiBlockScanResult(true, null, null, null);
+    }
 
 
+    //#################################################
+    //                smart-scan cuboid
+    //#################################################
     public static MultiBlockScanResult doComplexCuboidScan(Level level, BlockPos corner1, BlockPos corner2,
            BlockMask faces, BlockMask edges, BlockMask corners, BlockMask inside, HashMap<Block, ArrayList<BlockPos>> specialBlocks)
     {
@@ -247,53 +297,10 @@ public class StructureDetectionUtils
         return new MultiBlockScanResult(true, null, null, null);
     }
 
-    public static MultiBlockScanResult isCornersOf(Level level, BlockMask blockMask, HashMap<Block, ArrayList<BlockPos>> specialBlocks, BlockPos corner1, BlockPos corner2)
-    {
-        BlockPos cornerLow = getMinCorner(corner1, corner2);
-        BlockPos cornerHigh = getMaxCorner(corner1, corner2);
 
-        if (!blockMatches(level, blockMask, cornerHigh, specialBlocks))
-        {
-            return new MultiBlockScanResult(false, cornerHigh, blockMask, null);
-        }
-        if (!blockMatches(level, blockMask, cornerHigh, specialBlocks))
-        {
-            return new MultiBlockScanResult(false, cornerHigh, blockMask, null);
-        }
-        BlockPos toCheck = new BlockPos(cornerLow.getX(), cornerLow.getY(), cornerHigh.getZ());
-        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
-        {
-            return new MultiBlockScanResult(false, toCheck, blockMask, null);
-        }
-        toCheck = new BlockPos(cornerLow.getX(), cornerHigh.getY(), cornerLow.getZ());
-        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
-        {
-            return new MultiBlockScanResult(false, toCheck, blockMask, null);
-        }
-        toCheck = new BlockPos(cornerLow.getX(), cornerHigh.getY(), cornerHigh.getZ());
-        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
-        {
-            return new MultiBlockScanResult(false, toCheck, blockMask, null);
-        }
-        toCheck = new BlockPos(cornerHigh.getX(), cornerLow.getY(), cornerLow.getZ());
-        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
-        {
-            return new MultiBlockScanResult(false, toCheck, blockMask, null);
-        }
-        toCheck = new BlockPos(cornerHigh.getX(), cornerLow.getY(), cornerHigh.getZ());
-        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
-        {
-            return new MultiBlockScanResult(false, toCheck, blockMask, null);
-        }
-        toCheck = new BlockPos(cornerHigh.getX(), cornerHigh.getY(), cornerLow.getZ());
-        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
-        {
-            return new MultiBlockScanResult(false, toCheck, blockMask, null);
-        }
-
-        return new MultiBlockScanResult(true, null, null, null);
-    }
-
+    //#################################################
+    //              Conducts a cuboid scan
+    //#################################################
     public static Object scanRoomWithEdgeCornerRequirements(Level level, BlockMask faces, BlockMask edges, BlockMask corner, BlockMask inside, BlockMask specialsAnywhere, BlockPos corner1, BlockPos corner2)
     {
         BlockPos cornerLow = getMinCorner(corner1, corner2);
@@ -312,6 +319,7 @@ public class StructureDetectionUtils
         return new MultiBlockScanResult(true, null, null, specialBlocks);
     }
 
+    //old version for reference
     /*public static Object scanRoomWithEdgeCornerRequirements(Level level, BlockMask faces, BlockMask edges, BlockMask corner, BlockMask specialsAnywhere, BlockPos corner1, BlockPos corner2)
     {
         BlockPos cornerLow = getMinCorner(corner1, corner2);
