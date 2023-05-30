@@ -6,6 +6,7 @@ import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.bloodforge.bloodworks.Util;
+import com.ibm.icu.impl.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -75,9 +76,9 @@ public class BE_Braincase_Controller extends BlockEntityMachineBase
 
     public void use(Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
-        BlockPos found = MULTIBLOCK_BRAINCASE_GETTER.tryFindLastCornerWithFirstCorner(player.level, multiblockCoordMin, new BlockPos(4, 3, 4), new BlockPos(5, 4, 5));
+        Pair<BlockPos, BlockPos> found = MULTIBLOCK_BRAINCASE_GETTER.tryFindMultiblock(player.level, getBlockPos(), new BlockPos(4, 3, 4), new BlockPos(12, 10, 12), MultiblockBraincase.BLOCK_MASK_BRAINCASE_CORNERS);
         if (found != null)
-            PacketManager.sendToClients(new MessageS2CPacket(Component.literal(found.toString()), false));
+            PacketManager.sendToClients(new MessageS2CPacket(Component.literal(found.first.toString() + ", " + found.second.toString()), false));
         else
             PacketManager.sendToClients(new MessageS2CPacket(Component.literal("Not found"), false));
     }

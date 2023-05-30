@@ -28,22 +28,20 @@ public class StructureDetectionUtils
         );
     }
 
-    private static void tryAddSpecialBlock(Level level, BlockMask blockMask, BlockPos pos, HashMap<Block, ArrayList<BlockPos>> specialBlocks)
-    {
-        BlockState s = level.getBlockState(pos);
-        if (blockMask.isSpecialBlock(s))
-        {
-            if (!specialBlocks.containsKey(s.getBlock()))
-            {
-                specialBlocks.put(s.getBlock(), new ArrayList<>());
-            }
-            specialBlocks.get(s.getBlock()).add(pos);
-        }
-    }
 
-    public static boolean blockMatches(Level level, BlockMask blockMask, BlockPos pos)
-    {
-        return blockMask.DoesBlockFitMask(level.getBlockState(pos));
+    public static boolean blockMatches(Level level, BlockMask blockMask, BlockPos pos, HashMap<Block, ArrayList<BlockPos>> specialBlocks) {
+        BlockState blockState = level.getBlockState(pos);
+        BlockMask.BlockMaskCompareResult res = blockMask.Compare(blockState);
+        if (res.isRequired() || res.isSpecial())
+        {
+            if (!specialBlocks.containsKey(blockState.getBlock()))
+            {
+                specialBlocks.put(blockState.getBlock(), new ArrayList<>());
+            }
+            specialBlocks.get(blockState.getBlock()).add(pos);
+            System.out.println("Added special block: "+blockState.getBlock().getName());
+        }
+        return res.OK();
     }
 
     public static MultiBlockScanResult isCuboidOf(Level level, BlockMask blockMask, HashMap<Block, ArrayList<BlockPos>> specialBlocks, BlockPos corner1, BlockPos corner2)
@@ -57,8 +55,7 @@ public class StructureDetectionUtils
                 for (int z = cornerLow.getZ(); z < cornerHigh.getZ(); z++)
                 {
                     BlockPos pos = new BlockPos(x, y, z);
-                    tryAddSpecialBlock(level, blockMask, pos, specialBlocks);
-                    if (!blockMatches(level, blockMask, pos))
+                    if (!blockMatches(level, blockMask, pos, specialBlocks))
                     {
                         return new MultiBlockScanResult(false, pos, blockMask, null);
                     }
@@ -82,8 +79,7 @@ public class StructureDetectionUtils
                 {
                     if (z != cornerLow.getZ() && z != cornerHigh.getZ()) continue;
                     BlockPos pos = new BlockPos(x, y, z);
-                    tryAddSpecialBlock(level, blockMask, pos, specialBlocks);
-                    if (!blockMatches(level, blockMask, pos))
+                    if (!blockMatches(level, blockMask, pos, specialBlocks))
                     {
                         return new MultiBlockScanResult(false, pos, blockMask, null);
                     }
@@ -107,8 +103,7 @@ public class StructureDetectionUtils
                             (x != cornerLow.getX() && x != cornerHigh.getX()) &&
                             (z != cornerLow.getZ() && z != cornerHigh.getZ())) continue;
                     BlockPos pos = new BlockPos(x, y, z);
-                    tryAddSpecialBlock(level, blockMask, pos, specialBlocks);
-                    if (!blockMatches(level, blockMask, pos))
+                    if (!blockMatches(level, blockMask, pos, specialBlocks))
                     {
                         return new MultiBlockScanResult(false, pos, blockMask, null);
                     }
@@ -128,12 +123,38 @@ public class StructureDetectionUtils
             {
                 for (int z = cornerLow.getZ(); z < cornerHigh.getZ(); z++)
                 {
-                    if ((x == cornerLow.getX() || x == cornerHigh.getX()) &&
-                            (y == cornerLow.getY() || y == cornerHigh.getY()) &&
-                            (z == cornerLow.getZ() || z == cornerHigh.getZ())) continue;
+                    int edgeIntersectionCount = 0;
+                    if(x == cornerLow.getX() || x == cornerHigh.getX()) edgeIntersectionCount++;
+                    if(y == cornerLow.getY() || y == cornerHigh.getY()) edgeIntersectionCount++;
+                    if(z == cornerLow.getZ() || z == cornerHigh.getZ()) edgeIntersectionCount++;
+                    if(edgeIntersectionCount != 1) continue;
                     BlockPos pos = new BlockPos(x, y, z);
-                    tryAddSpecialBlock(level, blockMask, pos, specialBlocks);
-                    if (!blockMatches(level, blockMask, pos))
+                    if (!blockMatches(level, blockMask, pos, specialBlocks)) {
+                        return new MultiBlockScanResult(false, pos, blockMask, null);
+                    }
+                }
+            }
+        }
+        return new MultiBlockScanResult(true, null, null, null);
+    }
+    public static MultiBlockScanResult isInteriorOf(Level level, BlockMask blockMask, HashMap<Block, ArrayList<BlockPos>> specialBlocks, BlockPos corner1, BlockPos corner2)
+    {
+        BlockPos cornerLow = getMinCorner(corner1, corner2);
+        BlockPos cornerHigh = getMaxCorner(corner1, corner2);
+        for (int y = cornerLow.getY(); y < cornerHigh.getY(); y++)
+        {
+            for (int x = cornerLow.getX(); x < cornerHigh.getX(); x++)
+            {
+                for (int z = cornerLow.getZ(); z < cornerHigh.getZ(); z++)
+                {
+                    int edgeIntersectionCount = 0;
+
+                    if(x == cornerLow.getX() || x == cornerHigh.getX()) edgeIntersectionCount++;
+                    if(y == cornerLow.getY() || y == cornerHigh.getY()) edgeIntersectionCount++;
+                    if(z == cornerLow.getZ() || z == cornerHigh.getZ()) edgeIntersectionCount++;
+                    if(edgeIntersectionCount != 0) continue;
+                    BlockPos pos = new BlockPos(x, y, z);
+                    if (!blockMatches(level, blockMask, pos, specialBlocks))
                     {
                         return new MultiBlockScanResult(false, pos, blockMask, null);
                     }
@@ -153,14 +174,72 @@ public class StructureDetectionUtils
             {
                 for (int z = cornerLow.getZ(); z < cornerHigh.getZ(); z++)
                 {
-                    if ((x != cornerLow.getX() && x != cornerHigh.getX()) ||
-                            (y != cornerLow.getY() && y != cornerHigh.getY()) ||
-                            (z != cornerLow.getZ() && z != cornerHigh.getZ())) continue;
+                    int edgeIntersectionCount = 0;
+
+                    if(x == cornerLow.getX() || x == cornerHigh.getX()) edgeIntersectionCount++;
+                    if(y == cornerLow.getY() || y == cornerHigh.getY()) edgeIntersectionCount++;
+                    if(z == cornerLow.getZ() || z == cornerHigh.getZ()) edgeIntersectionCount++;
+                    if(edgeIntersectionCount != 2) continue;
                     BlockPos pos = new BlockPos(x, y, z);
-                    tryAddSpecialBlock(level, blockMask, pos, specialBlocks);
-                    if (!blockMatches(level, blockMask, pos))
+                    if (!blockMatches(level, blockMask, pos, specialBlocks))
                     {
                         return new MultiBlockScanResult(false, pos, blockMask, null);
+                    }
+                }
+            }
+        }
+        return new MultiBlockScanResult(true, null, null, null);
+    }
+
+
+    public static MultiBlockScanResult doComplexCuboidScan(Level level, BlockPos corner1, BlockPos corner2,
+           BlockMask faces, BlockMask edges, BlockMask corners, BlockMask inside, HashMap<Block, ArrayList<BlockPos>> specialBlocks)
+    {
+        BlockPos cornerLow = getMinCorner(corner1, corner2);
+        BlockPos cornerHigh = getMaxCorner(corner1, corner2);
+        for (int y = cornerLow.getY(); y < cornerHigh.getY(); y++)
+        {
+            for (int x = cornerLow.getX(); x < cornerHigh.getX(); x++)
+            {
+                for (int z = cornerLow.getZ(); z < cornerHigh.getZ(); z++)
+                {
+                    int edgeIntersectionCount = 0;
+
+                    if(x == cornerLow.getX() || x == cornerHigh.getX()) edgeIntersectionCount++;
+                    if(y == cornerLow.getY() || y == cornerHigh.getY()) edgeIntersectionCount++;
+                    if(z == cornerLow.getZ() || z == cornerHigh.getZ()) edgeIntersectionCount++;
+                    BlockPos pos = new BlockPos(x, y, z);
+                    if(edgeIntersectionCount == 0)
+                    {
+                        //inside
+                        if (!blockMatches(level, inside, pos, specialBlocks))
+                        {
+                            return new MultiBlockScanResult(false, pos, inside, null);
+                        }
+                    }
+                    else if(edgeIntersectionCount == 1)
+                    {
+                        //face
+                        if (!blockMatches(level, faces, pos, specialBlocks))
+                        {
+                            return new MultiBlockScanResult(false, pos, faces, null);
+                        }
+                    }
+                    else if(edgeIntersectionCount == 2)
+                    {
+                        //edge
+                        if (!blockMatches(level, edges, pos, specialBlocks))
+                        {
+                            return new MultiBlockScanResult(false, pos, edges, null);
+                        }
+                    }
+                    else if(edgeIntersectionCount == 3)
+                    {
+                        //corner
+                        if (!blockMatches(level, corners, pos, specialBlocks))
+                        {
+                            return new MultiBlockScanResult(false, pos, corners, null);
+                        }
                     }
                 }
             }
@@ -173,57 +252,67 @@ public class StructureDetectionUtils
         BlockPos cornerLow = getMinCorner(corner1, corner2);
         BlockPos cornerHigh = getMaxCorner(corner1, corner2);
 
-        if (!blockMatches(level, blockMask, cornerHigh))
+        if (!blockMatches(level, blockMask, cornerHigh, specialBlocks))
         {
-            tryAddSpecialBlock(level, blockMask, cornerHigh, specialBlocks);
             return new MultiBlockScanResult(false, cornerHigh, blockMask, null);
         }
-        if (!blockMatches(level, blockMask, cornerHigh))
+        if (!blockMatches(level, blockMask, cornerHigh, specialBlocks))
         {
-            tryAddSpecialBlock(level, blockMask, cornerLow, specialBlocks);
             return new MultiBlockScanResult(false, cornerHigh, blockMask, null);
         }
         BlockPos toCheck = new BlockPos(cornerLow.getX(), cornerLow.getY(), cornerHigh.getZ());
-        if (!blockMatches(level, blockMask, toCheck))
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
         {
-            tryAddSpecialBlock(level, blockMask, toCheck, specialBlocks);
             return new MultiBlockScanResult(false, toCheck, blockMask, null);
         }
         toCheck = new BlockPos(cornerLow.getX(), cornerHigh.getY(), cornerLow.getZ());
-        if (!blockMatches(level, blockMask, toCheck))
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
         {
-            tryAddSpecialBlock(level, blockMask, toCheck, specialBlocks);
             return new MultiBlockScanResult(false, toCheck, blockMask, null);
         }
         toCheck = new BlockPos(cornerLow.getX(), cornerHigh.getY(), cornerHigh.getZ());
-        if (!blockMatches(level, blockMask, toCheck))
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
         {
-            tryAddSpecialBlock(level, blockMask, toCheck, specialBlocks);
             return new MultiBlockScanResult(false, toCheck, blockMask, null);
         }
         toCheck = new BlockPos(cornerHigh.getX(), cornerLow.getY(), cornerLow.getZ());
-        if (!blockMatches(level, blockMask, toCheck))
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
         {
-            tryAddSpecialBlock(level, blockMask, toCheck, specialBlocks);
             return new MultiBlockScanResult(false, toCheck, blockMask, null);
         }
         toCheck = new BlockPos(cornerHigh.getX(), cornerLow.getY(), cornerHigh.getZ());
-        if (!blockMatches(level, blockMask, toCheck))
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
         {
-            tryAddSpecialBlock(level, blockMask, toCheck, specialBlocks);
             return new MultiBlockScanResult(false, toCheck, blockMask, null);
         }
         toCheck = new BlockPos(cornerHigh.getX(), cornerHigh.getY(), cornerLow.getZ());
-        if (!blockMatches(level, blockMask, toCheck))
+        if (!blockMatches(level, blockMask, toCheck, specialBlocks))
         {
-            tryAddSpecialBlock(level, blockMask, toCheck, specialBlocks);
             return new MultiBlockScanResult(false, toCheck, blockMask, null);
         }
 
         return new MultiBlockScanResult(true, null, null, null);
     }
 
-    public static Object scanRoomWithEdgeCornerRequirements(Level level, BlockMask faces, BlockMask edges, BlockMask corner, BlockMask specialsAnywhere, BlockPos corner1, BlockPos corner2)
+    public static Object scanRoomWithEdgeCornerRequirements(Level level, BlockMask faces, BlockMask edges, BlockMask corner, BlockMask inside, BlockMask specialsAnywhere, BlockPos corner1, BlockPos corner2)
+    {
+        BlockPos cornerLow = getMinCorner(corner1, corner2);
+        BlockPos cornerHigh = getMaxCorner(corner1, corner2);
+
+        HashMap<Block, ArrayList<BlockPos>> specialBlocks = new HashMap<>();
+
+        MultiBlockScanResult r;
+        BlockMask.BlockMaskRequireResult s;
+        System.out.println("Scanning faces");
+        if (!(r = doComplexCuboidScan(level, cornerLow, cornerHigh, faces, edges, corner, inside, specialBlocks)).isOK()) return r;
+
+        if (!(s = specialsAnywhere.areRequirementsSatisfiedBy(specialBlocks)).OK()) return s;
+        //past this point, multiblock is OK as far as masks go. Check for specials
+
+        return new MultiBlockScanResult(true, null, null, specialBlocks);
+    }
+
+    /*public static Object scanRoomWithEdgeCornerRequirements(Level level, BlockMask faces, BlockMask edges, BlockMask corner, BlockMask specialsAnywhere, BlockPos corner1, BlockPos corner2)
     {
         BlockPos cornerLow = getMinCorner(corner1, corner2);
         BlockPos cornerHigh = getMaxCorner(corner1, corner2);
@@ -233,15 +322,18 @@ public class StructureDetectionUtils
         HashMap<Block, ArrayList<BlockPos>> specialBlocksCorners = new HashMap<>();
 
         MultiBlockScanResult r;
-        SpecialBlockFindResult s;
+        BlockMask.BlockMaskRequireResult s;
+        System.out.println("Scanning faces");
         if (!(r = isFacesOf(level, faces, specialBlocksFaces, cornerLow, cornerHigh)).isOK()) return r;
-        if (!(s = faces.areSpecialsSatisfiedBy(specialBlocksFaces)).isOK()) return s;
+        if (!(s = faces.areRequirementsSatisfiedBy(specialBlocksFaces)).OK()) return s;
 
+        System.out.println("Scanning edges");
         if (!(r = isEdgesOf(level, edges, specialBlocksEdges, cornerLow, cornerHigh)).isOK()) return r;
-        if (!(s = edges.areSpecialsSatisfiedBy(specialBlocksEdges)).isOK()) return s;
+        if (!(s = edges.areRequirementsSatisfiedBy(specialBlocksEdges)).OK()) return s;
 
+        System.out.println("Scanning corners");
         if (!(r = isCornersOf(level, corner, specialBlocksCorners, cornerLow, cornerHigh)).isOK()) return r;
-        if (!(s = corner.areSpecialsSatisfiedBy(specialBlocksCorners)).isOK()) return s;
+        if (!(s = corner.areRequirementsSatisfiedBy(specialBlocksCorners)).OK()) return s;
 
         HashMap<Block, ArrayList<BlockPos>> specialBlocks = new HashMap<>();
         //merge lists down
@@ -260,9 +352,9 @@ public class StructureDetectionUtils
             if (!specialBlocks.containsKey(key)) specialBlocks.put(key, new ArrayList<>());
             val.forEach((a) -> specialBlocks.get(key).add(a));
         });
-        if (!(s = specialsAnywhere.areSpecialsSatisfiedBy(specialBlocks)).isOK()) return s;
+        if (!(s = specialsAnywhere.areRequirementsSatisfiedBy(specialBlocks)).OK()) return s;
         //past this point, multiblock is OK as far as masks go. Check for specials
 
         return new MultiBlockScanResult(true, null, null, specialBlocks);
-    }
+    }*/
 }

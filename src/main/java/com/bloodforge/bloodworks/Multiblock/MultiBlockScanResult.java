@@ -13,19 +13,7 @@ public record MultiBlockScanResult(boolean OK, @Nullable BlockPos errorLocation,
     @Override
     public String toString()
     {
-        return toString(false);
-    }
-
-    public String toString(boolean friendly)
-    {
-        if (!friendly)
-        {
-            return "MultiBlockScanResult{" +
-                    "errorLocation=" + errorLocation +
-                    ", expectedBlocks=" + expectedBlocks.toString() +
-                    '}';
-        }
-        return "Structure failed to find a correct block at " + errorLocation.toShortString() + "! Expected any of: " + expectedBlocks.toString();
+        return "Structure failed to find a correct block at " + errorLocation.toShortString() + "! Expected: " + expectedBlocks.toString();
     }
 
     public boolean isOK()

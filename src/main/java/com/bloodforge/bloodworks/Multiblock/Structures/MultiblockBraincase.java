@@ -7,17 +7,35 @@ import net.minecraft.world.level.Level;
 
 public class MultiblockBraincase extends MultiblockStructureBase
 {
-    public static final BlockMask BLOCK_MASK_BRAINCASE_WALLS = new BlockMask(BlockRegistry.BLOCK_BRAINCASE.block().get(), BlockRegistry.BLOCK_BRAINCASE_WINDOW.block().get(), BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.block().get());
-    public static final BlockMask BLOCK_MASK_BRAINCASE_EDGES_CORNERS = new BlockMask(BlockRegistry.BLOCK_BRAINCASE.block().get(), BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.block().get());
-    public static final BlockMask BLOCK_MASK_BRAINCASE_REQUIRED_ANYWHERE = new BlockMask(new SpecialBlockParams[]{new SpecialBlockParams(BlockRegistry.BLOCK_COAGULATED.blockBase().block().get(), true)});
+    public static final BlockMask BLOCK_MASK_BRAINCASE_WALLS = new BlockMask()
+        .withWhitelisted(BlockRegistry.BLOCK_BRAINCASE.block().get())
+        .withWhitelisted(BlockRegistry.BLOCK_BRAINCASE_WINDOW.block().get());
+
+    public static final BlockMask BLOCK_MASK_BRAINCASE_EDGES = new BlockMask()
+            .withWhitelisted(BlockRegistry.BLOCK_BRAINCASE.block().get())
+            .withWhitelisted(BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.block().get())
+            .withSpecial(BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.block().get());
+
+    public static final BlockMask BLOCK_MASK_BRAINCASE_CORNERS = new BlockMask()
+            .withWhitelisted(BlockRegistry.BLOCK_BRAINCASE.block().get())
+            .withWhitelisted(BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.block().get());
+
+    public static final BlockMask BLOCK_MASK_BRAINCASE_INSIDE = new BlockMask()
+            .withBlacklisted(BlockRegistry.BLOCK_BRAINCASE.block().get())
+            .withBlacklisted(BlockRegistry.BLOCK_BRAINCASE_WINDOW.block().get())
+            .withBlacklisted(BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.block().get());
+
+    public static final BlockMask BLOCK_MASK_BRAINCASE_REQUIRED_ANYWHERE = new BlockMask()
+        .withRequired(BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.block().get());
 
     @Override
     public boolean IsAtCoords(Level level, BlockPos minCorner, BlockPos maxCorner)
     {
-        Object structRes = StructureDetectionUtils.scanRoomWithEdgeCornerRequirements(level, BLOCK_MASK_BRAINCASE_WALLS, BLOCK_MASK_BRAINCASE_EDGES_CORNERS, BLOCK_MASK_BRAINCASE_EDGES_CORNERS, BLOCK_MASK_BRAINCASE_REQUIRED_ANYWHERE, minCorner, maxCorner);
-        if (structRes instanceof SpecialBlockFindResult specialBlockFindResult)
+        System.out.println(minCorner + ", " + maxCorner);
+        Object structRes = StructureDetectionUtils.scanRoomWithEdgeCornerRequirements(level, BLOCK_MASK_BRAINCASE_WALLS, BLOCK_MASK_BRAINCASE_EDGES, BLOCK_MASK_BRAINCASE_CORNERS, BLOCK_MASK_BRAINCASE_INSIDE, BLOCK_MASK_BRAINCASE_REQUIRED_ANYWHERE, minCorner, maxCorner);
+        if (structRes instanceof BlockMask.BlockMaskRequireResult specialBlockFindResult)
         {
-            if (!specialBlockFindResult.isOK())
+            if (!specialBlockFindResult.OK())
             {
                 System.out.println(specialBlockFindResult);
                 return false;
@@ -26,7 +44,7 @@ public class MultiblockBraincase extends MultiblockStructureBase
         {
             if (!multiBlockScanResult.isOK())
             {
-                System.out.println(multiBlockScanResult.toString(true));
+                System.out.println(multiBlockScanResult.toString());
                 return false;
             }
         }

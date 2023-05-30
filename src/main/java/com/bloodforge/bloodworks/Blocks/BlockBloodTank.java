@@ -51,7 +51,7 @@ public class BlockBloodTank extends BlockMachineBase
 
     //    public static final BlockShape SHAPE = BlockShape.createBlockShape(2.5, 0, 2.5, 13.5, 16, 13.5);
     public static final BooleanProperty OUTPUT = BooleanProperty.create("output");
-    public static final IntegerProperty TIER = IntegerProperty.create("tier", -1, 10);
+    public static final IntegerProperty TIER = IntegerProperty.create("tier", 0, 10);
 
     public BlockBloodTank()
     {
