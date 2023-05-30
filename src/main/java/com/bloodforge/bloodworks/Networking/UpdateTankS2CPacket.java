@@ -1,6 +1,7 @@
 package com.bloodforge.bloodworks.Networking;
 
-import com.bloodforge.bloodworks.Server.TankData;
+import com.bloodforge.bloodworks.Server.TankDataProxy;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -41,9 +42,9 @@ public class UpdateTankS2CPacket
         context.enqueueWork(() ->
         {
             if (wasAdded)
-                TankData.addChild(parentName, childPos);
+                TankDataProxy.addChild(parentName, childPos, Minecraft.getInstance().level);
             else
-                TankData.removeChild(parentName, childPos);
+                TankDataProxy.removeChild(parentName, childPos, Minecraft.getInstance().level);
         });
         return true;
     }

@@ -44,7 +44,7 @@ public class BlockRegistry
 
     public static final RegistryPair BLOCK_FLESH_LIGHT = createBlock("flesh_light", () -> new BlockFleshLight(false));
     public static final RegistryPair BLOCK_FLESH_LIGHT_LARGE = createBlock("flesh_light_large", () -> new BlockFleshLight(true));
-    public static final RegistryPair BLOCK_FLESH_PORTHOLE = createBlock("flesh_porthole", () -> new BlockBloodyTransparentBase());
+    public static final RegistryPair BLOCK_FLESH_PORTHOLE = createBlock("flesh_porthole", BlockBloodyTransparentBase::new);
 
     public static final RegistryPair BLOCK_BRAINCASE = createBlock("braincase", () ->
             new GenericBlockBase(BlockBehaviour.Properties.of(Material.METAL).strength(3f, 7f).sound(SoundType.METAL)));
@@ -73,7 +73,7 @@ public class BlockRegistry
     public static final BlockEntityRegister BLOCK_BLOOD_TANK = createBlockEntity2(
             "blood_tank",
             BlockBloodTank::new,
-            BE_BloodTank.class
+            BE_Tank3.class
     );
     public static final BlockEntityRegister BLOCK_NEURON = createBlockEntity2(
             "neuron",

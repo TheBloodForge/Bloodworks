@@ -46,7 +46,7 @@ public class Globals
         }
 
     };
-    public static final int DEFAULT_TANK_CAPACITY = 5000;
+    public static final int DEFAULT_TANK_CAPACITY = 5000, DEFAULT_TANK_TRANSFER_RATE = 50;
     public static MinecraftServer SERVER = null;
 
     public static void LogInfo(String toLog)

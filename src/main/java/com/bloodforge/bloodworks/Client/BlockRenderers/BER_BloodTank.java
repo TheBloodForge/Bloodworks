@@ -1,6 +1,6 @@
 package com.bloodforge.bloodworks.Client.BlockRenderers;
 
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_BloodTank;
+import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank3;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 
-public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
+public class BER_BloodTank implements BlockEntityRenderer<BE_Tank3>
 {
 
     private final BlockEntityRendererProvider.Context context;
@@ -39,28 +39,27 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
     private static int cFluidFrame = 0;
 
     @Override
-    public void render(BE_BloodTank tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int combinedLight, int combinedOverlay)
+    public void render(BE_Tank3 tank, float partialTicks, PoseStack poseStack, MultiBufferSource MBR, int cLight, int cOverlay)
     {
-        boolean connectU = shouldConnectTo(tileEntity.getBlockPos().above());
-        boolean connectD = shouldConnectTo(tileEntity.getBlockPos().below());
-        boolean connectN = shouldConnectTo(tileEntity.getBlockPos().north());
-        boolean connectE = shouldConnectTo(tileEntity.getBlockPos().east());
-        boolean connectS = shouldConnectTo(tileEntity.getBlockPos().south());
-        boolean connectW = shouldConnectTo(tileEntity.getBlockPos().west());
+        boolean connectU = shouldConnectTo(tank.getBlockPos().above());
+        boolean connectD = shouldConnectTo(tank.getBlockPos().below());
+        boolean connectN = shouldConnectTo(tank.getBlockPos().north());
+        boolean connectE = shouldConnectTo(tank.getBlockPos().east());
+        boolean connectS = shouldConnectTo(tank.getBlockPos().south());
+        boolean connectW = shouldConnectTo(tank.getBlockPos().west());
 
-        FluidStack fluidStack = tileEntity.getFluidInTank(0);
+        FluidStack fluidStack = tank.getFluidInTank(0);
 
         //renderTankOuter(matrixStack.last().pose(), renderTypeBuffer.getBuffer(RenderType.entityCutout(new ResourceLocation(Globals.MODID, "textures/blocks/block_blood_tank.png"))), 1f, 1f, 1f, 1f, combinedLight, tileEntity.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
 
         if (!fluidStack.isEmpty())
         {
-            System.out.println("FS NOT EMPTY");
-            float relativeFill = tileEntity.getRelativeFill();
+            float relativeFill = tank.getRelativeFill();
             if (relativeFill > 0.0f)
             {
                 //TODO: this is currently set by every renderer, which isn't really ideal though it should be _fine_ and the fix would be annoying
                 cFluidFrame = (int) Math.floor(Minecraft.getInstance().level.getGameTime() / 3.0) % NUM_FLUID_FRAMES; //don't use individual iterators so animations stay in sync
-                renderFluid(matrixStack, renderTypeBuffer, fluidStack, 1, relativeFill, combinedLight, tileEntity.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
+                renderFluid(poseStack, MBR, fluidStack, 1, relativeFill, cLight, tank.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
             }
         }
 

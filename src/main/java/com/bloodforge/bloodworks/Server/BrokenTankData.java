@@ -1,40 +1,21 @@
 package com.bloodforge.bloodworks.Server;
 
-import com.bloodforge.bloodworks.Globals;
-import com.bloodforge.bloodworks.Networking.PacketManager;
-import com.bloodforge.bloodworks.Networking.TankNameSyncS2CPacket;
-import com.bloodforge.bloodworks.Networking.TankSyncS2CPacket;
-import com.bloodforge.bloodworks.Networking.UpdateTankS2CPacket;
-import com.bloodforge.bloodworks.Registry.BlockRegistry;
-import com.bloodforge.bloodworks.Util;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-
-import java.util.*;
-
-@SuppressWarnings("resource")
-public class TankData extends SavedData
-{
+public class BrokenTankData/* extends SavedData*/
+{/*
     public static final HashMap<String, ArrayList<BlockPos>> TANK_CHILDREN = new HashMap<>();
     public static final HashMap<String, int[]> TANK_DATA = new HashMap<>();
     public static final HashMap<String, FluidTank> EXISTING_TANKS = new HashMap<>();
     CompoundTag tagLoadedFromWorld = new CompoundTag();
     public static CompoundTag TankDataTag = new CompoundTag();
 
-    public TankData()
+    public BrokenTankData()
     {
         super();
     }
 
-    public static TankData create()
+    public static BrokenTankData create()
     {
-        return new TankData();
+        return new BrokenTankData();
     }
 
     public static CompoundTag wrapChildren(String parentName)
@@ -120,24 +101,24 @@ public class TankData extends SavedData
         return tagLoadedFromWorld;
     }
 
-    public static TankData load(CompoundTag tag)
+    public static BrokenTankData load(CompoundTag tag)
     {
-        TankData data = create();
+        BrokenTankData data = create();
         data.tagLoadedFromWorld = tag;
         return data;
     }
 
-    public static TankData getDataManager(LevelAccessor level)
+    public static BrokenTankData getDataManager(LevelAccessor level)
     {
         if (level.getServer() == null) return create();
-        return level.getServer().overworld().getDataStorage().computeIfAbsent(TankData::load, TankData::create, "BloodworksTankData");
+        return level.getServer().overworld().getDataStorage().computeIfAbsent(BrokenTankData::load, BrokenTankData::create, "BloodworksTankData");
     }
 
     public static void save(LevelAccessor level)
     {
         if (!level.isClientSide())
         {
-            TankData data = TankData.getDataManager(level);
+            BrokenTankData data = BrokenTankData.getDataManager(level);
             data.tagLoadedFromWorld = TankDataTag;
             data.save();
         }
@@ -147,7 +128,7 @@ public class TankData extends SavedData
     {
         if (level != null && !level.isClientSide())
         {
-            TankData data = TankData.getDataManager(level);
+            BrokenTankData data = BrokenTankData.getDataManager(level);
             TankDataTag = data.tagLoadedFromWorld;
             for (String keyTag : TankDataTag.getAllKeys())
                 syncFluid(keyTag);
@@ -201,16 +182,16 @@ public class TankData extends SavedData
     {
 //        if (Minecraft.getInstance().level == null || Minecraft.getInstance().level.isClientSide) return "";
         String parentName = "TCT-" + (System.currentTimeMillis() - 1685405500000L);
-        TankData.TANK_CHILDREN.put(parentName, new ArrayList<>(List.of(pos)));
-        TankData.TANK_DATA.put(parentName, new int[]{1, pos.getY(), pos.getY(), 1});
-        TankData.EXISTING_TANKS.put(parentName, makeTank(parentName));
+        BrokenTankData.TANK_CHILDREN.put(parentName, new ArrayList<>(List.of(pos)));
+        BrokenTankData.TANK_DATA.put(parentName, new int[]{1, pos.getY(), pos.getY(), 1});
+        BrokenTankData.EXISTING_TANKS.put(parentName, makeTank(parentName));
         return parentName;
     }
 
     public static int getTankTier(String tankName)
     {
         if (!TANK_DATA.containsKey(tankName) || TANK_DATA.get(tankName).length != 4) return 0;
-        return TankData.TANK_DATA.get(tankName)[3];
+        return BrokenTankData.TANK_DATA.get(tankName)[3];
     }
 
     public static int getTankMin(String tankName)
@@ -220,7 +201,7 @@ public class TankData extends SavedData
             recalculateTankData(tankName);
             return 0;
         }
-        return TankData.TANK_DATA.get(tankName)[1];
+        return BrokenTankData.TANK_DATA.get(tankName)[1];
     }
 
     private static void recalculateTankData(String tankName)
@@ -240,13 +221,13 @@ public class TankData extends SavedData
     public static int getTankMax(String tankName)
     {
         if (!TANK_DATA.containsKey(tankName) || TANK_DATA.get(tankName).length != 4) return 0;
-        return TankData.TANK_DATA.get(tankName)[2];
+        return BrokenTankData.TANK_DATA.get(tankName)[2];
     }
 
     public static int getTankHeight(String tankName)
     {
         if (!TANK_DATA.containsKey(tankName) || TANK_DATA.get(tankName).length != 4) return 0;
-        return TankData.TANK_DATA.get(tankName)[0];
+        return BrokenTankData.TANK_DATA.get(tankName)[0];
     }
 
     public static FluidTank makeTank(String tankName)
@@ -323,4 +304,4 @@ public class TankData extends SavedData
             for (BlockPos blockPos : TANK_CHILDREN.get(parentName))
                 PacketManager.sendToClients(new TankNameSyncS2CPacket(parentName, blockPos));
     }
-}
+*/}

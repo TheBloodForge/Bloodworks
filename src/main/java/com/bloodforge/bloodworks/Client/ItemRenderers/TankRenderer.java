@@ -1,7 +1,7 @@
 package com.bloodforge.bloodworks.Client.ItemRenderers;
 
 import com.bloodforge.bloodworks.Blocks.BlockBloodTank;
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_BloodTank;
+import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank3;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -34,7 +34,7 @@ public class TankRenderer extends BlockEntityWithoutLevelRenderer
         if (!stack.hasTag() || !stack.getTag().contains("tileData"))
             return;
 
-        BE_BloodTank tile = (BE_BloodTank) ((BlockBloodTank) ((BlockItem) stack.getItem()).getBlock()).newBlockEntity(new BlockPos(0, 0, 0), ((BlockItem) stack.getItem()).getBlock().defaultBlockState());
+        BE_Tank3 tile = (BE_Tank3) ((BlockBloodTank) ((BlockItem) stack.getItem()).getBlock()).newBlockEntity(new BlockPos(0, 0, 0), ((BlockItem) stack.getItem()).getBlock().defaultBlockState());
         tile.readDataForItemRenderer(stack.getTag().getCompound("tileData"));
 
         Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(tile, matrixStack, buffer, combinedLight, combinedOverlay);

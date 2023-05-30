@@ -1,6 +1,6 @@
 package com.bloodforge.bloodworks.Networking;
 
-import com.bloodforge.bloodworks.Server.TankData;
+import com.bloodforge.bloodworks.Server.TankDataProxy;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkEvent;
@@ -35,7 +35,7 @@ public class TankSyncS2CPacket
     {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() ->
-                TankData.getTankByName(parentName).setFluid(fluidStack));
+                TankDataProxy.getTankByName(parentName).setFluid(fluidStack));
         return true;
     }
 }

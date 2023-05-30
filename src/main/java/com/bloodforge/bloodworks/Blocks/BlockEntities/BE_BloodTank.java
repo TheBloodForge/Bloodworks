@@ -1,30 +1,7 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
-import com.bloodforge.bloodworks.Globals;
-import com.bloodforge.bloodworks.Items.TankItem;
-import com.bloodforge.bloodworks.Registry.BlockRegistry;
-import com.bloodforge.bloodworks.Registry.FluidRegistry;
-import com.bloodforge.bloodworks.Server.TankData;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class BE_BloodTank extends BlockEntityMachineBase
-{
+public class BE_BloodTank /*extends BlockEntityMachineBase*/
+{/*
     private LazyOptional<IFluidHandler> lazyFluidHandler = LazyOptional.empty();
     public String parentName = "";
     public int tankTier = 0;
@@ -67,23 +44,23 @@ public class BE_BloodTank extends BlockEntityMachineBase
         return this.data;
     }
 
-    /**
+    *//**
      * this is the data accessor for the game to save the data
-     */
+     *//*
     public int getContainerData(int index)
     {
         if (parentName.isEmpty()) return -1;
         return switch (index)
                 {
-                    case 0 -> TankData.getTankByName(parentName).getFluidAmount();
-                    case 1 -> TankData.getTankByName(parentName).getCapacity();
+                    case 0 -> BrokenTankData.getTankByName(parentName).getFluidAmount();
+                    case 1 -> BrokenTankData.getTankByName(parentName).getCapacity();
                     default -> 0;
                 };
     }
 
-    /**
+    *//**
      * this sets the values relevant on loading
-     */
+     *//*
     public void setContainerData(int index, int value)
     {
         if (index == 0)
@@ -92,9 +69,9 @@ public class BE_BloodTank extends BlockEntityMachineBase
         }
     }
 
-    /**
+    *//**
      * this returns the number of data entries to be saved
-     */
+     *//*
     public int getContainerCount()
     {
         return 2;
@@ -115,9 +92,9 @@ public class BE_BloodTank extends BlockEntityMachineBase
     {
         super.onLoad();
         if (parentName.isEmpty()) return;
-        lazyFluidHandler = LazyOptional.of(() -> TankData.getTankByName(parentName));
+        lazyFluidHandler = LazyOptional.of(() -> BrokenTankData.getTankByName(parentName));
         if (getLevel() != null && !getLevel().isClientSide)
-            TankData.syncFluid(parentName);
+            BrokenTankData.syncFluid(parentName);
     }
 
     @Override
@@ -133,15 +110,15 @@ public class BE_BloodTank extends BlockEntityMachineBase
     {
         if (level.isClientSide()) return;
 
-        if (TankData.TankDataTag.getAllKeys().isEmpty())
-            TankData.read(level);
+        if (BrokenTankData.TankDataTag.getAllKeys().isEmpty())
+            BrokenTankData.read(level);
 
         if (!entity.parentName.isEmpty() && Globals.RAND.nextFloat() < 0.2f)
-            TankData.syncTankName(blockPos, entity.parentName);
+            BrokenTankData.syncTankName(blockPos, entity.parentName);
 
         if (!entity.ensureTank())
         {
-            if (!TankData.hasTankByName(entity.parentName))
+            if (!BrokenTankData.hasTankByName(entity.parentName))
             {
 //                FluidTank tank = TankData.getTankByName(entity.parentName);
 //                System.out.println("Tank Data - " + entity.parentName + " - " + tank.getFluidAmount() + " - " + Component.translatable(tank.getFluid().getTranslationKey()).getString() + " - " + tank.getCapacity());
@@ -163,7 +140,7 @@ public class BE_BloodTank extends BlockEntityMachineBase
     public void readDataForItemRenderer(CompoundTag nbt)
     {
         createParentTank();
-        TankData.getTankByName(parentName).readFromNBT(nbt);
+        BrokenTankData.getTankByName(parentName).readFromNBT(nbt);
     }
 
     @Override
@@ -171,7 +148,7 @@ public class BE_BloodTank extends BlockEntityMachineBase
     {
         if (level == null || level.isClientSide) return;
         nbt.putString("tankName", parentName);
-        TankData.saveTanksToWorld(level);
+        BrokenTankData.saveTanksToWorld(level);
         super.saveAdditional(nbt);
     }
 
@@ -181,13 +158,13 @@ public class BE_BloodTank extends BlockEntityMachineBase
         parentName = nbt.getString("tankName");
         if (!parentName.isEmpty() && level != null)
         {
-            TankData.read(level);
-            CompoundTag tag = TankData.TankDataTag.getCompound(parentName);
+            BrokenTankData.read(level);
+            CompoundTag tag = BrokenTankData.TankDataTag.getCompound(parentName);
             CompoundTag childrenTags = tag.getCompound("children");
-            TankData.getTankByName(parentName).readFromNBT(tag);
-            TankData.unwrapChildren(parentName, childrenTags);
+            BrokenTankData.getTankByName(parentName).readFromNBT(tag);
+            BrokenTankData.unwrapChildren(parentName, childrenTags);
         }
-        TankData.syncFluid(parentName);
+        BrokenTankData.syncFluid(parentName);
         super.load(nbt);
     }
 
@@ -203,39 +180,39 @@ public class BE_BloodTank extends BlockEntityMachineBase
     @Override
     public @NotNull FluidStack getFluidInTank(int tank)
     {
-        return !TankData.hasTankByName(parentName) ? FluidStack.EMPTY : TankData.getTankByName(parentName).getFluid();
+        return !BrokenTankData.hasTankByName(parentName) ? FluidStack.EMPTY : BrokenTankData.getTankByName(parentName).getFluid();
     }
 
     @Override
     public int getTankCapacity(int tank)
     {
-        return !TankData.hasTankByName(parentName) ? 0 : TankData.getTankByName(parentName).getCapacity();
+        return !BrokenTankData.hasTankByName(parentName) ? 0 : BrokenTankData.getTankByName(parentName).getCapacity();
     }
 
     @Override
     public boolean isFluidValid(int tank, @NotNull FluidStack stack)
     {
-        return TankData.hasTankByName(parentName) && TankData.getTankByName(parentName).isFluidValid(stack);
+        return BrokenTankData.hasTankByName(parentName) && BrokenTankData.getTankByName(parentName).isFluidValid(stack);
     }
 
     @Override
     public int fill(FluidStack resource, IFluidHandler.FluidAction action)
     {
-        if (!isFluidValid(1, resource) || resource.getAmount() <= 0 || !TankData.hasTankByName(parentName))
+        if (!isFluidValid(1, resource) || resource.getAmount() <= 0 || !BrokenTankData.hasTankByName(parentName))
             return 0;
-        return TankData.getTankByName(parentName).fill(resource, action);
+        return BrokenTankData.getTankByName(parentName).fill(resource, action);
     }
 
     @Override
     public @NotNull FluidStack drain(int maxDrain, IFluidHandler.FluidAction action)
     {
-        return !TankData.hasTankByName(parentName) ? FluidStack.EMPTY : TankData.getTankByName(parentName).drain(maxDrain, action);
+        return !BrokenTankData.hasTankByName(parentName) ? FluidStack.EMPTY : BrokenTankData.getTankByName(parentName).drain(maxDrain, action);
     }
 
     @Override
     public @NotNull FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action)
     {
-        return !TankData.hasTankByName(parentName) ? FluidStack.EMPTY : TankData.getTankByName(parentName).drain(resource, action);
+        return !BrokenTankData.hasTankByName(parentName) ? FluidStack.EMPTY : BrokenTankData.getTankByName(parentName).drain(resource, action);
     }
 
     private static List<BE_BloodTank> getNeighborTanks(BlockPos blockPos, Level level)
@@ -265,19 +242,14 @@ public class BE_BloodTank extends BlockEntityMachineBase
     @Override
     public CompoundTag getUpdateTag()
     {
-        TankData.read(level);
         CompoundTag clientPackage = new CompoundTag();
-        clientPackage.put("TankTags", TankData.TankDataTag);
         clientPackage.putString("parentName", parentName);
-        return TankData.TankDataTag;
+        return clientPackage;
     }
 
     @Override
     public void handleUpdateTag(CompoundTag tag)
-    {
-        parentName = tag.getString("parentName");
-        TankData.TankDataTag = tag.getCompound("TankTags");
-    }
+    { parentName = tag.getString("parentName"); }
 
     public float getRelativeFill()
     {
@@ -294,51 +266,51 @@ public class BE_BloodTank extends BlockEntityMachineBase
 
     private void removeChild(BlockPos pos)
     {
-        if (parentName.isEmpty() || !TankData.TANK_CHILDREN.containsKey(parentName)) return;
-        TankData.removeChild(parentName, pos);
+        if (parentName.isEmpty() || !BrokenTankData.TANK_CHILDREN.containsKey(parentName)) return;
+        BrokenTankData.removeChild(parentName, pos);
         drain(getFluidContained(), FluidAction.EXECUTE);
-        if (!parentName.isEmpty() && TankData.hasTankByName(parentName) && pos.getY() == TankData.getTankMin(parentName) || pos.getY() == TankData.getTankMax(parentName))
+        if (!parentName.isEmpty() && BrokenTankData.hasTankByName(parentName) && pos.getY() == BrokenTankData.getTankMin(parentName) || pos.getY() == BrokenTankData.getTankMax(parentName))
             updateTankSize();
     }
 
     private boolean ensureTank()
     {
-        if (level != null && (parentName.isEmpty() || !TankData.hasTankByName(parentName)))
+        if (level != null && (parentName.isEmpty() || !BrokenTankData.hasTankByName(parentName)))
             setTankLabel();
-        return TankData.hasTankByName(parentName);
+        return BrokenTankData.hasTankByName(parentName);
     }
 
     public void addChild(BE_BloodTank childTank)
     {
-        TankData.addChild(parentName, childTank.getBlockPos());
+        BrokenTankData.addChild(parentName, childTank.getBlockPos());
         childTank.parentName = parentName;
-        if (childTank.getBlockPos().getY() < TankData.getTankMin(parentName) || childTank.getBlockPos().getY() > TankData.getTankMax(parentName))
+        if (childTank.getBlockPos().getY() < BrokenTankData.getTankMin(parentName) || childTank.getBlockPos().getY() > BrokenTankData.getTankMax(parentName))
             updateTankSize();
     }
 
     public void createParentTank()
     {
         if (parentName.isEmpty())
-            parentName = TankData.createNewParent(getBlockPos());
+            parentName = BrokenTankData.createNewParent(getBlockPos());
 
-        TankData.syncFluid(parentName);
+        BrokenTankData.syncFluid(parentName);
     }
 
     private void updateTankSize()
     {
-        if (!TankData.hasTankByName(parentName)) return;
+        if (!BrokenTankData.hasTankByName(parentName)) return;
 
-        for (BlockPos child : TankData.TANK_CHILDREN.get(parentName))
-            if (child.getY() > TankData.getTankMax(parentName)) TankData.TANK_DATA.get(parentName)[2] = child.getY();
-            else if (child.getY() < TankData.getTankMin(parentName))
-                TankData.TANK_DATA.get(parentName)[1] = child.getY();
+        for (BlockPos child : BrokenTankData.TANK_CHILDREN.get(parentName))
+            if (child.getY() > BrokenTankData.getTankMax(parentName)) BrokenTankData.TANK_DATA.get(parentName)[2] = child.getY();
+            else if (child.getY() < BrokenTankData.getTankMin(parentName))
+                BrokenTankData.TANK_DATA.get(parentName)[1] = child.getY();
 
-        TankData.TANK_DATA.get(parentName)[0] = (TankData.getTankMax(parentName) - TankData.getTankMin(parentName)) + 1;
+        BrokenTankData.TANK_DATA.get(parentName)[0] = (BrokenTankData.getTankMax(parentName) - BrokenTankData.getTankMin(parentName)) + 1;
     }
 
     public void setFluid(FluidStack fluidStack)
     {
-        if (TankData.hasTankByName(parentName)) TankData.getTankByName(parentName).setFluid(fluidStack);
+        if (BrokenTankData.hasTankByName(parentName)) BrokenTankData.getTankByName(parentName).setFluid(fluidStack);
     }
 
     public int getRelativeHeight()
@@ -348,7 +320,7 @@ public class BE_BloodTank extends BlockEntityMachineBase
 
     public int getTotalHeight()
     {
-        return TankData.getTankHeight(parentName);
+        return BrokenTankData.getTankHeight(parentName);
     }
 
     public void breakTank(BlockPos pos, Level level)
@@ -362,7 +334,7 @@ public class BE_BloodTank extends BlockEntityMachineBase
         {
             List<BE_BloodTank> tanks;
             if ((tanks = getNeighborTanks(getBlockPos(), level)).isEmpty())
-                parentName = TankData.createNewParent(getBlockPos());
+                parentName = BrokenTankData.createNewParent(getBlockPos());
 
             for (BE_BloodTank tank : tanks)
                 if (!tank.parentName.isEmpty())
@@ -373,13 +345,13 @@ public class BE_BloodTank extends BlockEntityMachineBase
                 }
 
             if (parentName.isEmpty())
-                parentName = TankData.recoverTankName(getBlockPos());
+                parentName = BrokenTankData.recoverTankName(getBlockPos());
 
-            if (TankData.hasTankByName(parentName))
+            if (BrokenTankData.hasTankByName(parentName))
             {
-                TankData.syncTankName(parentName);
-                TankData.syncFluid(parentName);
+                BrokenTankData.syncTankName(parentName);
+                BrokenTankData.syncFluid(parentName);
             }
         }
     }
-}
+*/}
