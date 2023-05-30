@@ -16,8 +16,10 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,7 +27,9 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -47,6 +51,7 @@ public class BlockBloodTank extends BlockMachineBase
 
     //    public static final BlockShape SHAPE = BlockShape.createBlockShape(2.5, 0, 2.5, 13.5, 16, 13.5);
     public static final BooleanProperty OUTPUT = BooleanProperty.create("output");
+    public static final IntegerProperty TIER = IntegerProperty.create("tier", -1, 10);
 
     public BlockBloodTank()
     {
@@ -142,6 +147,18 @@ public class BlockBloodTank extends BlockMachineBase
     }
 
     @Override
+    public BlockState getStateForPlacement(BlockPlaceContext pContext)
+    {
+        return this.defaultBlockState().setValue(TIER, 1);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> blockStateDefinition)
+    {
+        super.createBlockStateDefinition(blockStateDefinition.add(OUTPUT).add(TIER));
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState cState, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
@@ -162,7 +179,7 @@ public class BlockBloodTank extends BlockMachineBase
                     }
                 } else if (heldItem.is(Items.DEBUG_STICK))
                 {
-                    machine.changeTier(player.isCrouching() ? -1 : 1);
+                    machine.setTier(-1);
                     return InteractionResult.CONSUME;
                 } else if (heldItem.getItem() instanceof BlockItem)
                 {

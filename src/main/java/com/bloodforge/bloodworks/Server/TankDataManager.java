@@ -3,6 +3,7 @@ package com.bloodforge.bloodworks.Server;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import static com.bloodforge.bloodworks.Server.TankDataProxy.TankDataTag;
 import static com.bloodforge.bloodworks.Server.TankDataProxy.syncFluid;
@@ -44,7 +45,14 @@ public class TankDataManager extends SavedData
         return level.getServer().overworld().getDataStorage().computeIfAbsent(TankDataManager::load, TankDataManager::create, "BloodworksTankData");
     }
 
-    public static void save(LevelAccessor level)
+    public static void saveData()
+    { save(ServerLifecycleHooks.getCurrentServer().overworld()); }
+
+
+    public static void read()
+    { read(ServerLifecycleHooks.getCurrentServer().overworld()); }
+
+    private static void save(LevelAccessor level)
     {
         if (!level.isClientSide())
         {
@@ -54,7 +62,7 @@ public class TankDataManager extends SavedData
         }
     }
 
-    public static void read(LevelAccessor level)
+    private static void read(LevelAccessor level)
     {
         if (level != null && !level.isClientSide())
         {

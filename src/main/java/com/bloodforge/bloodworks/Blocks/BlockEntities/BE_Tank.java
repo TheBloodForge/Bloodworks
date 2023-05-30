@@ -1,9 +1,11 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
+import com.bloodforge.bloodworks.Blocks.BlockBloodTank;
 import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Items.TankItem;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.bloodforge.bloodworks.Registry.FluidRegistry;
+import com.bloodforge.bloodworks.Server.TankDataManager;
 import com.bloodforge.bloodworks.Server.TankDataProxy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,6 +43,8 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
 
     public void tick()
     {
+        if (level.getBlockState(getBlockPos()).getValue(BlockBloodTank.TIER) != TankDataProxy.getTankTier(tank_id))
+            level.getBlockState(getBlockPos()).setValue(BlockBloodTank.TIER, TankDataProxy.getTankTier(tank_id));
         tryAndFillNeighbors();
     }
 
@@ -53,7 +57,9 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
                     int space = neighbor.getTankCapacity(i) - neighbor.getFluidInTank(i).getAmount();
                     int transferAmount = Math.min(TankDataProxy.getTankTransferRate(tank_id), space);
                     FluidStack fs = getTank().drain(transferAmount, FluidAction.EXECUTE);
-                    neighbor.fill(fs, FluidAction.EXECUTE);
+                    neighbor.fill(fs.copy(), FluidAction.EXECUTE);
+                    if (TankDataProxy.getTankTier(tank_id) == -1)
+                        fill(fs, FluidAction.EXECUTE);
                 }
     }
 
@@ -99,6 +105,9 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
     public void changeTier(int i)
     { TankDataProxy.changeTier(tank_id, i); }
 
+    public void setTier(int i)
+    { TankDataProxy.setTankTier(tank_id, i); }
+
 //######################################################################\\
 //                           BELOW IS UTILITIES                         \\
 //######################################################################\\
@@ -133,7 +142,11 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
 //######################################################################\\
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_Tank entity)
     {
-        if (level == null || level.isClientSide || entity.tank_id.isEmpty() || entity.getTank().getCapacity() == 404) return;
+        if (level == null || level.isClientSide) return;
+        if (entity.tank_id.isEmpty())
+            entity.setID(TankDataProxy.recoverTankName(blockPos));
+        if (entity.getTank().getCapacity() == 404)
+            TankDataManager.read();
         entity.tick();
     }
 

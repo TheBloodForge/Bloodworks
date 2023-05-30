@@ -56,12 +56,12 @@ public class TankDataProxy
             TankDataTag.remove(tankName);
             TankDataTag.put(tankName, TankDataPacker.getTankDataTagForSavingToMasterTag(tankName));
         }
-        TankDataManager.save(level);
+        TankDataManager.saveData();
     }
 
     public static void loadTanks(Level level)
     {
-        TankDataManager.read(level);
+        TankDataManager.read();
         MASTER_TANK_CONTAINER.clear();
         for (String tankName : TankDataTag.getAllKeys())
         {
@@ -146,9 +146,12 @@ public class TankDataProxy
     public static int getTankTransferRate(String tank_id)
     {
         if (tank_id.isEmpty()) return 0;
-        return getTankTier(tank_id) * DEFAULT_TANK_TRANSFER_RATE;
+        return getTankTier(tank_id) == -1 ? 50000 : getTankTier(tank_id) * DEFAULT_TANK_TRANSFER_RATE;
     }
 
     public static void changeTier(String tank_id, int i)
     { getDataForTank(tank_id).setTankTier(getTankTier(tank_id) + i); }
+
+    public static void setTankTier(String tank_id, int newTier)
+    { getDataForTank(tank_id).setTankTier(newTier); }
 }

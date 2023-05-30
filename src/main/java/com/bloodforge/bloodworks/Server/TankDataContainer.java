@@ -4,13 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.Collection;
 import java.util.HashMap;
 
 import static com.bloodforge.bloodworks.Globals.DEFAULT_TANK_CAPACITY;
-import static com.bloodforge.bloodworks.Server.TankDataManager.save;
+import static com.bloodforge.bloodworks.Server.TankDataManager.saveData;
 import static com.bloodforge.bloodworks.Server.TankDataProxy.syncFluid;
 import static com.bloodforge.bloodworks.Server.TankDataProxy.syncTankName;
 
@@ -124,7 +123,7 @@ public class TankDataContainer
             @Override
             protected void onContentsChanged()
             {
-                save(ServerLifecycleHooks.getCurrentServer().overworld());
+                saveData();
                 syncTankName(tankName);
                 syncFluid(tankName);
                 super.onContentsChanged();
