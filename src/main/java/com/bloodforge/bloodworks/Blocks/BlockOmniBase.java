@@ -27,16 +27,16 @@ public class BlockOmniBase extends FaceAttachedHorizontalDirectionalBlock
     protected VoxelShape SOUTH_AABB = Block.box(5.0D, 6.0D, 0.0D, 11.0D, 10.0D, 2.0D);
     protected VoxelShape WEST_AABB = Block.box(14.0D, 6.0D, 5.0D, 16.0D, 10.0D, 11.0D);
     protected VoxelShape EAST_AABB = Block.box(0.0D, 6.0D, 5.0D, 2.0D, 10.0D, 11.0D);
-    
-    public BlockOmniBase(Properties properties,  VoxelShape shapeOnFloor)
+
+    public BlockOmniBase(Properties properties, VoxelShape shapeOnFloor)
     {
         super(properties);
         FLOOR_AABB_X = Util.RotateVoxelShapeOnYAxis(1, shapeOnFloor);
         FLOOR_AABB_Z = Util.RotateVoxelShapeOnYAxis(1, FLOOR_AABB_X);
-        NORTH_AABB  = Util.RotateVoxelShapeOnYAxis(3, Util.RotateVoxelShapeOnZAxis(1, FLOOR_AABB_Z));
-        EAST_AABB   = Util.RotateVoxelShapeOnYAxis(1, NORTH_AABB);
-        SOUTH_AABB  = Util.RotateVoxelShapeOnYAxis(1, EAST_AABB);
-        WEST_AABB   = Util.RotateVoxelShapeOnYAxis(1, SOUTH_AABB);
+        NORTH_AABB = Util.RotateVoxelShapeOnYAxis(3, Util.RotateVoxelShapeOnZAxis(1, FLOOR_AABB_Z));
+        EAST_AABB = Util.RotateVoxelShapeOnYAxis(1, NORTH_AABB);
+        SOUTH_AABB = Util.RotateVoxelShapeOnYAxis(1, EAST_AABB);
+        WEST_AABB = Util.RotateVoxelShapeOnYAxis(1, SOUTH_AABB);
         CEILING_AABB_X = Util.RotateVoxelShapeOnZAxis(2, FLOOR_AABB_X);
         CEILING_AABB_Z = Util.RotateVoxelShapeOnYAxis(1, CEILING_AABB_X);
     }
@@ -49,14 +49,17 @@ public class BlockOmniBase extends FaceAttachedHorizontalDirectionalBlock
     }
 
     @Override
-    public VoxelShape getShape(BlockState p_51104_, BlockGetter p_51105_, BlockPos p_51106_, CollisionContext p_51107_) {
+    public VoxelShape getShape(BlockState p_51104_, BlockGetter p_51105_, BlockPos p_51106_, CollisionContext p_51107_)
+    {
         Direction direction = p_51104_.getValue(FACING);
-        switch ((AttachFace)p_51104_.getValue(FACE)) {
+        switch (p_51104_.getValue(FACE))
+        {
             case FLOOR:
-                if (direction.getAxis() == Direction.Axis.X) {
-                    return  FLOOR_AABB_X;
+                if (direction.getAxis() == Direction.Axis.X)
+                {
+                    return FLOOR_AABB_X;
                 }
-                return  FLOOR_AABB_Z;
+                return FLOOR_AABB_Z;
             case WALL:
                 return switch (direction)
                         {
@@ -68,15 +71,18 @@ public class BlockOmniBase extends FaceAttachedHorizontalDirectionalBlock
                         };
             case CEILING:
             default:
-                if (direction.getAxis() == Direction.Axis.X) {
+                if (direction.getAxis() == Direction.Axis.X)
+                {
                     return CEILING_AABB_X;
-                } else {
-                    return  CEILING_AABB_Z;
+                } else
+                {
+                    return CEILING_AABB_Z;
                 }
         }
     }
 
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_51101_) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_51101_)
+    {
         p_51101_.add(FACING, FACE);
     }
 }

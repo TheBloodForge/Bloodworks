@@ -16,12 +16,18 @@ import java.util.List;
 public class BloodworksBlockItem extends BlockItem
 {
     public BloodworksBlockItem(Block block)
-    { super(block, new Item.Properties().tab(Globals.CREATIVE_TAB)); }
+    {
+        super(block, new Item.Properties().tab(Globals.CREATIVE_TAB));
+    }
+
     public BloodworksBlockItem(Block block, Item.Properties props)
-    { super(block, props); }
+    {
+        super(block, props);
+    }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag tooltipFlag)
+    {
         ClientUtils.AddChatComponents(components, itemStack);
         super.appendHoverText(itemStack, level, components, tooltipFlag);
     }

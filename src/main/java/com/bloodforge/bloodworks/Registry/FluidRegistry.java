@@ -25,7 +25,7 @@ public class FluidRegistry
                             Globals.MODID,
                             "fluid_blood"
                     ).fogColor(0.15f, 0.0f, 0.01f).tint(0xFAAA0011)
-            , 0xFAAA0011),
+                    , 0xFAAA0011),
 
             Block.Properties.of(MATERIAL_BLOOD).noCollission().strength(100.0F).noLootTable().color(MATERIAL_BLOOD.getColor()).speedFactor(0.8F).jumpFactor(0.8F),
             new Item.Properties()
@@ -41,7 +41,7 @@ public class FluidRegistry
                             "fluid_cranial"
                     ).fogColor(0.1f, 0.2f, 0.2f).tint(0xAA00AAAA)
                     , 0xAA00AAAA),
-            Block.Properties.of(MATERIAL_CRANIAL).noCollission().strength(100.0F).noLootTable().color(MATERIAL_CRANIAL.getColor()).randomTicks().isViewBlocking((a,b,c)->false),
+            Block.Properties.of(MATERIAL_CRANIAL).noCollission().strength(100.0F).noLootTable().color(MATERIAL_CRANIAL.getColor()).randomTicks().isViewBlocking((a, b, c) -> false),
             new Item.Properties()
                     .tab(Globals.CREATIVE_TAB)
                     .stacksTo(1)

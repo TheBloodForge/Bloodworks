@@ -10,12 +10,12 @@ public class BlockBloodyWallBase extends WallBlock
     public BlockBloodyWallBase()
     {
         super
-        (
-                BlockBehaviour.Properties
-                        .of(Material.STONE)
-                        .strength(3f, 5f)
-                        .sound(SoundType.SLIME_BLOCK)
-        );
+                (
+                        BlockBehaviour.Properties
+                                .of(Material.STONE)
+                                .strength(3f, 5f)
+                                .sound(SoundType.SLIME_BLOCK)
+                );
     }
 
 }

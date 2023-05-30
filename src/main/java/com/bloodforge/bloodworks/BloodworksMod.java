@@ -77,9 +77,4 @@ public class BloodworksMod
         System.out.println("FIN ON GATHER DATA EVENT");
     }
 
-//    @SubscribeEvent
-//    public void onPlayerConnect(PlayerEvent.PlayerLoggedInEvent event)
-//    {
-//
-//    }
 }

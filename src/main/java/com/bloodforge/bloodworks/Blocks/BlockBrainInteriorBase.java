@@ -27,8 +27,9 @@ import org.jetbrains.annotations.Nullable;
 public class BlockBrainInteriorBase extends BaseEntityBlock implements SimpleCranialFluidLoggedBlock
 {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    private String selfQuoteText = "A block that goes in cranial fluid.";
-    private String useText = "Must be placed inside a Braincase";
+    private final String selfQuoteText = "A block that goes in cranial fluid.";
+    private final String useText = "Must be placed inside a Braincase";
+
     public BlockBrainInteriorBase()
     {
         super(
@@ -38,7 +39,7 @@ public class BlockBrainInteriorBase extends BaseEntityBlock implements SimpleCra
                         .sound(SoundType.SLIME_BLOCK)
                         .noCollission()
                         .noOcclusion()
-                .isViewBlocking((blockState, blockGetter, blockPos) -> false)
+                        .isViewBlocking((blockState, blockGetter, blockPos) -> false)
         );
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
     }
@@ -50,7 +51,8 @@ public class BlockBrainInteriorBase extends BaseEntityBlock implements SimpleCra
         ParticleHelper.DoStepParticle(ParticleRegistry.PARTICLE_FLESH_STEP.get(), level, pos, blockState, stepperOnner);
     }
 
-    public BlockState getStateForPlacement(BlockPlaceContext placeContext) {
+    public BlockState getStateForPlacement(BlockPlaceContext placeContext)
+    {
         Direction direction = placeContext.getClickedFace();
         BlockPos blockpos = placeContext.getClickedPos();
         FluidState fluidstate = placeContext.getLevel().getFluidState(blockpos);
@@ -58,8 +60,9 @@ public class BlockBrainInteriorBase extends BaseEntityBlock implements SimpleCra
     }
 
     @Override
-    public FluidState getFluidState(BlockState blockState) {
-        return blockState.getValue(WATERLOGGED).booleanValue()?FluidRegistry.FLUID_CRANIAL.source.get().getSource().defaultFluidState(): Fluids.EMPTY.defaultFluidState();
+    public FluidState getFluidState(BlockState blockState)
+    {
+        return blockState.getValue(WATERLOGGED).booleanValue() ? FluidRegistry.FLUID_CRANIAL.source.get().getSource().defaultFluidState() : Fluids.EMPTY.defaultFluidState();
     }
 
     @Override

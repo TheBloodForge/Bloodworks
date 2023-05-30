@@ -84,6 +84,7 @@
   "block.bloodworks.block_fluid_blood_still": "Still Blood",
   "item.bloodworks.fluid_blood_bucket": "Blood Bucket",
   "fluid_type.bloodworks.fluid_blood": "Blood",
+  "fluid_type.bloodworks.fluid_cranial": "Cranial Fluid",
 
   "_comment": "--------------------------------------------MISC----------------------------------------------------",
   "itemGroup.bloodworks": "Bloodworks",

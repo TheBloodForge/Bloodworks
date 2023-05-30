@@ -18,11 +18,13 @@ public class BlockMask
     {
         allowedBlocks = new ArrayList<>(List.of(allowed));
     }
+
     public BlockMask(boolean isBlacklist, Block... allowed)
     {
         this.isBlacklist = isBlacklist;
         allowedBlocks = new ArrayList<>(List.of(allowed));
     }
+
     public BlockMask(SpecialBlockParams[] specials, boolean isBlacklist, Block... allowed)
     {
         specialBlocks = new ArrayList<>(List.of(specials));
@@ -43,27 +45,28 @@ public class BlockMask
 
     public boolean isSpecialBlock(BlockState state)
     {
-        if(specialBlocks == null) return false;
+        if (specialBlocks == null) return false;
         return specialBlocks.contains(state.getBlock());
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder s = new StringBuilder();
         for (Block b : allowedBlocks)
         {
             s.append(b.getDescriptionId()).append(", ");
         }
-        s.setLength(s.length()-2);
+        s.setLength(s.length() - 2);
         return s.toString();
     }
 
     public SpecialBlockFindResult areSpecialsSatisfiedBy(HashMap<Block, ArrayList<BlockPos>> found)
     {
-        if(specialBlocks == null) return new SpecialBlockFindResult(true, null);
+        if (specialBlocks == null) return new SpecialBlockFindResult(true, null);
         for (SpecialBlockParams b : specialBlocks)
         {
-            if(b.isRequired() && !found.containsKey(b.block()))
+            if (b.isRequired() && !found.containsKey(b.block()))
             {
                 return new SpecialBlockFindResult(false, b.block());
             }

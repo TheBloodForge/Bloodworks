@@ -1,9 +1,10 @@
 package com.bloodforge.bloodworks;
 
-import com.mojang.logging.LogUtils;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
+import com.mojang.logging.LogUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -33,17 +34,20 @@ public class Globals
         {
             return new ItemStack(BlockRegistry.BLOCK_INTESTINE.item().get());
         }
+
         @Override
-        public void fillItemList(NonNullList<ItemStack> stacksInInv) {
-            List<Item> itemList =  Registry.ITEM.stream().sorted(Comparator.comparing(Item::getDescriptionId)).toList();
-            for(Item item:itemList)
+        public void fillItemList(NonNullList<ItemStack> stacksInInv)
+        {
+            List<Item> itemList = Registry.ITEM.stream().sorted(Comparator.comparing(Item::getDescriptionId)).toList();
+            for (Item item : itemList)
             {
                 item.fillItemCategory(this, stacksInInv);
             }
         }
 
     };
-    public static final int DEFAULT_CAPACITY = 5000;
+    public static final int DEFAULT_TANK_CAPACITY = 5000;
+    public static MinecraftServer SERVER = null;
 
     public static void LogInfo(String toLog)
     {

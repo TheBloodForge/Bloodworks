@@ -12,6 +12,7 @@ public class BER_Braincase_Controller implements BlockEntityRenderer<BE_Braincas
 {
 
     private final BlockEntityRendererProvider.Context context;
+
     public BER_Braincase_Controller(BlockEntityRendererProvider.Context context)
     {
         this.context = context;

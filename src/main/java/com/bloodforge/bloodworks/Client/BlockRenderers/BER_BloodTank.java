@@ -21,6 +21,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
 {
 
     private final BlockEntityRendererProvider.Context context;
+
     public BER_BloodTank(BlockEntityRendererProvider.Context context)
     {
         super();
@@ -40,7 +41,6 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
     @Override
     public void render(BE_BloodTank tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int combinedLight, int combinedOverlay)
     {
-
         boolean connectU = shouldConnectTo(tileEntity.getBlockPos().above());
         boolean connectD = shouldConnectTo(tileEntity.getBlockPos().below());
         boolean connectN = shouldConnectTo(tileEntity.getBlockPos().north());
@@ -48,14 +48,16 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
         boolean connectS = shouldConnectTo(tileEntity.getBlockPos().south());
         boolean connectW = shouldConnectTo(tileEntity.getBlockPos().west());
 
-
         FluidStack fluidStack = tileEntity.getFluidInTank(0);
 
         //renderTankOuter(matrixStack.last().pose(), renderTypeBuffer.getBuffer(RenderType.entityCutout(new ResourceLocation(Globals.MODID, "textures/blocks/block_blood_tank.png"))), 1f, 1f, 1f, 1f, combinedLight, tileEntity.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
 
-        if (!fluidStack.isEmpty()) {
+        if (!fluidStack.isEmpty())
+        {
+            System.out.println("FS NOT EMPTY");
             float relativeFill = tileEntity.getRelativeFill();
-            if (relativeFill > 0.0f) {
+            if (relativeFill > 0.0f)
+            {
                 //TODO: this is currently set by every renderer, which isn't really ideal though it should be _fine_ and the fix would be annoying
                 cFluidFrame = (int) Math.floor(Minecraft.getInstance().level.getGameTime() / 3.0) % NUM_FLUID_FRAMES; //don't use individual iterators so animations stay in sync
                 renderFluid(matrixStack, renderTypeBuffer, fluidStack, 1, relativeFill, combinedLight, tileEntity.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
@@ -72,7 +74,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
     }
 
     private static void renderFluid(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, FluidStack fluidStack, float alpha, float heightPercentage, int combinedLight, BlockPos blockPos,
-            boolean connectU, boolean connectD, boolean connectN, boolean connectE, boolean connectS, boolean connectW)
+                                    boolean connectU, boolean connectD, boolean connectN, boolean connectE, boolean connectS, boolean connectW)
     {
         VertexConsumer vertexBuilder = renderTypeBuffer.getBuffer(RenderType.translucent());
         ResourceLocation fluidResource = RenderHelper.getResourceForFluid(fluidStack);
@@ -90,19 +92,19 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
 
         float height = MIN_Y + (MAX_Y - MIN_Y) * heightPercentage;
         float minU = 0, maxU = 1;
-        float frameVOff = cFluidFrame/(float)NUM_FLUID_FRAMES;
+        float frameVOff = cFluidFrame / (float) NUM_FLUID_FRAMES;
         float minV = MIN_Y + frameVOff;
-        float maxV = minV + (((height)/NUM_FLUID_FRAMES));
-        float maxVFlat = (1f/NUM_FLUID_FRAMES) + frameVOff;
+        float maxV = minV + (((height) / NUM_FLUID_FRAMES));
+        float maxVFlat = (1f / NUM_FLUID_FRAMES) + frameVOff;
 //        Globals.LogInfo(heightPercentage + "");
-        Vec3 BL = new Vec3(connectW?0: FLUID_SIDE_MARGIN, connectD?0:MIN_Y, connectN?0: FLUID_SIDE_MARGIN);
-        Vec3 BR = new Vec3(connectE?1:1- FLUID_SIDE_MARGIN, connectD?0:MIN_Y, connectN?0: FLUID_SIDE_MARGIN);
-        Vec3 FL = new Vec3(connectW?0: FLUID_SIDE_MARGIN, connectD?0:MIN_Y, connectS?1:1- FLUID_SIDE_MARGIN);
-        Vec3 FR = new Vec3(connectE?1:1- FLUID_SIDE_MARGIN, connectD?0:MIN_Y, connectS?1:1- FLUID_SIDE_MARGIN);
-        Vec3 BLT = new Vec3(connectW?0: FLUID_SIDE_MARGIN, (connectU && heightPercentage >= 1)?1:height - 0.001f, connectN?0: FLUID_SIDE_MARGIN);
-        Vec3 BRT = new Vec3(connectE?1:1- FLUID_SIDE_MARGIN, (connectU && heightPercentage >= 1)?1:height - 0.001f, connectN?0: FLUID_SIDE_MARGIN);
-        Vec3 FLT = new Vec3(connectW?0: FLUID_SIDE_MARGIN, (connectU && heightPercentage >= 1)?1:height - 0.001f, connectS?1:1- FLUID_SIDE_MARGIN);
-        Vec3 FRT = new Vec3(connectE?1:1- FLUID_SIDE_MARGIN, (connectU && heightPercentage >= 1)?1:height - 0.001f, connectS?1:1- FLUID_SIDE_MARGIN);
+        Vec3 BL = new Vec3(connectW ? 0 : FLUID_SIDE_MARGIN, connectD ? 0 : MIN_Y, connectN ? 0 : FLUID_SIDE_MARGIN);
+        Vec3 BR = new Vec3(connectE ? 1 : 1 - FLUID_SIDE_MARGIN, connectD ? 0 : MIN_Y, connectN ? 0 : FLUID_SIDE_MARGIN);
+        Vec3 FL = new Vec3(connectW ? 0 : FLUID_SIDE_MARGIN, connectD ? 0 : MIN_Y, connectS ? 1 : 1 - FLUID_SIDE_MARGIN);
+        Vec3 FR = new Vec3(connectE ? 1 : 1 - FLUID_SIDE_MARGIN, connectD ? 0 : MIN_Y, connectS ? 1 : 1 - FLUID_SIDE_MARGIN);
+        Vec3 BLT = new Vec3(connectW ? 0 : FLUID_SIDE_MARGIN, (connectU && heightPercentage >= 1) ? 1 : height - 0.001f, connectN ? 0 : FLUID_SIDE_MARGIN);
+        Vec3 BRT = new Vec3(connectE ? 1 : 1 - FLUID_SIDE_MARGIN, (connectU && heightPercentage >= 1) ? 1 : height - 0.001f, connectN ? 0 : FLUID_SIDE_MARGIN);
+        Vec3 FLT = new Vec3(connectW ? 0 : FLUID_SIDE_MARGIN, (connectU && heightPercentage >= 1) ? 1 : height - 0.001f, connectS ? 1 : 1 - FLUID_SIDE_MARGIN);
+        Vec3 FRT = new Vec3(connectE ? 1 : 1 - FLUID_SIDE_MARGIN, (connectU && heightPercentage >= 1) ? 1 : height - 0.001f, connectS ? 1 : 1 - FLUID_SIDE_MARGIN);
         Vec2 UVNN = new Vec2(minU, minV);
         Vec2 UVPN = new Vec2(maxU, minV);
         Vec2 UVNP = new Vec2(minU, maxV);
@@ -114,9 +116,9 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
         Vector4f color = new Vector4f(r, g, b, alpha);
 
         // top
-        if(heightPercentage < 1 || !connectU)
+        if (heightPercentage < 1 || !connectU)
         {
-            double waveTime = Minecraft.getInstance().level.getGameTime()/10.0;
+            double waveTime = Minecraft.getInstance().level.getGameTime() / 10.0;
             BLT = BLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BLT.x + BLT.z) + (waveTime)), 0).scale(WAVE_SIZE));
             BRT = BRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BRT.x + BRT.z) + (waveTime)), 0).scale(WAVE_SIZE));
             FLT = FLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FLT.x + FLT.z) + (waveTime)), 0).scale(WAVE_SIZE));
@@ -124,38 +126,38 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BRT, FRT, FLT, BLT, UVPN, UVPPFlat, UVNPFlat, UVNN, light, color);
         }
         //bottom
-        if(!connectD)
+        if (!connectD)
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BL, FL, FR, BR, UVPN, UVPPFlat, UVNPFlat, UVNN, light, color);
         // min z
-        if(!connectN)
+        if (!connectN)
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BR, BRT, BLT, BL, UVPN, UVPP, UVNP, UVNN, light, color);
         // max z
-        if(!connectS)
+        if (!connectS)
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, FL, FLT, FRT, FR, UVPN, UVPP, UVNP, UVNN, light, color);
         // min x
-        if(!connectW)
+        if (!connectW)
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BL, BLT, FLT, FL, UVPN, UVPP, UVNP, UVNN, light, color);
         // max x
-        if(!connectE)
+        if (!connectE)
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, FR, FRT, BRT, BR, UVPN, UVPP, UVNP, UVNN, light, color);
     }
 
     private static void renderTankOuter(Matrix4f matrix, VertexConsumer vertexBuilder, float r, float g, float b, float alpha, int light, BlockPos blockPos,
-                                          boolean connectU, boolean connectD, boolean connectN, boolean connectE, boolean connectS, boolean connectW)
+                                        boolean connectU, boolean connectD, boolean connectN, boolean connectE, boolean connectS, boolean connectW)
     {
         float minU = 0;
         float maxU = 0.5f;
         float minV = 0f;
         float maxV = 0.5f;
 
-        Vec3 BL = new Vec3(connectW?0: TANKBLOCK_ALLSIDE_MARGIN, connectD?0:TANKBLOCK_ALLSIDE_MARGIN, connectN?0: TANKBLOCK_ALLSIDE_MARGIN);
-        Vec3 BR = new Vec3(connectE?1:1 - TANKBLOCK_ALLSIDE_MARGIN, connectD?0:TANKBLOCK_ALLSIDE_MARGIN, connectN?0: TANKBLOCK_ALLSIDE_MARGIN);
-        Vec3 FL = new Vec3(connectW?0: TANKBLOCK_ALLSIDE_MARGIN, connectD?0:TANKBLOCK_ALLSIDE_MARGIN, connectS?1:1- TANKBLOCK_ALLSIDE_MARGIN);
-        Vec3 FR = new Vec3(connectE?1:1 - TANKBLOCK_ALLSIDE_MARGIN, connectD?0:TANKBLOCK_ALLSIDE_MARGIN, connectS?1:1- TANKBLOCK_ALLSIDE_MARGIN);
-        Vec3 BLT = new Vec3(connectW?0: TANKBLOCK_ALLSIDE_MARGIN, connectU?1:1 - TANKBLOCK_ALLSIDE_MARGIN, connectN?0: TANKBLOCK_ALLSIDE_MARGIN);
-        Vec3 BRT = new Vec3(connectE?1:1 - TANKBLOCK_ALLSIDE_MARGIN, connectU?1:1 - TANKBLOCK_ALLSIDE_MARGIN, connectN?0: TANKBLOCK_ALLSIDE_MARGIN);
-        Vec3 FLT = new Vec3(connectW?0: TANKBLOCK_ALLSIDE_MARGIN, connectU?1:1 - TANKBLOCK_ALLSIDE_MARGIN, connectS?1:1- TANKBLOCK_ALLSIDE_MARGIN);
-        Vec3 FRT = new Vec3(connectE?1:1 - TANKBLOCK_ALLSIDE_MARGIN, connectU?1:1 - TANKBLOCK_ALLSIDE_MARGIN, connectS?1:1- TANKBLOCK_ALLSIDE_MARGIN);
+        Vec3 BL = new Vec3(connectW ? 0 : TANKBLOCK_ALLSIDE_MARGIN, connectD ? 0 : TANKBLOCK_ALLSIDE_MARGIN, connectN ? 0 : TANKBLOCK_ALLSIDE_MARGIN);
+        Vec3 BR = new Vec3(connectE ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN, connectD ? 0 : TANKBLOCK_ALLSIDE_MARGIN, connectN ? 0 : TANKBLOCK_ALLSIDE_MARGIN);
+        Vec3 FL = new Vec3(connectW ? 0 : TANKBLOCK_ALLSIDE_MARGIN, connectD ? 0 : TANKBLOCK_ALLSIDE_MARGIN, connectS ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN);
+        Vec3 FR = new Vec3(connectE ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN, connectD ? 0 : TANKBLOCK_ALLSIDE_MARGIN, connectS ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN);
+        Vec3 BLT = new Vec3(connectW ? 0 : TANKBLOCK_ALLSIDE_MARGIN, connectU ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN, connectN ? 0 : TANKBLOCK_ALLSIDE_MARGIN);
+        Vec3 BRT = new Vec3(connectE ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN, connectU ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN, connectN ? 0 : TANKBLOCK_ALLSIDE_MARGIN);
+        Vec3 FLT = new Vec3(connectW ? 0 : TANKBLOCK_ALLSIDE_MARGIN, connectU ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN, connectS ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN);
+        Vec3 FRT = new Vec3(connectE ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN, connectU ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN, connectS ? 1 : 1 - TANKBLOCK_ALLSIDE_MARGIN);
         Vec2 UVNN = new Vec2(minU, minV);
         Vec2 UVPN = new Vec2(maxU, minV);
         Vec2 UVNP = new Vec2(minU, maxV);
@@ -165,37 +167,38 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_BloodTank>
         Vector4f color = new Vector4f(r, g, b, alpha);
 
         // top
-        if(!connectU)
+        if (!connectU)
         {
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BRT, FRT, FLT, BLT, UVPN, UVPP, UVNP, UVNN, light, color);
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BLT, FLT, FRT, BRT, UVPN, UVPP, UVNP, UVNN, light, color);
         }
         //bottom
-        if(!connectD)
+        if (!connectD)
         {
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BL, FL, FR, BR, UVPN.add(new Vec2(0.5f, 0f)), UVPP.add(new Vec2(0.5f, 0f)), UVNP.add(new Vec2(0.5f, 0f)), UVNN.add(new Vec2(0.5f, 0f)), light, color);
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BR, FR, FL, BL, UVPN.add(new Vec2(0.5f, 0f)), UVPP.add(new Vec2(0.5f, 0f)), UVNP.add(new Vec2(0.5f, 0f)), UVNN.add(new Vec2(0.5f, 0f)), light, color);
         }
         // min z
-        if(!connectN)
+        if (!connectN)
         {
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BR, BRT, BLT, BL, UVPN, UVPP, UVNP, UVNN, light, color);
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BL, BLT, BRT, BR, UVPN, UVPP, UVNP, UVNN, light, color);
         }
         // max z
-        if(!connectS)
+        if (!connectS)
         {
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, FL, FLT, FRT, FR, UVPN, UVPP, UVNP, UVNN, light, color);
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, FR, FRT, FLT, FL, UVPN, UVPP, UVNP, UVNN, light, color);
         }
         // min x
-        if(!connectW)
+        if (!connectW)
         {
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BL, BLT, FLT, FL, UVPN, UVPP, UVNP, UVNN, light, color);
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BLT, BL, FL, FLT, UVPN, UVPP, UVNP, UVNN, light, color);
         }
         // max x
-        if(!connectE) {
+        if (!connectE)
+        {
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, FR, FRT, BRT, BR, UVPN, UVPP, UVNP, UVNN, light, color);
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, FRT, FR, BR, BRT, UVPN, UVPP, UVNP, UVNN, light, color);
         }

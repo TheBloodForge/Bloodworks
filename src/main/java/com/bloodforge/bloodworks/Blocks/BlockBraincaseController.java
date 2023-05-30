@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BlockBraincaseController extends BlockMachineBase
 {
-    
+
     public BlockBraincaseController()
     {
     }
@@ -32,12 +32,14 @@ public class BlockBraincaseController extends BlockMachineBase
     }
 
     @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos)
+    {
         return 12;
     }
 
     @Override
-    public float getShadeBrightness(BlockState state, BlockGetter blockGetter, BlockPos blockPos) {
+    public float getShadeBrightness(BlockState state, BlockGetter blockGetter, BlockPos blockPos)
+    {
         return 1F;
     }
 
@@ -47,14 +49,17 @@ public class BlockBraincaseController extends BlockMachineBase
     {
         return createTickerHelper(type, (BlockEntityType<BE_Braincase_Controller>) BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.blockEntity().get(), BE_Braincase_Controller::tick);
     }
+
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState cState, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
-        if(level.isClientSide()) {
+        if (level.isClientSide())
+        {
             return super.use(cState, level, pos, player, interactionHand, blockHitResult);
         }
-        if (level.getBlockEntity(pos) instanceof BE_Braincase_Controller controller) {
+        if (level.getBlockEntity(pos) instanceof BE_Braincase_Controller controller)
+        {
             controller.use(player, interactionHand, blockHitResult);
         }
 
