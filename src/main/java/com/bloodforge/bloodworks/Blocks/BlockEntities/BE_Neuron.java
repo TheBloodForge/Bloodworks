@@ -1,6 +1,6 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
-import com.bloodforge.bloodworks.Networking.NeuronSyncS2CPacket;
+import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.bloodforge.bloodworks.Util;
@@ -91,7 +91,7 @@ public class BE_Neuron extends BlockEntity
 
     private void syncNeuron()
     {
-        PacketManager.sendToClients(new NeuronSyncS2CPacket(getBlockPos(), wrapNBT()));
+        PacketManager.sendToClients(new NBTSyncS2CPacket(getBlockPos(), wrapNBT()));
     }
 
     private CompoundTag wrapNBT()

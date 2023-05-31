@@ -7,7 +7,6 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-@SuppressWarnings({"SameReturnValue", "UnusedReturnValue"})
 public class TankSyncS2CPacket
 {
     private final String parentName;
@@ -31,11 +30,11 @@ public class TankSyncS2CPacket
         buf.writeFluidStack(fluidStack);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public boolean handle(Supplier<NetworkEvent.Context> supplier)
     {
         NetworkEvent.Context context = supplier.get();
-        context.enqueueWork(() ->
-                TankDataProxy.getTankByName(parentName).setFluid(fluidStack));
+        context.enqueueWork(() -> TankDataProxy.getTankByName(parentName).setFluid(fluidStack));
         return true;
     }
 }

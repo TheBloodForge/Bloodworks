@@ -5,7 +5,6 @@ import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Items.TankItem;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.bloodforge.bloodworks.Registry.FluidRegistry;
-import com.bloodforge.bloodworks.Server.TankDataManager;
 import com.bloodforge.bloodworks.Server.TankDataProxy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,12 +40,27 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
         super(BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), pos, state);
     }
 
+    private void setTankLabel()
+    {
+        if (getNeighborTanks(getBlockPos(), ServerLifecycleHooks.getCurrentServer().overworld()).isEmpty())
+            setID(TankDataProxy.createNewParent(getBlockPos()));
+        if (getID().isEmpty())
+            for (BE_Tank be_tank : getNeighborTanks(getBlockPos(), ServerLifecycleHooks.getCurrentServer().overworld()))
+                if (!be_tank.getID().isEmpty())
+                {
+                    setID(be_tank.getID());
+                    TankDataProxy.addChild(be_tank.getID(), getBlockPos(), false);
+                    break; // Returning once an id was found.
+                }
+        if (!getID().isEmpty())
+            setChanged();
+    }
+
     public void tick()
     {
         if (level.getBlockState(getBlockPos()).getValue(BlockBloodTank.TIER) != TankDataProxy.getTankTier(tank_id))
             level.getBlockState(getBlockPos()).setValue(BlockBloodTank.TIER, TankDataProxy.getTankTier(tank_id));
         tryAndFillNeighbors();
-        setChanged();
     }
 
     private void tryAndFillNeighbors()
@@ -59,7 +73,7 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
                     int transferAmount = Math.min(TankDataProxy.getTankTransferRate(tank_id), space);
                     FluidStack fs = getTank().drain(transferAmount, FluidAction.EXECUTE);
                     neighbor.fill(fs.copy(), FluidAction.EXECUTE);
-                    if (TankDataProxy.getTankTier(tank_id) == -1)
+                    if (TankDataProxy.getTankTier(tank_id) == 0)
                         fill(fs, FluidAction.EXECUTE);
                 }
     }
@@ -85,7 +99,7 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
 
     public void breakTank(BlockPos pos, Level level)
     {
-        TankDataProxy.removeChild(tank_id, pos, level);
+        TankDataProxy.removeChild(tank_id, pos, level.isClientSide());
     }
 
     public void setID(String newTankID)
@@ -104,10 +118,10 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
     { return TankDataProxy.getTankByName(tank_id); }
 
     public void changeTier(int i)
-    { TankDataProxy.changeTier(tank_id, i); }
+    { TankDataProxy.changeTier(tank_id, i, getLevel().isClientSide); }
 
     public void setTier(int i)
-    { TankDataProxy.setTankTier(tank_id, i); }
+    { TankDataProxy.setTankTier(tank_id, i, getLevel().isClientSide); }
 
 //######################################################################\\
 //                           BELOW IS UTILITIES                         \\
@@ -144,10 +158,12 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_Tank entity)
     {
         if (level == null || level.isClientSide) return;
+        if (!entity.tank_id.isEmpty() && entity.getTank().getCapacity() == 404)
+            TankDataProxy.loadTanks(false);
+        if (entity.tank_id.isEmpty()) // Try to find Neighbor ID before attempting to Recover.
+            entity.setTankLabel();
         if (entity.tank_id.isEmpty())
-            entity.setID(TankDataProxy.recoverTankName(blockPos));
-        if (entity.getTank().getCapacity() == 404)
-            TankDataManager.read();
+            entity.setID(TankDataProxy.recoverTankName(blockPos, level));
         entity.tick();
     }
 
@@ -190,6 +206,8 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
     protected void saveAdditional(CompoundTag tag)
     {
         if (level == null || level.isClientSide) return;
+        if (tank_id.isEmpty())
+            setTankLabel();
         tag.putString("tank_id", tank_id);
         TankDataProxy.saveTanks(ServerLifecycleHooks.getCurrentServer().overworld());
         super.saveAdditional(tag);

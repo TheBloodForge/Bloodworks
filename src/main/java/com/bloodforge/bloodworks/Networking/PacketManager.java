@@ -48,22 +48,10 @@ public class PacketManager
                 .consumerMainThread(TankSyncS2CPacket::handle)
                 .add();
 
-        net.messageBuilder(TankNameSyncS2CPacket.class, id(), PAYLOAD_TO_CLIENT)
-                .decoder(TankNameSyncS2CPacket::new)
-                .encoder(TankNameSyncS2CPacket::toBytes)
-                .consumerMainThread(TankNameSyncS2CPacket::handle)
-                .add();
-
-        net.messageBuilder(UpdateTankS2CPacket.class, id(), PAYLOAD_TO_CLIENT)
-                .decoder(UpdateTankS2CPacket::new)
-                .encoder(UpdateTankS2CPacket::toBytes)
-                .consumerMainThread(UpdateTankS2CPacket::handle)
-                .add();
-
-        net.messageBuilder(NeuronSyncS2CPacket.class, id(), PAYLOAD_TO_CLIENT)
-                .decoder(NeuronSyncS2CPacket::new)
-                .encoder(NeuronSyncS2CPacket::toBytes)
-                .consumerMainThread(NeuronSyncS2CPacket::handle)
+        net.messageBuilder(TankDataSyncS2CPacket.class, id(), PAYLOAD_TO_CLIENT)
+                .decoder(TankDataSyncS2CPacket::new)
+                .encoder(TankDataSyncS2CPacket::toBytes)
+                .consumerMainThread(TankDataSyncS2CPacket::handle)
                 .add();
 
         net.messageBuilder(MessageS2CPacket.class, id(), PAYLOAD_TO_CLIENT)

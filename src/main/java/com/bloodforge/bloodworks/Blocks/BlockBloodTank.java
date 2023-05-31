@@ -5,7 +5,6 @@ import com.bloodforge.bloodworks.ClientUtils;
 import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
-import com.bloodforge.bloodworks.Server.TankDataProxy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -39,10 +38,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings({"unchecked", "deprecation"})
@@ -70,18 +67,7 @@ public class BlockBloodTank extends BlockMachineBase
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        BE_Tank tank = (BE_Tank) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get().create(pos, state);
-        List<BE_Tank> tanks;
-        if ((tanks = getNeighborTanks(pos, ServerLifecycleHooks.getCurrentServer().overworld())).isEmpty())
-            tank.setID(TankDataProxy.createNewParent(pos));
-        if (tank.getID().isEmpty())
-            for (BE_Tank be_tank : tanks)
-                if (!be_tank.getID().isEmpty())
-                {
-                    tank.setID(be_tank.getID());
-                    TankDataProxy.addChild(be_tank.getID(), pos, ServerLifecycleHooks.getCurrentServer().overworld());
-                }
-        return tank;
+        return BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get().create(pos, state);
     }
 
     @Override
@@ -195,14 +181,5 @@ public class BlockBloodTank extends BlockMachineBase
             level.getLightEngine().checkBlock(pos);
         }
         return InteractionResult.sidedSuccess(!level.isClientSide());
-    }
-
-    private static List<BE_Tank> getNeighborTanks(BlockPos blockPos, Level level)
-    {
-        List<BE_Tank> tanks = new ArrayList<>();
-        for (Direction value : Direction.values())
-            if (level.getBlockEntity(blockPos.relative(value)) instanceof BE_Tank tank)
-                tanks.add(tank);
-        return tanks;
     }
 }

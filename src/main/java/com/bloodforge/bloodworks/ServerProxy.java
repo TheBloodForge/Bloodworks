@@ -16,5 +16,6 @@ public class ServerProxy
     {
         // Do something when the server starts
         Globals.LogInfo("Initializing Server.");
+        Globals.IS_SERVER = true;
     }
 }

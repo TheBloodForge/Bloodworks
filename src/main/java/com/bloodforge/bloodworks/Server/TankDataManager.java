@@ -1,10 +1,12 @@
 package com.bloodforge.bloodworks.Server;
 
+import com.bloodforge.bloodworks.Globals;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
+import static com.bloodforge.bloodworks.Globals.KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS;
 import static com.bloodforge.bloodworks.Server.TankDataProxy.TankDataTag;
 import static com.bloodforge.bloodworks.Server.TankDataProxy.syncFluid;
 
@@ -50,7 +52,7 @@ public class TankDataManager extends SavedData
 
 
     public static void read()
-    { read(ServerLifecycleHooks.getCurrentServer().overworld()); }
+    { if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Read Tank Data", false); read(ServerLifecycleHooks.getCurrentServer().overworld()); }
 
     private static void save(LevelAccessor level)
     {

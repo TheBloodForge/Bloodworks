@@ -1,26 +1,34 @@
 package com.bloodforge.bloodworks.Server;
 
+import com.bloodforge.bloodworks.Globals;
+import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
-import com.bloodforge.bloodworks.Networking.TankNameSyncS2CPacket;
+import com.bloodforge.bloodworks.Networking.TankDataSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.TankSyncS2CPacket;
-import com.bloodforge.bloodworks.Networking.UpdateTankS2CPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.HashMap;
 import java.util.Set;
 
 import static com.bloodforge.bloodworks.Globals.DEFAULT_TANK_TRANSFER_RATE;
+import static com.bloodforge.bloodworks.Globals.KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS;
 
 public class TankDataProxy
 {
     public static final HashMap<String, TankDataContainer> MASTER_TANK_CONTAINER = new HashMap<>();
     public static CompoundTag TankDataTag = new CompoundTag();
 
-    static void deleteTank(String parentName)
-    { MASTER_TANK_CONTAINER.remove(parentName); }
+    static void deleteTank(String tankName)
+    {
+        MASTER_TANK_CONTAINER.remove(tankName);
+        TankDataTag.remove(tankName);
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Removed [" + tankName + "] from Master and Data", false);
+    }
 
     public static FluidTank getTankByName(String tankName)
     {
@@ -32,7 +40,8 @@ public class TankDataProxy
     {
         String tank_id = "TCT-" + (System.currentTimeMillis() - 1685405500000L);
         TankDataContainer tank_data = new TankDataContainer(tank_id, block_pos);
-        MASTER_TANK_CONTAINER.put(tank_id, tank_data);
+        addToMasterContainer(tank_id, tank_data, false);
+        saveTanks(ServerLifecycleHooks.getCurrentServer().overworld());
         return tank_id;
     }
 
@@ -43,56 +52,93 @@ public class TankDataProxy
     {
         if (!tankExists(tank))
         {
-            System.err.println("No entry exists for [" + tank + "] in MASTER_TANK_CONTAINER.");
+            Globals.LOGGER.error("No entry exists for [" + tank + "] in MASTER_TANK_CONTAINER.");
             return new TankDataContainer(tank, new BlockPos(0, 0, 0));
         }
         return MASTER_TANK_CONTAINER.get(tank);
     }
 
+    private static int saveCooldown = 10;
     public static void saveTanks(Level level)
     {
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Save Tanks Requested", level.isClientSide);
+        if (saveCooldown > 0)
+        {
+            saveCooldown--;
+            if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Save Tanks Rejected", level.isClientSide);
+            return;
+        }
+        Globals.LogDebug("Saving Tanks", level.isClientSide);
+        saveCooldown = 10;
         for (String tankName : MASTER_TANK_CONTAINER.keySet())
         {
-            TankDataTag.remove(tankName);
-            TankDataTag.put(tankName, TankDataPacker.getTankDataTagForSavingToMasterTag(tankName));
+            updateDataTag(tankName);
         }
         TankDataManager.saveData();
     }
 
-    public static void loadTanks(Level level)
+    public static void loadTanks(boolean isClient)
     {
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Load Tanks Requested", isClient);
         TankDataManager.read();
-        MASTER_TANK_CONTAINER.clear();
+        resetMaster(isClient);
         for (String tankName : TankDataTag.getAllKeys())
         {
-            TankDataContainer tc = TankDataPacker.getTankDataFromCompound(tankName, TankDataTag.getCompound(tankName));
-            MASTER_TANK_CONTAINER.put(tankName, tc);
+            loadTank(tankName, TankDataTag.get(tankName), isClient);
             syncTankName(tankName);
             syncFluid(tankName);
         }
     }
 
-    public static String recoverTankName(BlockPos blockPos)
+    public static void loadTank(String tankName, Tag tag, boolean isClient)
     {
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Loading Tank [" + tankName + "]", isClient);
+        TankDataContainer tc = TankDataPacker.getTankDataFromCompound(tankName, TankDataTag.getCompound(tankName), isClient);
+        addToMasterContainer(tankName, tc, isClient);
+    }
+
+    private static void resetMaster(boolean isClient)
+    {
+        MASTER_TANK_CONTAINER.clear();
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Cleared Master Tank Container", isClient);
+    }
+
+    private static void addToMasterContainer(String tankName, TankDataContainer tc, boolean isClient)
+    {
+        MASTER_TANK_CONTAINER.remove(tankName);
+        MASTER_TANK_CONTAINER.put(tankName, tc);
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Put Tank Into Master Tank Container", isClient);
+    }
+
+    public static String recoverTankName(BlockPos blockPos, Level level)
+    {
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Recovering Tank Name [" + blockPos + "]", level.isClientSide());
         Set<String> tankNames = MASTER_TANK_CONTAINER.keySet();
         for (String tankName : tankNames)
             if (getDataForTank(tankName).hasChild(blockPos))
                 return tankName;
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Tank Name for [" + blockPos + "] wasn't found.", level.isClientSide());
         return "";
     }
 
-    public static void addChild(String parentName, BlockPos blockPos, Level level)
+    public static void addChild(String tankName, BlockPos blockPos, boolean isClient)
     {
-        getDataForTank(parentName).addChild(blockPos);
-        if (level != null && !level.isClientSide())
-            PacketManager.sendToClients(new UpdateTankS2CPacket(parentName, blockPos, true));
+        getDataForTank(tankName).addChild(blockPos, isClient);
+        updateDataTag(tankName);
     }
 
-    public static void removeChild(String parentName, BlockPos blockPos, Level level)
+    public static void removeChild(String tankName, BlockPos blockPos, boolean isClient)
     {
-        getDataForTank(parentName).removeChild(blockPos);
-        if (level != null && !level.isClientSide())
-            PacketManager.sendToClients(new UpdateTankS2CPacket(parentName, blockPos, false));
+        getDataForTank(tankName).removeChild(blockPos, isClient);
+        updateDataTag(tankName);
+    }
+
+    private static void updateDataTag(String tankName)
+    {
+        TankDataTag.remove(tankName);
+        CompoundTag nbt;
+        if (!(nbt = TankDataPacker.getTankDataTag(tankName)).isEmpty())
+            TankDataTag.put(tankName, nbt);
     }
 
     public static int getTankTier(String tankName)
@@ -123,24 +169,32 @@ public class TankDataProxy
     public static void syncFluid(String tankName)
     {
         PacketManager.sendToClients(new TankSyncS2CPacket(tankName, getTankByName(tankName).getFluid()));
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Synced Fluid For Tank [" + tankName + "] to Client", false);
     }
 
-    public static boolean hasTankByName(String parentName)
+    public static boolean hasTankByName(String tankName)
     {
-        if (parentName.isEmpty()) return false;
-        return tankExists(parentName);
+        if (tankName.isEmpty()) return false;
+        return tankExists(tankName);
     }
 
-    public static void syncTankName(String parentName, BlockPos blockPos)
+    public static void syncTankName(String tankName, BlockPos blockPos)
     {
-        PacketManager.sendToClients(new TankNameSyncS2CPacket(parentName, blockPos));
+        CompoundTag tag = new CompoundTag();
+        tag.putString("tank_id", tankName);
+        PacketManager.sendToClients(new NBTSyncS2CPacket(blockPos, tag));
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Synced Tank [" + tankName + "] @[" + blockPos + "] to Client", false);
     }
 
-    public static void syncTankName(String parentName)
+    public static void syncTankName(String tankName)
     {
-        if (!parentName.isEmpty() && hasTankByName(parentName))
-            for (BlockPos blockPos : getDataForTank(parentName).getChildren())
-                syncTankName(parentName, blockPos);
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Syncing Tank Children for [" + tankName + "] to Client", false);
+        if (!tankName.isEmpty() && hasTankByName(tankName))
+        {
+            PacketManager.sendToClients(new TankDataSyncS2CPacket(tankName, TankDataTag.getCompound(tankName)));
+            for (BlockPos blockPos : getDataForTank(tankName).getChildren())
+                syncTankName(tankName, blockPos);
+        }
     }
 
     public static int getTankTransferRate(String tank_id)
@@ -149,9 +203,9 @@ public class TankDataProxy
         return getTankTier(tank_id) == 0 ? 50000 : getTankTier(tank_id) * DEFAULT_TANK_TRANSFER_RATE;
     }
 
-    public static void changeTier(String tank_id, int i)
-    { getDataForTank(tank_id).setTankTier(getTankTier(tank_id) + i); }
+    public static void changeTier(String tank_id, int i, boolean isClient)
+    { getDataForTank(tank_id).setTankTier(getTankTier(tank_id) + i, isClient); }
 
-    public static void setTankTier(String tank_id, int newTier)
-    { getDataForTank(tank_id).setTankTier(newTier); }
+    public static void setTankTier(String tank_id, int newTier, boolean isClient)
+    { getDataForTank(tank_id).setTankTier(newTier, isClient); }
 }

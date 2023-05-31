@@ -4,7 +4,6 @@ import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -47,7 +46,8 @@ public class Globals
 
     };
     public static final int DEFAULT_TANK_CAPACITY = 5000, DEFAULT_TANK_TRANSFER_RATE = 50;
-    public static MinecraftServer SERVER = null;
+    public static final boolean KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS = true;
+    public static boolean IS_CLIENT = false, IS_SERVER = false;
 
     public static void LogInfo(String toLog)
     {
@@ -57,5 +57,10 @@ public class Globals
     public static void LogError(String toLog)
     {
         LOGGER.error("[" + MODID + "] " + toLog);
+    }
+
+    public static void LogDebug(String toLog, boolean isClient)
+    {
+        LOGGER.debug("[" + MODID + "] {" + (!isClient ? "SERVER" : "CLIENT") + "} " + toLog);
     }
 }
