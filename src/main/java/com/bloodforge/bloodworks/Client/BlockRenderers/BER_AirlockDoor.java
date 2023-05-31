@@ -47,6 +47,13 @@ public class BER_AirlockDoor implements BlockEntityRenderer<BE_AirlockDoor>
             poseStack.mulPose(Quaternion.fromXYZDegrees(new Vector3f(0, 90, 0)));
             poseStack.translate(-1, 0, 0);
         }
+        boolean isTopBlock = Minecraft.getInstance().level.getBlockState(ent.getBlockPos().below()).is(ent.getBlockState().getBlock());
+        if(isTopBlock)
+        {
+            poseStack.mulPose(Quaternion.fromXYZDegrees(new Vector3f(180, 0, 0)));
+            poseStack.translate(0, -1, -1);
+        }
+
         ModelBlockRenderer mbr = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
         VertexConsumer vertexBuilder = RenderHelper.StartRenderingCutout(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_braincase_airlock_door.png"));
         float xMin = 4f/16f;
