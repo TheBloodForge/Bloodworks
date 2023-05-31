@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "bloodworks:block/block_braincase_controller"
+    },
+    "facing=south": {
+      "model": "bloodworks:block/block_braincase_controller",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "bloodworks:block/block_braincase_controller",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "bloodworks:block/block_braincase_controller",
+      "y": 90
+    }
+  }
+}

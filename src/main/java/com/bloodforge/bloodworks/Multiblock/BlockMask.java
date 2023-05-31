@@ -9,32 +9,51 @@ import java.util.HashMap;
 
 public class BlockMask
 {
+    public record RequiredBlockRecord(Block block, int min, int max){}
+
     ArrayList<Block> allowedBlocks;
     ArrayList<Block> disallowedBlocks;
-    ArrayList<Block> requiredBlocks;
+    ArrayList<RequiredBlockRecord> requiredBlocks;
     ArrayList<Block> specialBlocks;
 
     public BlockMask()
     { }
 
+    //Blocks to exclusively allow
     public BlockMask withWhitelisted(Block block)
     {
         if(allowedBlocks == null) allowedBlocks = new ArrayList<>();
         allowedBlocks.add(block);
         return this;
     }
+    //Required means the same as special, but will cause a list of blocks to fail areRequirementsSatisfied if missing.
+    public BlockMask withRequired(Block block, int minimum, int maximum)
+    {
+        if(requiredBlocks == null) requiredBlocks = new ArrayList<>();
+        requiredBlocks.add(new RequiredBlockRecord(block, minimum, maximum));
+        return this;
+    }
+    public BlockMask withRequired(Block block, int minimum)
+    {
+        if(requiredBlocks == null) requiredBlocks = new ArrayList<>();
+        requiredBlocks.add(new RequiredBlockRecord(block, minimum, 99999));
+        return this;
+    }
     public BlockMask withRequired(Block block)
     {
         if(requiredBlocks == null) requiredBlocks = new ArrayList<>();
-        requiredBlocks.add(block);
+        requiredBlocks.add(new RequiredBlockRecord(block, 1, 99999));
         return this;
     }
+    //Blocks to exclusively deny. If only this is set, the blacklist is active
     public BlockMask withBlacklisted(Block block)
     {
         if(disallowedBlocks == null) disallowedBlocks = new ArrayList<>();
         disallowedBlocks.add(block);
         return this;
     }
+
+    //Special means "we care about this block, add it to the special array"
     public BlockMask withSpecial(Block block)
     {
         if(specialBlocks == null) specialBlocks = new ArrayList<>();
@@ -98,11 +117,16 @@ public class BlockMask
     public BlockMaskRequireResult areRequirementsSatisfiedBy(HashMap<Block, ArrayList<BlockPos>> found)
     {
         if (requiredBlocks == null) return new BlockMaskRequireResult(true, null);
-        for (Block b : requiredBlocks)
+        for (RequiredBlockRecord b : requiredBlocks)
         {
-            if (!found.containsKey(b))
+            if (!found.containsKey(b.block))
             {
-                return new BlockMaskRequireResult(false, b);
+                return new BlockMaskRequireResult(false, b.block);
+            }
+            int numFound = found.get(b.block).size();
+            if(numFound < b.min || numFound > b.max)
+            {
+                return new BlockMaskRequireResult(false, b.block);
             }
         }
         return new BlockMaskRequireResult(true, null);

@@ -1,0 +1,50 @@
+{
+	"credit": "Made with Blockbench",
+	"render_type": "cutout",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "bloodworks:blocks/block_braincase_airlock_door",
+		"particle": "bloodworks:blocks/block_braincase_airlock_door"
+	},
+	"elements": [
+		{
+			"name": "Base",
+			"from": [0, 0, 4],
+			"to": [16, 2, 12],
+			"faces": {
+				"north": {"uv": [8, 15, 16, 16], "texture": "#0"},
+				"east": {"uv": [4, 15, 8, 16], "texture": "#0", "cullface": "east"},
+				"south": {"uv": [8, 15, 16, 16], "texture": "#0"},
+				"west": {"uv": [4, 15, 8, 16], "texture": "#0", "cullface": "west"},
+				"up": {"uv": [8, 11, 16, 15], "texture": "#0"},
+				"down": {"uv": [8, 11, 16, 15], "texture": "#0", "cullface": "down"}
+			}
+		},
+		{
+			"name": "door1",
+			"from": [0.005, 0, 5],
+			"to": [15.995, 16, 11],
+			"faces": {
+				"north": {"uv": [0, 3, 8, 11], "texture": "#0"},
+				"east": {"uv": [2.5, 3, 5.5, 11], "texture": "#0", "cullface": "east"},
+				"south": {"uv": [0, 3, 8, 11], "texture": "#0"},
+				"west": {"uv": [2.5, 3, 5.5, 11], "texture": "#0", "cullface": "west"},
+				"up": {"uv": [0, 0, 8, 3], "texture": "#0"},
+				"down": {"uv": [0, 0, 8, 3], "texture": "#0"}
+			}
+		},
+		{
+			"name": "door2",
+			"from": [0.01, 1, 6],
+			"to": [15.99, 17, 10],
+			"faces": {
+				"north": {"uv": [8, 2, 16, 10], "texture": "#0"},
+				"east": {"uv": [13.5, 2, 15.5, 10], "texture": "#0", "cullface": "east"},
+				"south": {"uv": [8, 2, 16, 10], "texture": "#0"},
+				"west": {"uv": [8.5, 2, 10.5, 10], "texture": "#0", "cullface": "west"},
+				"up": {"uv": [8, 0, 16, 2], "texture": "#0"},
+				"down": {"uv": [8, 0, 16, 2], "texture": "#0"}
+			}
+		}
+	]
+}

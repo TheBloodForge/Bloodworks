@@ -52,6 +52,15 @@ public class BlockRegistry
     public static final RegistryPair BLOCK_BRAINCASE_WINDOW = createBlock("braincase_window", () ->
             new GenericBlockBase(BlockBehaviour.Properties.of(Material.METAL).strength(3f, 4f).sound(SoundType.GLASS).noOcclusion().isSuffocating((a, b, c) -> false).isViewBlocking((a, b, c) -> false)).withGlasslikeProperties());
 
+    public static final RegistryPair BLOCK_AIRLOCK_DRAIN = createBlock("braincase_airlock_drain", () ->
+            new GenericBlockBase(BlockBehaviour.Properties.of(Material.METAL).strength(3f, 7f).sound(SoundType.METAL)));
+
+    public static final BlockEntityRegister BLOCK_AIRLOCK_DOOR = createBlockEntity2(
+            "braincase_airlock_door",
+            BlockAirlockDoor::new,
+            BE_AirlockDoor.class
+    );
+
     public static final BlockEntityRegister BLOCK_INFUSION_CHAMBER = createBlockEntity2(
             "infusion_chamber",
             BlockInfusionChamber::new,

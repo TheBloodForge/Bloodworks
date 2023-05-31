@@ -1,13 +1,7 @@
 package com.bloodforge.bloodworks;
 
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank;
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Braincase_Controller;
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Intestine;
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Neuron;
-import com.bloodforge.bloodworks.Client.BlockRenderers.BER_BloodTank;
-import com.bloodforge.bloodworks.Client.BlockRenderers.BER_Braincase_Controller;
-import com.bloodforge.bloodworks.Client.BlockRenderers.BER_Intestine;
-import com.bloodforge.bloodworks.Client.BlockRenderers.BER_Neuron;
+import com.bloodforge.bloodworks.Blocks.BlockEntities.*;
+import com.bloodforge.bloodworks.Client.BlockRenderers.*;
 import com.bloodforge.bloodworks.Client.Screens.InfusionChamberScreen;
 import com.bloodforge.bloodworks.Particles.FleshStepParticle;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
@@ -17,9 +11,11 @@ import com.bloodforge.bloodworks.Registry.ParticleRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -50,6 +46,7 @@ public class ClientProxy
         registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_Tank>) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), BER_BloodTank::new);
         registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_Neuron>) BlockRegistry.BLOCK_NEURON.blockEntity().get(), BER_Neuron::new);
         registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_Braincase_Controller>) BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.blockEntity().get(), BER_Braincase_Controller::new);
+        registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_AirlockDoor>) BlockRegistry.BLOCK_AIRLOCK_DOOR.blockEntity().get(), BER_AirlockDoor::new);
 
         ItemBlockRenderTypes.setRenderLayer(FluidRegistry.FLUID_BLOOD.source.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(FluidRegistry.FLUID_BLOOD.flowing.get(), RenderType.translucent());

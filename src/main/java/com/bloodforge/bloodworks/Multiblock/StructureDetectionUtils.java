@@ -33,6 +33,7 @@ public class StructureDetectionUtils
 
     public static boolean blockMatches(Level level, BlockMask blockMask, BlockPos pos, HashMap<Block, ArrayList<BlockPos>> specialBlocks) {
         BlockState blockState = level.getBlockState(pos);
+        //System.out.println(pos.toShortString() + "- " + blockState.getBlock());
         BlockMask.BlockMaskCompareResult res = blockMask.Compare(blockState);
         if (res.isRequired() || res.isSpecial())
         {
@@ -243,15 +244,15 @@ public class StructureDetectionUtils
     //                smart-scan cuboid
     //#################################################
     public static MultiBlockScanResult doComplexCuboidScan(Level level, BlockPos corner1, BlockPos corner2,
-           BlockMask faces, BlockMask edges, BlockMask corners, BlockMask inside, HashMap<Block, ArrayList<BlockPos>> specialBlocks)
+           BlockMask walls, BlockMask floor, BlockMask ceil, BlockMask edges, BlockMask corners, BlockMask inside, HashMap<Block, ArrayList<BlockPos>> specialBlocks)
     {
         BlockPos cornerLow = getMinCorner(corner1, corner2);
         BlockPos cornerHigh = getMaxCorner(corner1, corner2);
-        for (int y = cornerLow.getY(); y < cornerHigh.getY(); y++)
+        for (int y = cornerLow.getY(); y <= cornerHigh.getY(); y++)
         {
-            for (int x = cornerLow.getX(); x < cornerHigh.getX(); x++)
+            for (int x = cornerLow.getX(); x <= cornerHigh.getX(); x++)
             {
-                for (int z = cornerLow.getZ(); z < cornerHigh.getZ(); z++)
+                for (int z = cornerLow.getZ(); z <= cornerHigh.getZ(); z++)
                 {
                     int edgeIntersectionCount = 0;
 
@@ -269,10 +270,23 @@ public class StructureDetectionUtils
                     }
                     else if(edgeIntersectionCount == 1)
                     {
-                        //face
-                        if (!blockMatches(level, faces, pos, specialBlocks))
+                        //floor
+                        if(y == cornerLow.getY())
                         {
-                            return new MultiBlockScanResult(false, pos, faces, null);
+                            if(!blockMatches(level, floor, pos, specialBlocks))
+                                return new MultiBlockScanResult(false, pos, floor, null);
+                        }
+                        //ceiling
+                        else if(y == cornerHigh.getY())
+                        {
+                            if(!blockMatches(level, ceil, pos, specialBlocks))
+                                return new MultiBlockScanResult(false, pos, ceil, null);
+                        }
+                        //wall
+                        else
+                        {
+                            if (!blockMatches(level, walls, pos, specialBlocks))
+                                return new MultiBlockScanResult(false, pos, walls, null);
                         }
                     }
                     else if(edgeIntersectionCount == 2)
@@ -301,7 +315,7 @@ public class StructureDetectionUtils
     //#################################################
     //              Conducts a cuboid scan
     //#################################################
-    public static Object scanRoomWithEdgeCornerRequirements(Level level, BlockMask faces, BlockMask edges, BlockMask corner, BlockMask inside, BlockMask specialsAnywhere, BlockPos corner1, BlockPos corner2)
+    public static Object scanRoomWithEdgeCornerRequirements(Level level, BlockMask walls, BlockMask floor, BlockMask ceil, BlockMask edges, BlockMask corner, BlockMask inside, BlockMask specialsAnywhere, BlockPos corner1, BlockPos corner2)
     {
         BlockPos cornerLow = getMinCorner(corner1, corner2);
         BlockPos cornerHigh = getMaxCorner(corner1, corner2);
@@ -310,8 +324,7 @@ public class StructureDetectionUtils
 
         MultiBlockScanResult r;
         BlockMask.BlockMaskRequireResult s;
-        System.out.println("Scanning faces");
-        if (!(r = doComplexCuboidScan(level, cornerLow, cornerHigh, faces, edges, corner, inside, specialBlocks)).isOK()) return r;
+        if (!(r = doComplexCuboidScan(level, cornerLow, cornerHigh, walls, floor, ceil, edges, corner, inside, specialBlocks)).isOK()) return r;
 
         if (!(s = specialsAnywhere.areRequirementsSatisfiedBy(specialBlocks)).OK()) return s;
         //past this point, multiblock is OK as far as masks go. Check for specials

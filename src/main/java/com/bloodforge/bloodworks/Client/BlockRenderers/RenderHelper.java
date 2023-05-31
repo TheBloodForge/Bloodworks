@@ -79,6 +79,79 @@ public class RenderHelper
         //DoTriangle(builder, matrix, d, c, b, uvD, uvC, uvB, cLight);
     }
 
+    public static void renderCuboid(Matrix4f matrix, VertexConsumer vertexBuilder, Vec3 pos, Vec3 size, float sizeShrink, float minU, float minV, float maxU, float maxV, int light, boolean drawInside)
+    {
+        renderCuboid(matrix, vertexBuilder, pos, size, sizeShrink, minU, maxU, minV, maxV, light, 1f, 1f, 1f, 1f, true, true, true, true, true, true, drawInside);
+    }
+
+    public static void renderCuboid(Matrix4f matrix, VertexConsumer vertexBuilder, Vec3 pos, Vec3 size, float sizeShrink, float minU, float minV, float maxU, float maxV, int light,
+                                    boolean drawN, boolean drawE, boolean drawS, boolean drawW, boolean drawU, boolean drawD, boolean drawInside)
+    {
+        renderCuboid(matrix, vertexBuilder, pos, size, sizeShrink, minU, maxU, minV, maxV, light, 1f, 1f, 1f, 1f, drawN, drawE, drawS, drawW, drawU, drawD, drawInside);
+    }
+
+    public static void renderCuboid(Matrix4f matrix, VertexConsumer vertexBuilder, Vec3 pos, Vec3 size, float sizeShrink, float minU, float minV, float maxU, float maxV, int light,
+                                    float r, float g, float b, float alpha, boolean drawN, boolean drawE, boolean drawS, boolean drawW, boolean drawU, boolean drawD, boolean drawInside)
+    {
+
+        Vec3 halfSize = size.scale(0.5f);
+        Vec3 startPos = Vec3.ZERO.subtract(halfSize);
+
+        Vec3 BL  = new Vec3(startPos.x + sizeShrink,    startPos.y + sizeShrink,    startPos.z + sizeShrink).add(pos);
+        Vec3 BR  = new Vec3(halfSize.x - sizeShrink,    startPos.y + sizeShrink,    startPos.z + sizeShrink).add(pos);
+        Vec3 FL  = new Vec3(startPos.x + sizeShrink,    startPos.y + sizeShrink,    halfSize.z - sizeShrink).add(pos);
+        Vec3 FR  = new Vec3(halfSize.x - sizeShrink,    startPos.y + sizeShrink,    halfSize.z - sizeShrink).add(pos);
+        Vec3 BLT = new Vec3(startPos.x + sizeShrink,    halfSize.y - sizeShrink,    startPos.z + sizeShrink).add(pos);
+        Vec3 BRT = new Vec3(halfSize.x - sizeShrink,    halfSize.y - sizeShrink,    startPos.z + sizeShrink).add(pos);
+        Vec3 FLT = new Vec3(startPos.x + sizeShrink,    halfSize.y - sizeShrink,    halfSize.z - sizeShrink).add(pos);
+        Vec3 FRT = new Vec3(halfSize.x - sizeShrink,    halfSize.y - sizeShrink,    halfSize.z - sizeShrink).add(pos);
+
+        Vec2 UVNN = new Vec2(minU, minV);
+        Vec2 UVPN = new Vec2(maxU, minV);
+        Vec2 UVNP = new Vec2(minU, maxV);
+        Vec2 UVPP = new Vec2(maxU, maxV);
+
+
+        Vector4f color = new Vector4f(r, g, b, alpha);
+
+        // top
+        if (drawU)
+        {
+            RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BRT, FRT, FLT, BLT, UVPN, UVPP, UVNP, UVNN, light, color);
+            if(drawInside)RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BLT, FLT, FRT, BRT, UVPN, UVPP, UVNP, UVNN, light, color);
+        }
+        //bottom
+        if (drawD)
+        {
+            RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BL, FL, FR, BR, UVPN.add(new Vec2(0.5f, 0f)), UVPP.add(new Vec2(0.5f, 0f)), UVNP.add(new Vec2(0.5f, 0f)), UVNN.add(new Vec2(0.5f, 0f)), light, color);
+            if(drawInside)RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BR, FR, FL, BL, UVPN.add(new Vec2(0.5f, 0f)), UVPP.add(new Vec2(0.5f, 0f)), UVNP.add(new Vec2(0.5f, 0f)), UVNN.add(new Vec2(0.5f, 0f)), light, color);
+        }
+        // min z
+        if (drawN)
+        {
+            RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BR, BRT, BLT, BL, UVPN, UVPP, UVNP, UVNN, light, color);
+            if(drawInside)RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BL, BLT, BRT, BR, UVPN, UVPP, UVNP, UVNN, light, color);
+        }
+        // max z
+        if (drawS)
+        {
+            RenderHelper.DoQuadWithColor(vertexBuilder, matrix, FL, FLT, FRT, FR, UVPN, UVPP, UVNP, UVNN, light, color);
+            if(drawInside)RenderHelper.DoQuadWithColor(vertexBuilder, matrix, FR, FRT, FLT, FL, UVPN, UVPP, UVNP, UVNN, light, color);
+        }
+        // min x
+        if (drawW)
+        {
+            RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BL, BLT, FLT, FL, UVPN, UVPP, UVNP, UVNN, light, color);
+            if(drawInside)RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BLT, BL, FL, FLT, UVPN, UVPP, UVNP, UVNN, light, color);
+        }
+        // max x
+        if (drawE)
+        {
+            RenderHelper.DoQuadWithColor(vertexBuilder, matrix, FR, FRT, BRT, BR, UVPN, UVPP, UVNP, UVNN, light, color);
+            if(drawInside)RenderHelper.DoQuadWithColor(vertexBuilder, matrix, FRT, FR, BR, BRT, UVPN, UVPP, UVNP, UVNN, light, color);
+        }
+    }
+
     public static Vector3f GetVertexWorldLocation(Matrix4f matrix, Vector3f a)
     {
         Vector4f f = new Vector4f(a.x(), a.y(), a.z(), 1.0F);
