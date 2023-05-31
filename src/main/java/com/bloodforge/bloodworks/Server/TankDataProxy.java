@@ -146,7 +146,7 @@ public class TankDataProxy
     public static int getTankTransferRate(String tank_id)
     {
         if (tank_id.isEmpty()) return 0;
-        return getTankTier(tank_id) == -1 ? 50000 : getTankTier(tank_id) * DEFAULT_TANK_TRANSFER_RATE;
+        return getTankTier(tank_id) == 0 ? 50000 : getTankTier(tank_id) * DEFAULT_TANK_TRANSFER_RATE;
     }
 
     public static void changeTier(String tank_id, int i)

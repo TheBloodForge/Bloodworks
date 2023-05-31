@@ -46,6 +46,7 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
         if (level.getBlockState(getBlockPos()).getValue(BlockBloodTank.TIER) != TankDataProxy.getTankTier(tank_id))
             level.getBlockState(getBlockPos()).setValue(BlockBloodTank.TIER, TankDataProxy.getTankTier(tank_id));
         tryAndFillNeighbors();
+        setChanged();
     }
 
     private void tryAndFillNeighbors()
@@ -201,10 +202,6 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
         clientPackage.putString("tank_id", tank_id);
         return clientPackage;
     }
-
-    @Override
-    public void handleUpdateTag(CompoundTag tag)
-    { tank_id = tag.getString("tank_id"); }
 
     @Override
     public CompoundTag getPersistentData()

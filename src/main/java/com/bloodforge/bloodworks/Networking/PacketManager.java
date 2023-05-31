@@ -71,6 +71,12 @@ public class PacketManager
                 .encoder(MessageS2CPacket::toBytes)
                 .consumerMainThread(MessageS2CPacket::handle)
                 .add();
+
+        net.messageBuilder(NBTSyncS2CPacket.class, id(), PAYLOAD_TO_CLIENT)
+                .decoder(NBTSyncS2CPacket::new)
+                .encoder(NBTSyncS2CPacket::toBytes)
+                .consumerMainThread(NBTSyncS2CPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message)

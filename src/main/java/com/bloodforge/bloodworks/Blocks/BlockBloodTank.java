@@ -179,7 +179,7 @@ public class BlockBloodTank extends BlockMachineBase
                     }
                 } else if (heldItem.is(Items.DEBUG_STICK))
                 {
-                    machine.setTier(-1);
+                    machine.setTier(0);
                     return InteractionResult.CONSUME;
                 } else if (heldItem.getItem() instanceof BlockItem)
                 {
