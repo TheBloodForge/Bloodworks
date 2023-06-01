@@ -41,6 +41,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
     @Override
     public void render(BE_Tank tank, float partialTicks, PoseStack poseStack, MultiBufferSource MBR, int cLight, int cOverlay)
     {
+        Minecraft.getInstance().getProfiler().push("Bloodworks Tank Renderer");
         boolean connectU = shouldConnectTo(tank.getBlockPos().above());
         boolean connectD = shouldConnectTo(tank.getBlockPos().below());
         boolean connectN = shouldConnectTo(tank.getBlockPos().north());
@@ -62,7 +63,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
                 renderFluid(poseStack, MBR, fluidStack, 1, relativeFill, cLight, tank.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
             }
         }
-
+        Minecraft.getInstance().getProfiler().pop();
     }
 
     private static boolean shouldConnectTo(BlockPos target)

@@ -1,6 +1,8 @@
 package com.bloodforge.bloodworks.Multiblock;
 
+import com.ibm.icu.impl.Pair;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -239,6 +241,52 @@ public class StructureDetectionUtils
         return new MultiBlockScanResult(true, null, null, null);
     }
 
+    public static int marchUntilHit(Level level, BlockPos start, Direction direction, int maxDistance, BlockMask solids)
+    {
+        for(int i = 0; i <= maxDistance; i++)
+        {
+            BlockState bs = level.getBlockState(start.offset(direction.getNormal().multiply(i)));
+            if(solids.Compare(bs).OK())
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static Pair<BlockPos, BlockPos> findAdjacentRoomCorners(Level level, BlockPos positionInDoor, Direction directionIntoRoom, BlockMask solids, int maxRoomWidthFromDoor, int maxRoomDepth, int maxRoomHeight)
+    {
+        BlockPos startScanPos = positionInDoor.offset(directionIntoRoom.getNormal());
+        int rightDistance = marchUntilHit(level, startScanPos, directionIntoRoom.getClockWise(), maxRoomWidthFromDoor, solids);
+        if(rightDistance == -1) return null;
+        int leftDistance = marchUntilHit(level, startScanPos, directionIntoRoom.getCounterClockWise(), maxRoomWidthFromDoor, solids);
+        if(leftDistance == -1) return null;
+        int forwardDistance = marchUntilHit(level, startScanPos, directionIntoRoom, maxRoomDepth, solids);
+        if(forwardDistance == -1) return null;
+        int upDistance = marchUntilHit(level, startScanPos, Direction.UP, maxRoomHeight, solids);
+        if(upDistance == -1) return null;
+        int downDistance = marchUntilHit(level, startScanPos, Direction.DOWN, maxRoomHeight, solids);
+        if(downDistance == -1) return null;
+        if(upDistance + downDistance > maxRoomHeight) return null;
+        if(leftDistance + rightDistance > maxRoomWidthFromDoor) return null;
+        if(forwardDistance > maxRoomDepth) return null;
+
+        BlockPos posA = positionInDoor.offset(directionIntoRoom.getCounterClockWise().getNormal().multiply(leftDistance)).offset(Direction.DOWN.getNormal().multiply(downDistance));
+        BlockPos posB = startScanPos.offset(directionIntoRoom.getNormal().multiply(forwardDistance)).offset(Direction.UP.getNormal().multiply(upDistance)).offset(directionIntoRoom.getClockWise().getNormal().multiply(rightDistance));
+        return Pair.of(getMinCorner(posA, posB), getMaxCorner(posA, posB));
+    }
+
+    public static Direction getSideFacingOfCuboidThisBlockIsOn(BlockPos cuboidMin, BlockPos cuboidMax, BlockPos target)
+    {
+        if(target.getX() == cuboidMin.getX()) return Direction.WEST;
+        if(target.getX() == cuboidMax.getX()) return Direction.EAST;
+        if(target.getY() == cuboidMin.getY()) return Direction.DOWN;
+        if(target.getY() == cuboidMax.getY()) return Direction.UP;
+        if(target.getZ() == cuboidMin.getZ()) return Direction.NORTH;
+        if(target.getZ() == cuboidMax.getZ()) return Direction.SOUTH;
+
+        return null;
+    }
 
     //#################################################
     //                smart-scan cuboid

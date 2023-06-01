@@ -1,6 +1,7 @@
 package com.bloodforge.bloodworks.Multiblock;
 
 import com.ibm.icu.impl.Pair;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
@@ -32,6 +33,7 @@ public class MultiblockStructureBase
 
     public Pair<BlockPos, BlockPos> tryFindMultiblock(Level level, BlockPos masterPos, BlockPos minSize, BlockPos maxSize, BlockMask validCornerBlocks)
     {
+        Minecraft.getInstance().getProfiler().push("Bloodworks Multiblock Scan");
         BlockPos min;
         BlockPos max;
         //trying to find minimum corner, so only move -xyz
@@ -47,12 +49,14 @@ public class MultiblockStructureBase
                         System.out.println("Found possible first corner: " + min);
                         if((max = tryFindLastCornerWithFirstCorner(level, min, minSize, maxSize, validCornerBlocks)) != null)
                         {
+                            Minecraft.getInstance().getProfiler().pop();
                             return Pair.of(min, max);
                         }
                     }
                 }
             }
         }
+        Minecraft.getInstance().getProfiler().pop();
         return null;
     }
 }

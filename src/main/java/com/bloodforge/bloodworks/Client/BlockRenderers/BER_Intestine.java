@@ -44,10 +44,12 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
     @Override
     public void render(BE_Intestine ent, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay)
     {
+        Minecraft.getInstance().getProfiler().push("Bloodworks Intestine Renderer");
         currentBE = ent;
         BlockPos blockPos = ent.getBlockPos();
         if (Minecraft.getInstance().cameraEntity.blockPosition().distSqr(blockPos) > 80 * 80)
         {
+            Minecraft.getInstance().getProfiler().pop();
             return;
         }
         if (BloodworksCommonConfig.DO_OCCLUSION_CULLING.get() &&
@@ -60,6 +62,7 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
                 !checkLOS(blockPos, new Vec3(0, 1, 1)) &&
                 !checkLOS(blockPos, new Vec3(1, 1, 1)))
         {
+            Minecraft.getInstance().getProfiler().pop();
             return;
         }
 
@@ -122,6 +125,7 @@ public class BER_Intestine implements BlockEntityRenderer<BE_Intestine>
         RenderHelper.FinishRendering(buffer);
 
         poseStack.popPose();
+        Minecraft.getInstance().getProfiler().pop();
     }
 
     private void OrientFromDirection(PoseStack poseStack, Direction fromDir)

@@ -34,6 +34,7 @@ public class BER_AirlockDoor implements BlockEntityRenderer<BE_AirlockDoor>
     @Override
     public void render(BE_AirlockDoor ent, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay)
     {
+        Minecraft.getInstance().getProfiler().push("Bloodworks Airlock Renderer");
         poseStack.pushPose();
         if(ent.isOpen)
         {
@@ -195,6 +196,8 @@ public class BER_AirlockDoor implements BlockEntityRenderer<BE_AirlockDoor>
         RenderHelper.DoQuadWithColor(vertexBuilder, matrix, FR, FRT, BRT, BR, F_UVPN, F_UVPP, F_UVNP, F_UVNN, combinedLight, color);
 
         poseStack.popPose();
+
+        Minecraft.getInstance().getProfiler().pop();
     }
 
     @Override

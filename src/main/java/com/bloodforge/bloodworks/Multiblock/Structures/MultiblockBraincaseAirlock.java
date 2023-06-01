@@ -41,6 +41,13 @@ public class MultiblockBraincaseAirlock extends MultiblockStructureBase
             .withRequired(BlockRegistry.BLOCK_AIRLOCK_DRAIN.block().get())
             .withRequired(BlockRegistry.BLOCK_AIRLOCK_DOOR.block().get(), 4);
 
+    //used for airlock-search from MultiblockBraincase
+    public static final BlockMask BLOCK_MASK_AIRLOCK_WALL_CEIL_FLOOR_SCANMASK = new BlockMask()
+            .withWhitelisted(BlockRegistry.BLOCK_BRAINCASE.block().get())
+            .withWhitelisted(BlockRegistry.BLOCK_BRAINCASE_WINDOW.block().get())
+            .withWhitelisted(BlockRegistry.BLOCK_AIRLOCK_DRAIN.block().get())
+            .withWhitelisted(BlockRegistry.BLOCK_AIRLOCK_DOOR.block().get());
+
     @Override
     public boolean IsAtCoords(Level level, BlockPos minCorner, BlockPos maxCorner)
     {

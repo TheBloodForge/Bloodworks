@@ -42,9 +42,11 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
     @Override
     public void render(BE_Neuron ent, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay)
     {
+        Minecraft.getInstance().getProfiler().push("Bloodworks Neuron Renderer");
         BlockPos blockPos = ent.getBlockPos();
         if (Minecraft.getInstance().cameraEntity.blockPosition().distSqr(blockPos) > 80 * 80)
         {
+            Minecraft.getInstance().getProfiler().pop();
             return;
         }
 
@@ -71,6 +73,7 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
         }
 
         poseStack.popPose();
+        Minecraft.getInstance().getProfiler().pop();
     }
 
     private void OrientFromDirection(PoseStack poseStack, Direction fromDir)

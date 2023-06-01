@@ -2,6 +2,7 @@ package com.bloodforge.bloodworks.Client.BlockRenderers;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Braincase_Controller;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -21,7 +22,8 @@ public class BER_Braincase_Controller implements BlockEntityRenderer<BE_Braincas
     @Override
     public void render(BE_Braincase_Controller ent, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay)
     {
-
+        Minecraft.getInstance().getProfiler().push("Bloodworks Braincase Renderer");
+        Minecraft.getInstance().getProfiler().pop();
     }
 
     @Override
