@@ -7,6 +7,7 @@ import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.bloodforge.bloodworks.Util;
 import com.ibm.icu.impl.Pair;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -76,14 +77,23 @@ public class BE_Braincase_Controller extends BlockEntityMachineBase
 
     public void use(Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
+        if(player.level.isClientSide()) return;
         long start = System.nanoTime();
         Pair<BlockPos, BlockPos> found = MULTIBLOCK_BRAINCASE_GETTER.tryFindMultiblock(player.level, getBlockPos(), new BlockPos(4, 3, 4), new BlockPos(12, 10, 12), MultiblockBraincase.BLOCK_MASK_BRAINCASE_CORNERS);
-
+        MultiblockBraincase.MultiblockBraincaseScanResults results = MULTIBLOCK_BRAINCASE_GETTER.mostRecentScanResult;
         float len = System.nanoTime() - start;
         len /= 1000000f;
+        /*
         if (found != null)
             PacketManager.sendToClients(new MessageS2CPacket(Component.literal(found.first.toString() + ", " + found.second.toString() + " in " + len + " ms."), false));
         else
             PacketManager.sendToClients(new MessageS2CPacket(Component.literal("Not found" + " in " + len + " ms."), false));
+         */
+
+        Component component = Component.literal("");
+        for (String s : results.errorMessage().split("\n"))
+        {
+            PacketManager.sendToClients(new MessageS2CPacket(Component.literal(s).withStyle(ChatFormatting.YELLOW), true));
+        }
     }
 }

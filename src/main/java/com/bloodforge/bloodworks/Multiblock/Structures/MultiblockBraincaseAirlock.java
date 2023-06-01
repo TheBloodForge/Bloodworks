@@ -71,4 +71,22 @@ public class MultiblockBraincaseAirlock extends MultiblockStructureBase
         System.out.println("Found structure! Min: " + minCorner.toShortString() + " | Max: " + maxCorner.toShortString());
         return true;
     }
+
+
+    public MultiBlockScanResult IsAtCoordsWithScanResult(Level level, BlockPos minCorner, BlockPos maxCorner)
+    {
+        System.out.println(minCorner + ", " + maxCorner);
+        Object structRes = StructureDetectionUtils.scanRoomWithEdgeCornerRequirements(level, BLOCK_MASK_AIRLOCK_WALLS, BLOCK_MASK_AIRLOCK_FLOOR, BLOCK_MASK_AIRLOCK_CEIL, BLOCK_MASK_AIRLOCK_EDGES, BLOCK_MASK_AIRLOCK_CORNERS, BLOCK_MASK_AIRLOCK_INSIDE, BLOCK_MASK_AIRLOCK_REQUIRED_ANYWHERE, minCorner, maxCorner);
+        if (structRes instanceof BlockMask.BlockMaskRequireResult specialBlockFindResult)
+        {
+            if (!specialBlockFindResult.OK())
+            {
+                return new MultiBlockScanResult(false, null, new BlockMask().withWhitelisted(specialBlockFindResult.missing()), null);
+            }
+        } else if (structRes instanceof MultiBlockScanResult multiBlockScanResult)
+        {
+            return multiBlockScanResult;
+        }
+        return new MultiBlockScanResult(false, null, null, null);
+    }
 }

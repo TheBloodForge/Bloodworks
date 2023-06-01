@@ -56,11 +56,12 @@ public class BlockBraincaseController extends BlockMachineBase
     {
         if (level.isClientSide())
         {
-            return super.use(cState, level, pos, player, interactionHand, blockHitResult);
+            return InteractionResult.sidedSuccess(!level.isClientSide());
         }
         if (level.getBlockEntity(pos) instanceof BE_Braincase_Controller controller)
         {
             controller.use(player, interactionHand, blockHitResult);
+            return InteractionResult.sidedSuccess(!level.isClientSide());
         }
 
         return super.use(cState, level, pos, player, interactionHand, blockHitResult);
