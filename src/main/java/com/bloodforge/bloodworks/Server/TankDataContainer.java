@@ -1,5 +1,6 @@
 package com.bloodforge.bloodworks.Server;
 
+import com.bloodforge.bloodworks.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Globals;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -10,7 +11,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 
-import static com.bloodforge.bloodworks.Globals.DEFAULT_TANK_CAPACITY;
 import static com.bloodforge.bloodworks.Globals.KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS;
 import static com.bloodforge.bloodworks.Server.TankDataManager.saveData;
 import static com.bloodforge.bloodworks.Server.TankDataProxy.syncFluid;
@@ -81,7 +81,7 @@ public class TankDataContainer
 
     private void updateCapacity(boolean isClient)
     {
-        tank.setCapacity(children.size() * (tier > 0 ? tier : 1) * DEFAULT_TANK_CAPACITY);
+        tank.setCapacity(children.size() * (tier > 0 ? tier : 1) * BloodworksCommonConfig.TANK_STORAGE_PER_TIER.get());
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Updating Capacity for [" + tank_name + "]. New Capacity : " + tank.getCapacity(), isClient);
     }
 
@@ -126,7 +126,7 @@ public class TankDataContainer
 
     public static FluidTank makeTank(String tankName)
     {
-        return new FluidTank(DEFAULT_TANK_CAPACITY)
+        return new FluidTank(BloodworksCommonConfig.TANK_STORAGE_PER_TIER.get())
         {
             @Override
             public boolean isFluidValid(FluidStack stack)

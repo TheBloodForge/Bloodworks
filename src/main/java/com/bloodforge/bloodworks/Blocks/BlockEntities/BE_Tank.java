@@ -1,7 +1,7 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
 import com.bloodforge.bloodworks.Blocks.BlockBloodTank;
-import com.bloodforge.bloodworks.Globals;
+import com.bloodforge.bloodworks.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Items.TankItem;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.bloodforge.bloodworks.Registry.FluidRegistry;
@@ -55,12 +55,21 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
         if (!getID().isEmpty())
             setChanged();
     }
-
+    private int cooldown = 8;
     public void tick()
     {
+        cooldown--;
+        if (cooldown != 0) return;
+        cooldown = getCooldown();
         if (level.getBlockState(getBlockPos()).getValue(BlockBloodTank.TIER) != TankDataProxy.getTankTier(tank_id))
             level.getBlockState(getBlockPos()).setValue(BlockBloodTank.TIER, TankDataProxy.getTankTier(tank_id));
         tryAndFillNeighbors();
+    }
+
+    private int getCooldown()
+    {
+        int cdr = TankDataProxy.getTankTier(tank_id) * BloodworksCommonConfig.TANK_COOLDOWN_REDUCTION.get();
+        return TankDataProxy.getTankTier(tank_id) == 0 ? 0 : BloodworksCommonConfig.MAX_TANK_COOLDOWN.get() - cdr;
     }
 
     private void tryAndFillNeighbors()
@@ -90,7 +99,7 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
     }
 
     public int getFluidContained()
-    { return Math.round(getRelativeFill() * Globals.DEFAULT_TANK_CAPACITY); }
+    { return Math.round(getRelativeFill() * BloodworksCommonConfig.TANK_STORAGE_PER_TIER.get()); }
 
     public int getRelativeHeight()
     { return getBlockPos().getY() - TankDataProxy.getTankMin(tank_id); }
@@ -101,6 +110,7 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
     public void breakTank(BlockPos pos, Level level)
     {
         TankDataProxy.removeChild(tank_id, pos, level.isClientSide());
+        drain(getFluidContained(), FluidAction.EXECUTE);
     }
 
     public void setID(String newTankID)

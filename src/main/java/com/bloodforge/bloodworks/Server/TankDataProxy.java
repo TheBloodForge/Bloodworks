@@ -1,5 +1,6 @@
 package com.bloodforge.bloodworks.Server;
 
+import com.bloodforge.bloodworks.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
@@ -15,7 +16,6 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import java.util.HashMap;
 import java.util.Set;
 
-import static com.bloodforge.bloodworks.Globals.DEFAULT_TANK_TRANSFER_RATE;
 import static com.bloodforge.bloodworks.Globals.KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS;
 
 public class TankDataProxy
@@ -199,7 +199,7 @@ public class TankDataProxy
     public static int getTankTransferRate(String tank_id)
     {
         if (tank_id.isEmpty()) return 0;
-        return getTankTier(tank_id) == 0 ? 50000 : getTankTier(tank_id) * DEFAULT_TANK_TRANSFER_RATE;
+        return getTankTier(tank_id) == 0 ? getDataForTank(tank_id).getTank().getCapacity() : getTankTier(tank_id) * BloodworksCommonConfig.TANK_TRANSFER_PER_ACTION.get();
     }
 
     public static void changeTier(String tank_id, int i, boolean isClient)
