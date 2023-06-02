@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -78,7 +79,7 @@ public class TankDataProxy
         TankDataManager.read();
         resetMaster(isClient);
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Loaded TankData : " + TankDataTag.getAllKeys(), isClient);
-        for (String tankName : TankDataTag.getAllKeys())
+        for (String tankName : Collections.unmodifiableSet(TankDataTag.getAllKeys()))
         {
             loadTank(tankName, TankDataTag.getCompound(tankName), isClient);
             syncTankName(tankName);
@@ -192,6 +193,7 @@ public class TankDataProxy
         if (!tankName.isEmpty() && hasTankByName(tankName))
         {
             if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Syncing Tank Children for [" + tankName + "] to Client", false);
+            updateDataTag(tankName);
             PacketManager.sendToClients(new TankDataSyncS2CPacket(tankName, TankDataTag.getCompound(tankName)));
             for (BlockPos blockPos : getDataForTank(tankName).getChildren())
                 syncTankName(tankName, blockPos);

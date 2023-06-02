@@ -41,21 +41,6 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
         super(BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), pos, state);
     }
 
-    private void setTankLabel()
-    {
-        if (getNeighborTanks(getBlockPos(), ServerLifecycleHooks.getCurrentServer().overworld()).isEmpty())
-            setID(TankDataProxy.createNewParent(getBlockPos()));
-        if (getID().isEmpty())
-            for (BE_Tank be_tank : getNeighborTanks(getBlockPos(), ServerLifecycleHooks.getCurrentServer().overworld()))
-                if (!be_tank.getID().isEmpty())
-                {
-                    setID(be_tank.getID());
-                    TankDataProxy.addChild(be_tank.getID(), getBlockPos(), false);
-                    break; // Returning once an id was found.
-                }
-        if (!getID().isEmpty())
-            setChanged();
-    }
     public void tick()
     {
         if (level.getBlockState(getBlockPos()).getValue(BlockBloodTank.TIER) != TankDataProxy.getTankTier(tank_id))
@@ -90,6 +75,21 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
 //                        BELOW IS DATA HANDLING                        \\
 //######################################################################\\
 
+    private void setTankLabel()
+    {
+        System.out.println("Attempting to set label");
+        if (getNeighborTanks(getBlockPos(), ServerLifecycleHooks.getCurrentServer().overworld()).isEmpty())
+            setID(TankDataProxy.createNewParent(getBlockPos()));
+        if (getID().isEmpty())
+            for (BE_Tank be_tank : getNeighborTanks(getBlockPos(), ServerLifecycleHooks.getCurrentServer().overworld()))
+                if (!be_tank.getID().isEmpty())
+                {
+                    setID(be_tank.getID());
+                    TankDataProxy.addChild(be_tank.getID(), getBlockPos(), false);
+                    break; // Returning once an id was found.
+                }
+    }
+
     public float getRelativeFill()
     {
         float fillPercentage = Math.min(1f, (float) getFluidInTank(0).getAmount() / getTankCapacity(0));
@@ -116,6 +116,7 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
         if (tank_id.isEmpty() || (level != null && level.isClientSide))
         {
             tank_id = newTankID;
+            System.out.println("Tank ID Was Set");
             setChanged();
         }
     }
