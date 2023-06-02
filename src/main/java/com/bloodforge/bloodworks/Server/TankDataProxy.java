@@ -6,10 +6,8 @@ import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Networking.TankDataSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.TankSyncS2CPacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -82,16 +80,17 @@ public class TankDataProxy
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Loaded TankData : " + TankDataTag.getAllKeys(), isClient);
         for (String tankName : TankDataTag.getAllKeys())
         {
-            loadTank(tankName, TankDataTag.get(tankName), isClient);
+            loadTank(tankName, TankDataTag.getCompound(tankName), isClient);
             syncTankName(tankName);
             syncFluid(tankName);
         }
     }
 
-    public static void loadTank(String tankName, Tag tag, boolean isClient)
+    public static void loadTank(String tankName, CompoundTag tag, boolean isClient)
     {
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Loading Tank [" + tankName + "]", isClient);
-        TankDataContainer tc = TankDataPacker.getTankDataFromCompound(tankName, TankDataTag.getCompound(tankName), isClient);
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS)
+            Globals.LogDebug("Loading Tank [" + tankName + "]", isClient);
+        TankDataContainer tc = TankDataPacker.getTankDataFromCompound(tankName, tag, isClient);
         addToMasterContainer(tankName, tc, isClient);
     }
 
@@ -105,9 +104,10 @@ public class TankDataProxy
     {
         MASTER_TANK_CONTAINER.remove(tankName);
         MASTER_TANK_CONTAINER.put(tankName, tc);
+        updateDataTag(tankName);
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Put Tank Into Master Tank Container", isClient);
         if (!isClient)
             syncTankName(tankName);
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Put Tank Into Master Tank Container", isClient);
     }
 
     public static String recoverTankName(BlockPos blockPos, Level level)
@@ -214,7 +214,7 @@ public class TankDataProxy
     {
         for (BlockPos child : getDataForTank(parentName).getChildren())
         {
-            Level level = Minecraft.getInstance().level;
+            Level level = ServerLifecycleHooks.getCurrentServer().overworld();
             if (level == null) continue;
             level.getLightEngine().checkBlock(child);
         }
