@@ -58,23 +58,19 @@ public class TankDataProxy
         return MASTER_TANK_CONTAINER.get(tank);
     }
 
-    private static int saveCooldown = 10;
+    private static final int saveCooldown = 500;
+    private static long lastSave = 0;
     public static void saveTanks(Level level)
     {
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Save Tanks Requested", level.isClientSide);
-        if (saveCooldown > 0)
-        {
-            saveCooldown--;
-            if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Save Tanks Rejected", level.isClientSide);
-            return;
-        }
+        if (System.currentTimeMillis() - lastSave < saveCooldown) return;
         Globals.LogDebug("Saving Tanks", level.isClientSide);
-        saveCooldown = 10;
         for (String tankName : MASTER_TANK_CONTAINER.keySet())
         {
             updateDataTag(tankName);
         }
-        TankDataManager.saveData();
+        if (!TankDataTag.isEmpty())
+            TankDataManager.saveData();
+        lastSave = System.currentTimeMillis();
     }
 
     public static void loadTanks(boolean isClient)
@@ -82,6 +78,7 @@ public class TankDataProxy
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Load Tanks Requested", isClient);
         TankDataManager.read();
         resetMaster(isClient);
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Loaded TankData : " + TankDataTag.getAllKeys(), isClient);
         for (String tankName : TankDataTag.getAllKeys())
         {
             loadTank(tankName, TankDataTag.get(tankName), isClient);
@@ -107,6 +104,8 @@ public class TankDataProxy
     {
         MASTER_TANK_CONTAINER.remove(tankName);
         MASTER_TANK_CONTAINER.put(tankName, tc);
+        if (!isClient)
+            syncTankName(tankName);
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Put Tank Into Master Tank Container", isClient);
     }
 
@@ -188,9 +187,9 @@ public class TankDataProxy
 
     public static void syncTankName(String tankName)
     {
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Syncing Tank Children for [" + tankName + "] to Client", false);
         if (!tankName.isEmpty() && hasTankByName(tankName))
         {
+            if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Syncing Tank Children for [" + tankName + "] to Client", false);
             PacketManager.sendToClients(new TankDataSyncS2CPacket(tankName, TankDataTag.getCompound(tankName)));
             for (BlockPos blockPos : getDataForTank(tankName).getChildren())
                 syncTankName(tankName, blockPos);

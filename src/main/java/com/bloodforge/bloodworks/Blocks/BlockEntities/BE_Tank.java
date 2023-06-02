@@ -71,10 +71,11 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
                 {
                     int space = neighbor.getTankCapacity(i) - neighbor.getFluidInTank(i).getAmount();
                     int transferAmount = Math.min(TankDataProxy.getTankTransferRate(tank_id), space);
-                    FluidStack fs = getTank().drain(transferAmount, FluidAction.EXECUTE);
+                    FluidStack fs = getTank().getFluid().copy();
+                    fs.setAmount(transferAmount); // To avoid sending update packets to client if tank level didn't change
+                    if (TankDataProxy.getTankTier(tank_id) != 0)
+                        drain(fs.copy(), FluidAction.EXECUTE);
                     neighbor.fill(fs.copy(), FluidAction.EXECUTE);
-                    if (TankDataProxy.getTankTier(tank_id) == 0)
-                        fill(fs, FluidAction.EXECUTE);
                 }
     }
 

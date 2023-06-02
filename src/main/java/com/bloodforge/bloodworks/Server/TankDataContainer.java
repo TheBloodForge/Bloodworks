@@ -38,6 +38,7 @@ public class TankDataContainer
         tier = params[0]; bottomY = params[1]; topY = params[2];
         tank = makeTank(name);
         tank.readFromNBT(tankTag);
+        updateCapacity(isClient);
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Creating Tank Container for [" + name + "] with params" + Arrays.toString(params) + " with [" + readChildren.size() + "] children at locations " + readChildren.keySet(), isClient);
     }
 
@@ -56,6 +57,7 @@ public class TankDataContainer
         if (hasChild(pos)) return;
         children.put(pos.toShortString(), pos);
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Added Child to [" + tank_name + "]. Child : " + pos, isClient);
+        syncTankName(tank_name);
         updateSize(pos.getY(), true, isClient);
         updateCapacity(isClient);
     }
@@ -136,7 +138,6 @@ public class TankDataContainer
             protected void onContentsChanged()
             {
                 saveData();
-                syncTankName(tankName);
                 syncFluid(tankName);
                 super.onContentsChanged();
             }

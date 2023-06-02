@@ -37,13 +37,18 @@ public class TankDataManager extends SavedData
 
     public static TankDataManager load(CompoundTag tag)
     {
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Loading Compound : " + tag.getAllKeys(), false);
         TankDataManager data = create();
         data.tagLoadedFromWorld = tag;
         return data;
     }
     public static TankDataManager getDataManager(LevelAccessor level)
     {
-        if (level.getServer() == null) return create();
+        if (level.getServer() == null)
+        {
+            if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Level Server is Null", false);
+            return create();
+        }
         return level.getServer().overworld().getDataStorage().computeIfAbsent(TankDataManager::load, TankDataManager::create, "BloodworksTankData");
     }
 
@@ -70,6 +75,7 @@ public class TankDataManager extends SavedData
         {
             TankDataManager data = TankDataManager.getDataManager(level);
             TankDataTag = data.tagLoadedFromWorld;
+            if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Read Tanks from file", false);
             for (String keyTag : TankDataTag.getAllKeys())
                 syncFluid(keyTag);
         }
