@@ -31,14 +31,10 @@ public class BE_Neuron extends BlockEntity
     @Override
     public CompoundTag getUpdateTag()
     {
-        return wrapNBT();
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundTag tag)
-    {
-        unwrapNBT(tag);
-        super.handleUpdateTag(tag);
+        CompoundTag updateTag = new CompoundTag();
+        updateTag.putString("neural_id", getNeuralID());
+        updateTag.put("NeuronPositions", wrapNBT());
+        return updateTag;
     }
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_Neuron entity)
@@ -59,11 +55,11 @@ public class BE_Neuron extends BlockEntity
     @Override
     public void load(CompoundTag nbt)
     {
-        if(!level.isClientSide) return;
         NEURAL_ID = nbt.getString("neural_id");
         unwrapNBT(nbt.getCompound("NeuronPositions"));
         super.load(nbt);
-        syncNeuron();
+        if(level == null || level.isClientSide) return;
+            syncNeuron();
     }
 
     private static BlockPos firstNeuronPos = null;
@@ -92,7 +88,7 @@ public class BE_Neuron extends BlockEntity
 
     private void syncNeuron()
     {
-        PacketManager.sendToClients(new NBTSyncS2CPacket(getBlockPos(), wrapNBT()));
+        PacketManager.sendToClients(new NBTSyncS2CPacket(getBlockPos(), getUpdateTag()));
     }
 
     private CompoundTag wrapNBT()
@@ -105,7 +101,6 @@ public class BE_Neuron extends BlockEntity
     public void unwrapNBT(CompoundTag nbt)
     {
         neuronMap.clear();
-        //CompoundTag posTags = nbt.getCompound("NeuronPositions");
         Set<String> neuronIds = nbt.getAllKeys();
         for (String neuronId : neuronIds)
         {
