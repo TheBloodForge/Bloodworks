@@ -169,8 +169,8 @@ public class FluidRegistryContainer
             public void modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick,
                                         float nearDistance, float farDistance, FogShape shape)
             {
-                RenderSystem.setShaderFogStart(1f);
-                RenderSystem.setShaderFogEnd(6f);
+                RenderSystem.setShaderFogStart(extensions.fogStart);
+                RenderSystem.setShaderFogEnd(extensions.fogEnd);
             }
         };
     }
@@ -216,6 +216,8 @@ public class FluidRegistryContainer
         private ResourceLocation overlay;
         private ResourceLocation renderOverlay;
         private Vector3f fogColor;
+        private float fogStart = 1;
+        private float fogEnd = 10;
         private TriFunction<FluidState, BlockAndTintGetter, BlockPos, Integer> tintFunction;
 
         private final String modid;
@@ -242,6 +244,13 @@ public class FluidRegistryContainer
         public ClientExtensions fogColor(float red, float green, float blue)
         {
             this.fogColor = new Vector3f(red, green, blue);
+            return this;
+        }
+
+        public ClientExtensions fogDistance(float start, float end)
+        {
+            this.fogStart = start;
+            this.fogEnd = end;
             return this;
         }
 

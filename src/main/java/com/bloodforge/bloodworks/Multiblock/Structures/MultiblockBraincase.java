@@ -46,8 +46,8 @@ public class MultiblockBraincase extends MultiblockStructureBase
             .withBlacklisted(BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.block().get());
 
     public static final BlockMask BLOCK_MASK_BRAINCASE_REQUIRED_ANYWHERE = new BlockMask()
-            .withRequired(BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.block().get(), 1)
-            .withRequired(BlockRegistry.BLOCK_AIRLOCK_DOOR.block().get(), 1, 4);
+            .withRequired(BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.block().get(), 1, 1)
+            .withRequired(BlockRegistry.BLOCK_AIRLOCK_DOOR.block().get(), 1, 16);
 
     public record MultiblockBraincaseScanResults(boolean wasFound,
                                                  String errorMessage,
@@ -61,6 +61,7 @@ public class MultiblockBraincase extends MultiblockStructureBase
     @Override
     public boolean IsAtCoords(Level level, BlockPos minCorner, BlockPos maxCorner)
     {
+        mostRecentScanResult = new MultiblockBraincaseScanResults(false, "Structure not found.", null, null, null, null);
         //System.out.println(minCorner + ", " + maxCorner);
         Object structRes = StructureDetectionUtils.scanRoomWithEdgeCornerRequirements(level, BLOCK_MASK_BRAINCASE_WALLS, BLOCK_MASK_BRAINCASE_FLOOR, BLOCK_MASK_BRAINCASE_CEIL, BLOCK_MASK_BRAINCASE_EDGES, BLOCK_MASK_BRAINCASE_CORNERS, BLOCK_MASK_BRAINCASE_INSIDE, BLOCK_MASK_BRAINCASE_REQUIRED_ANYWHERE, minCorner, maxCorner);
         if (structRes instanceof BlockMask.BlockMaskRequireResult specialBlockFindResult)
@@ -88,7 +89,7 @@ public class MultiblockBraincase extends MultiblockStructureBase
             {
                 Direction doorFacing = StructureDetectionUtils.getSideFacingOfCuboidThisBlockIsOn(minCorner, maxCorner, blockPos);
                 System.out.println("Scanning door facing " + doorFacing.toString());
-                Pair<BlockPos, BlockPos> foundAirLock = StructureDetectionUtils.findAdjacentRoomCorners(level, blockPos, doorFacing, MultiblockBraincaseAirlock.BLOCK_MASK_AIRLOCK_WALL_CEIL_FLOOR_SCANMASK, 10, 10, 5);
+                Pair<BlockPos, BlockPos> foundAirLock = StructureDetectionUtils.findAdjacentRoomCorners(level, blockPos, doorFacing, MultiblockBraincaseAirlock.BLOCK_MASK_AIRLOCK_WALL_CEIL_FLOOR_SCANMASK, 15, 15, 15);
                 if(foundAirLock == null)
                 {
                     mostRecentScanResult = new MultiblockBraincaseScanResults(false, "One or more doors didn't lead to an airlock!", null, null, null, null);
@@ -115,7 +116,8 @@ public class MultiblockBraincase extends MultiblockStructureBase
             MultiBlockScanResult res = MULTIBLOCK_BRAINCASE_AIRLOCK.IsAtCoordsWithScanResult(level, airlockMin, airlockMax);
             if(!(res.isOK()))
             {
-                mostRecentScanResult = new MultiblockBraincaseScanResults(false, "Airlock Malformed at "+res.errorLocation().toShortString() + ".\n"+res.expectedBlocks().toString(), null, null, null, null);
+                if(res.errorLocation() != null) mostRecentScanResult = new MultiblockBraincaseScanResults(false, "Airlock Malformed at "+res.errorLocation().toShortString() + ".\n"+res.expectedBlocks().toString(), null, null, null, null);
+                else mostRecentScanResult = new MultiblockBraincaseScanResults(false, "Airlock Malformed.\nMissing: "+res.expectedBlocks().toString(), null, null, null, null);
                 return true; //failed to find airlock, but this is the correct location.
             }
             List<BlockPos> airlockDoorsInside = multiBlockScanResult.specialBlocks().get(BlockRegistry.BLOCK_AIRLOCK_DOOR.block().get());
@@ -127,7 +129,7 @@ public class MultiblockBraincase extends MultiblockStructureBase
                 }
             }
             List<BlockPos> airlockVents = res.specialBlocks().get(BlockRegistry.BLOCK_AIRLOCK_DRAIN.block().get());
-            mostRecentScanResult = new MultiblockBraincaseScanResults(true, "Braincase and airlock were found successfully! :D\n  Inner doors: "+airlockDoorsInside.size()+"\n  Outer doors: "+airlockDoorsOutside.size()+"\n  Drains:"+airlockVents.size(), Pair.of(airlockMin, airlockMax), airlockDoorsInside, airlockDoorsOutside, airlockVents);
+            mostRecentScanResult = new MultiblockBraincaseScanResults(true, "Braincase and airlock were found successfully! :D\n  Inner doors: "+airlockDoorsInside.size()+"\n  Outer doors: "+airlockDoorsOutside.size()+"\n  Drains: "+airlockVents.size(), Pair.of(airlockMin, airlockMax), airlockDoorsInside, airlockDoorsOutside, airlockVents);
             return true;
         }
         mostRecentScanResult = new MultiblockBraincaseScanResults(false, "Braincase not found.", null, null, null, null);

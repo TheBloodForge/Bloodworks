@@ -148,6 +148,9 @@ dependencies {
     compileOnly fg.deobf("curse.maven:jei-238222:4494410")
     runtimeOnly fg.deobf("curse.maven:jei-238222:4494410")
 
+    compileOnly fg.deobf("curse.maven:ctm-267602:4393695")
+    runtimeOnly fg.deobf("curse.maven:ctm-267602:4393695")
+
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html

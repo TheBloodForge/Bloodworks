@@ -24,7 +24,7 @@ public class FluidRegistry
                     new FluidRegistryContainer.ClientExtensions(
                             Globals.MODID,
                             "fluid_blood"
-                    ).fogColor(0.15f, 0.0f, 0.01f).tint(0xFAAA0011)
+                    ).fogColor(0.15f, 0.0f, 0.01f).tint(0xFAAA0011).fogDistance(1, 3)
                     , 0xFAAA0011),
 
             Block.Properties.of(MATERIAL_BLOOD).noCollission().strength(100.0F).noLootTable().color(MATERIAL_BLOOD.getColor()).speedFactor(0.8F).jumpFactor(0.8F),
@@ -34,12 +34,12 @@ public class FluidRegistry
     );
     public static final FluidRegistryContainer FLUID_CRANIAL = new FluidRegistryContainer(
             "fluid_cranial",
-            FluidType.Properties.create().canSwim(true).canDrown(false).canPushEntity(true).supportsBoating(false).lightLevel(2),
+            FluidType.Properties.create().canSwim(true).canDrown(false).canPushEntity(false).supportsBoating(false).lightLevel(2),
             () -> FluidRegistryContainer.createExtension(
                     new FluidRegistryContainer.ClientExtensions(
                             Globals.MODID,
                             "fluid_cranial"
-                    ).fogColor(0.1f, 0.2f, 0.2f).tint(0xAA00AAAA)
+                    ).fogColor(0.1f, 0.2f, 0.2f).tint(0xAA00AAAA).fogDistance(1, 30)
                     , 0xAA00AAAA),
             Block.Properties.of(MATERIAL_CRANIAL).noCollission().strength(100.0F).noLootTable().color(MATERIAL_CRANIAL.getColor()).randomTicks().isViewBlocking((a, b, c) -> false),
             new Item.Properties()

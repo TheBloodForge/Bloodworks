@@ -178,6 +178,7 @@ public class TankItem extends BloodworksBlockItem
             return this.stack;
         }
 
+        @SuppressWarnings("removal")
         @Override
         @Nonnull
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)

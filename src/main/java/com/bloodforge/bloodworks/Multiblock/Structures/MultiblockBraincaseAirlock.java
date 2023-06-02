@@ -13,6 +13,7 @@ public class MultiblockBraincaseAirlock extends MultiblockStructureBase
     public static final BlockMask BLOCK_MASK_AIRLOCK_WALLS = new BlockMask()
             .withWhitelisted(BlockRegistry.BLOCK_BRAINCASE.block().get())
             .withWhitelisted(BlockRegistry.BLOCK_BRAINCASE_WINDOW.block().get())
+            .withWhitelisted(BlockRegistry.BLOCK_BRAINCASE_CONTROLLER.block().get())
             .withSpecial(BlockRegistry.BLOCK_AIRLOCK_DOOR.block().get());
 
     public static final BlockMask BLOCK_MASK_AIRLOCK_FLOOR = new BlockMask()

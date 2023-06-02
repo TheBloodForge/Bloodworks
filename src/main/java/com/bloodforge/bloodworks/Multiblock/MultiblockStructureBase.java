@@ -14,11 +14,11 @@ public class MultiblockStructureBase
 
     public BlockPos tryFindLastCornerWithFirstCorner(Level level, BlockPos minCorner, BlockPos minSize, BlockPos maxSize, BlockMask validCornerBlocks)
     {
-        for (int xS = minSize.getX(); xS < maxSize.getX(); xS++)
+        for (int xS = minSize.getX()-1; xS < maxSize.getX(); xS++)
         {
-            for (int yS = minSize.getY(); yS < maxSize.getY(); yS++)
+            for (int yS = minSize.getY()-1; yS < maxSize.getY(); yS++)
             {
-                for (int zS = minSize.getZ(); zS < maxSize.getZ(); zS++)
+                for (int zS = minSize.getZ()-1; zS < maxSize.getZ(); zS++)
                 {
                     BlockPos pos = new BlockPos(minCorner.getX() + xS, minCorner.getY() + yS, minCorner.getZ() + zS);
                     if (validCornerBlocks.Compare(level.getBlockState(pos)).OK() && IsAtCoords(level, minCorner, pos))

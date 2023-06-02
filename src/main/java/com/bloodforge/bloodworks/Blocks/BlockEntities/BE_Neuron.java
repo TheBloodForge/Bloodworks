@@ -59,6 +59,7 @@ public class BE_Neuron extends BlockEntity
     @Override
     public void load(CompoundTag nbt)
     {
+        if(!level.isClientSide) return;
         NEURAL_ID = nbt.getString("neural_id");
         unwrapNBT(nbt.getCompound("NeuronPositions"));
         super.load(nbt);

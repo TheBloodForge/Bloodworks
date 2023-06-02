@@ -1,0 +1,14 @@
+{
+  "ctm": {
+    "ctm_version": 1,
+    "type": "CTM",
+    "layer": "CUTOUT",
+    "textures": [
+      "bloodworks:blocks/block_blood_tank-ctm"
+    ],
+    "extra":
+    {
+      "connect_inside": true
+    }
+  }
+}

@@ -31,7 +31,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
     public static final float TANK_THICKNESS = 0.3f;
     public static final float TANK_HEIGHT = 0.2f;
     public static final float TANK_BOTTOM = 0.0f;
-    private static final float FLUID_SIDE_MARGIN = 0.0125f, MIN_Y = 1 / 16f, MAX_Y = 1 - MIN_Y;
+    private static final float FLUID_SIDE_MARGIN = 0.001f, MIN_Y = 1 / 16f, MAX_Y = 1 - MIN_Y;
     private static final float TANKBLOCK_ALLSIDE_MARGIN = 0.0001f; //to prevent z-fighting
     private static final int NUM_FLUID_FRAMES = 32;
     private static final float WAVE_SIZE = 0.02f;

@@ -1,0 +1,10 @@
+{
+  "ctm": {
+    "ctm_version": 1,
+    "type": "CTM",
+    "layer": "CUTOUT",
+    "textures": [
+      "bloodworks:blocks/block_braincase_airlock_drain-ctm"
+    ]
+  }
+}
