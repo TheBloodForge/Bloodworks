@@ -135,7 +135,8 @@ public class TankDataProxy
 
     private static void updateDataTag(String tankName)
     {
-        TankDataTag.remove(tankName);
+        if (TankDataTag.contains(tankName))
+            TankDataTag.remove(tankName);
         CompoundTag nbt;
         if (!(nbt = TankDataPacker.getTankDataTag(tankName)).isEmpty())
             TankDataTag.put(tankName, nbt);
