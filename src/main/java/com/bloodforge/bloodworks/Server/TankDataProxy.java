@@ -63,7 +63,7 @@ public class TankDataProxy
     public static void saveTanks(Level level)
     {
         if (System.currentTimeMillis() - lastSave < saveCooldown) return;
-        Globals.LogDebug("Saving Tanks", level.isClientSide);
+        Globals.LogInfo("Saving Tanks");
         for (String tankName : MASTER_TANK_CONTAINER.keySet())
         {
             updateDataTag(tankName);

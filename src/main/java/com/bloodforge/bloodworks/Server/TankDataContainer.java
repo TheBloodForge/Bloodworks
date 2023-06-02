@@ -57,7 +57,7 @@ public class TankDataContainer
         if (hasChild(pos)) return;
         children.put(pos.toShortString(), pos);
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Added Child to [" + tank_name + "]. Child : " + pos, isClient);
-        syncTankName(tank_name);
+        syncTankName(tank_name, pos);
         updateSize(pos.getY(), true, isClient);
         updateCapacity(isClient);
     }
