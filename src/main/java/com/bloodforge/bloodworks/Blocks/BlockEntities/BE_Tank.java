@@ -30,6 +30,7 @@ import java.util.List;
 public class BE_Tank extends BlockEntity implements IFluidHandler
 {
     private String tank_id = "";
+    private int cooldown = 8;
     public BE_Tank(BlockPos pos, BlockState state)
     {
         super(BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), pos, state);
@@ -55,21 +56,18 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
         if (!getID().isEmpty())
             setChanged();
     }
-    private int cooldown = 8;
     public void tick()
     {
-        cooldown--;
-        if (cooldown != 0) return;
-        cooldown = getCooldown();
         if (level.getBlockState(getBlockPos()).getValue(BlockBloodTank.TIER) != TankDataProxy.getTankTier(tank_id))
             level.getBlockState(getBlockPos()).setValue(BlockBloodTank.TIER, TankDataProxy.getTankTier(tank_id));
         tryAndFillNeighbors();
+        cooldown = getCooldown();
     }
 
     private int getCooldown()
     {
         int cdr = TankDataProxy.getTankTier(tank_id) * BloodworksCommonConfig.TANK_COOLDOWN_REDUCTION.get();
-        return TankDataProxy.getTankTier(tank_id) == 0 ? 0 : BloodworksCommonConfig.MAX_TANK_COOLDOWN.get() - cdr;
+        return TankDataProxy.getTankTier(tank_id) == 0 ? 0 : Math.max(0, BloodworksCommonConfig.MAX_TANK_COOLDOWN.get() - cdr);
     }
 
     private void tryAndFillNeighbors()
@@ -175,7 +173,8 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
             entity.setTankLabel();
         if (entity.tank_id.isEmpty())
             entity.setID(TankDataProxy.recoverTankName(blockPos, level));
-        entity.tick();
+        if (entity.cooldown > 0) entity.cooldown--;
+        if (entity.cooldown <= 0) entity.tick();
     }
 
     @Override

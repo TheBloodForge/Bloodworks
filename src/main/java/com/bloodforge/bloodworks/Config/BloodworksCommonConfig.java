@@ -26,13 +26,13 @@ public class BloodworksCommonConfig
                 .comment("Effectiveness questionable, but doesnt seem to reduce FPS?")
                 .define("Do_Occlusion_Culling", true);
         MAX_TANK_COOLDOWN = BUILDER.comment("Maximum Tank Cooldown in Ticks Between Actions")
-                .defineInRange("Maximum_Tank_Cooldown", 8, 0, 200);
+                .defineInRange("Maximum_Tank_Cooldown", 20, 0, 200);
         TANK_COOLDOWN_REDUCTION = BUILDER.comment("Tank Cooldown Reduction Per Tier")
                 .defineInRange("Tank_Cooldown_Reduction", 2, 0, 200);
         TANK_STORAGE_PER_TIER = BUILDER.comment("Tank Fluid Storage Per Tier")
                 .defineInRange("Tank_Storage_Per_Tier", 5000, 1000, 2000000);
         TANK_TRANSFER_PER_ACTION = BUILDER.comment("Tank Transfer Amount Per Tier Per Action")
-                .defineInRange("Tank_Transfer_Per_Action", 50, 10, 200000);
+                .defineInRange("Tank_Transfer_Per_Action", 100, 10, 200000);
 
         BUILDER.pop();
         CONFIG_SPEC = BUILDER.build();
