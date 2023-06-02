@@ -32,7 +32,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
     public static final float TANK_THICKNESS = 0.3f;
     public static final float TANK_HEIGHT = 0.2f;
     public static final float TANK_BOTTOM = 0.0f;
-    private static final float FLUID_SIDE_MARGIN = 0.001f, MIN_Y = 1 / 16f, MAX_Y = 1 - MIN_Y;
+    private static final float FLUID_SIDE_MARGIN = 0.001f, MIN_Y = 0.001f, MAX_Y = 1 - MIN_Y;
     private static final float TANKBLOCK_ALLSIDE_MARGIN = 0.0001f; //to prevent z-fighting
     private static final int NUM_FLUID_FRAMES = 32;
     private static final float WAVE_SIZE = 0.02f;
@@ -123,39 +123,16 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
         Vector4f color = new Vector4f(r, g, b, alpha);
 
         // top
-        if (!connectU)
+        if (heightPercentage < 1 || !connectU)
         {
             double waveTime = Minecraft.getInstance().level.getGameTime() / 10.0;
-            Vec3 sBL = BLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BLT.x + BLT.z) + (waveTime)), 0).scale(WAVE_SIZE));
-            Vec3 sBR = BRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BRT.x + BRT.z) + (waveTime)), 0).scale(WAVE_SIZE));
-            Vec3 sFL = FLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FLT.x + FLT.z) + (waveTime)), 0).scale(WAVE_SIZE));
-            Vec3 sFR = FRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FRT.x + FRT.z) + (waveTime)), 0).scale(WAVE_SIZE));
-            RenderHelper.DoQuadWithColor(vertexBuilder, matrix, sBR, sFR, sFL, sBL, UVPN, UVPPFlat, UVNPFlat, UVNN, light, color);
-            if(heightPercentage > 0.5)
-            {
-                float sMinV = MIN_Y + frameVOff;
-                float sMaxV = minV + (((1-height) / NUM_FLUID_FRAMES));
-                Vec2 sUVNN = new Vec2(minU, sMinV);
-                Vec2 sUVPN = new Vec2(maxU, sMinV);
-                Vec2 sUVNP = new Vec2(minU, sMaxV);
-                Vec2 sUVPP = new Vec2(maxU, sMaxV);
-                // min z
-                //if (!connectN)
-                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sBR, BRT, BLT, sBL, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(0, 0, 1));
-                // max z
-                //if (!connectS)
-                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sFL, FLT, FRT, sFR, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(0, 0, 1));
-                // min x
-                //if (!connectW)
-                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sBL, BLT, FLT, sFL, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(-1, 0, 0));
-                // max x
-                //if (!connectE)
-                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sFR, FRT, BRT, sBR, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(-1, 0, 0));
+            if(heightPercentage < 1) {
+                BLT = BLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BLT.x + BLT.z) + (waveTime)), 0).scale(WAVE_SIZE));
+                BRT = BRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BRT.x + BRT.z) + (waveTime)), 0).scale(WAVE_SIZE));
+                FLT = FLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FLT.x + FLT.z) + (waveTime)), 0).scale(WAVE_SIZE));
+                FRT = FRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FRT.x + FRT.z) + (waveTime)), 0).scale(WAVE_SIZE));
             }
-            BLT = sBL;
-            BRT = sBR;
-            FLT = sFL;
-            FRT = sFR;
+            RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BRT, FRT, FLT, BLT, UVPN, UVPPFlat, UVNPFlat, UVNN, light, color);
         }
         //bottom
         if (!connectD)
