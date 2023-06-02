@@ -93,7 +93,7 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
     public float getRelativeFill()
     {
         float fillPercentage = Math.min(1f, (float) getFluidInTank(0).getAmount() / getTankCapacity(0));
-        return Mth.clamp((fillPercentage * getTotalHeight()) - getRelativeHeight(), 0f, 1.01f);
+        return Mth.clamp((fillPercentage * getTotalHeight()) - getRelativeHeight(), -0.01f, 1.01f);
     }
 
     public int getFluidContained()

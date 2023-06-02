@@ -2,6 +2,7 @@ package com.bloodforge.bloodworks.Client.BlockRenderers;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
+import com.bloodforge.bloodworks.Util;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
@@ -32,10 +34,11 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
     public static final float TANK_THICKNESS = 0.3f;
     public static final float TANK_HEIGHT = 0.2f;
     public static final float TANK_BOTTOM = 0.0f;
-    private static final float FLUID_SIDE_MARGIN = 0.001f, MIN_Y = 0.001f, MAX_Y = 1 - MIN_Y;
+    private static final float FLUID_SIDE_MARGIN = 0.001f, MIN_Y = 0.0002f, MAX_Y = 1 - MIN_Y;
     private static final float TANKBLOCK_ALLSIDE_MARGIN = 0.0001f; //to prevent z-fighting
     private static final int NUM_FLUID_FRAMES = 32;
-    private static final float WAVE_SIZE = 0.02f;
+    private static final float WAVE_SIZE_MAX = 0.08f;
+    private static final float WAVE_SIZE_MIN = 0.01f;
 
     private static int cFluidFrame = 0;
 
@@ -58,11 +61,14 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
         if (!fluidStack.isEmpty())
         {
             float relativeFill = tank.getRelativeFill();
-            if (relativeFill > 0.0f)
+            //water viscosity = 1000
+            //lava viscosity = 6000
+            float flowAmt = Util.Lerp(WAVE_SIZE_MIN, WAVE_SIZE_MAX, 1-Mth.clamp((fluidStack.getFluid().getFluidType().getViscosity()/6000), 0, 1));
+            if (relativeFill >= 0.0f)
             {
                 //TODO: this is currently set by every renderer, which isn't really ideal though it should be _fine_ and the fix would be annoying
                 cFluidFrame = (int) Math.floor(Minecraft.getInstance().level.getGameTime() / 3.0) % NUM_FLUID_FRAMES; //don't use individual iterators so animations stay in sync
-                renderFluid(poseStack, MBR, fluidStack, 1, relativeFill, cLight, tank.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
+                renderFluid(poseStack, MBR, fluidStack, 1, relativeFill, flowAmt, cLight, tank.getBlockPos(), connectU, connectD, connectN, connectE, connectS, connectW);
             }
         }
         Minecraft.getInstance().getProfiler().pop();
@@ -75,7 +81,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
 
     }
 
-    private static void renderFluid(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, FluidStack fluidStack, float alpha, float heightPercentage, int combinedLight, BlockPos blockPos,
+    private static void renderFluid(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, FluidStack fluidStack, float alpha, float heightPercentage, float flowAmt, int combinedLight, BlockPos blockPos,
                                     boolean connectU, boolean connectD, boolean connectN, boolean connectE, boolean connectS, boolean connectW)
     {
         VertexConsumer vertexBuilder = renderTypeBuffer.getBuffer(RenderType.translucent());
@@ -90,14 +96,19 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
         {
             lighting = 15728880;
         }
-        renderLiquidQuads(matrixStack.last().pose(), renderTypeBuffer.getBuffer(RenderType.entityTranslucentCull(fluidResource)), red, green, blue, alpha, heightPercentage, lighting, blockPos, connectU, connectD, connectN, connectE, connectS, connectW);
+        renderLiquidQuads(matrixStack.last().pose(), renderTypeBuffer.getBuffer(RenderType.entityTranslucentCull(fluidResource)), red, green, blue, alpha, heightPercentage, flowAmt, lighting, blockPos, connectU, connectD, connectN, connectE, connectS, connectW);
     }
 
-    private static void renderLiquidQuads(Matrix4f matrix, VertexConsumer vertexBuilder, float r, float g, float b, float alpha, float heightPercentage, int light, BlockPos blockPos,
+    private static Vec3 clampVec3Y(Vec3 in, float minY, float maxY)
+    {
+        return new Vec3(in.x, Mth.clamp(in.y, minY, maxY), in.z);
+    }
+
+    private static void renderLiquidQuads(Matrix4f matrix, VertexConsumer vertexBuilder, float r, float g, float b, float alpha, float heightPercentage, float flowAmt, int light, BlockPos blockPos,
                                           boolean connectU, boolean connectD, boolean connectN, boolean connectE, boolean connectS, boolean connectW)
     {
 
-        float height = MIN_Y + (MAX_Y - MIN_Y) * heightPercentage;
+        float height = MIN_Y + (MAX_Y - MIN_Y) * Mth.clamp(heightPercentage, 0, 1);
         float minU = 0, maxU = 1;
         float frameVOff = cFluidFrame / (float) NUM_FLUID_FRAMES;
         float minV = MIN_Y + frameVOff;
@@ -126,11 +137,39 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
         if (heightPercentage < 1 || !connectU)
         {
             double waveTime = Minecraft.getInstance().level.getGameTime() / 10.0;
-            if(heightPercentage < 1) {
-                BLT = BLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BLT.x + BLT.z) + (waveTime)), 0).scale(WAVE_SIZE));
-                BRT = BRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BRT.x + BRT.z) + (waveTime)), 0).scale(WAVE_SIZE));
-                FLT = FLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FLT.x + FLT.z) + (waveTime)), 0).scale(WAVE_SIZE));
-                FRT = FRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FRT.x + FRT.z) + (waveTime)), 0).scale(WAVE_SIZE));
+            if(heightPercentage < 1 || connectU) {
+                float minY = connectD ? -1 : MIN_Y;
+                float maxY = connectU ? 1 : MAX_Y;
+                Vec3 sBL = clampVec3Y(BLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BLT.x + BLT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
+                Vec3 sBR = clampVec3Y(BRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BRT.x + BRT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
+                Vec3 sFL = clampVec3Y(FLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FLT.x + FLT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
+                Vec3 sFR = clampVec3Y(FRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FRT.x + FRT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
+
+                if(heightPercentage == 0)
+                {
+                    float sMinV = MIN_Y + frameVOff;
+                    float sMaxV = minV + (((1 - height) / NUM_FLUID_FRAMES));
+                    Vec2 sUVNN = new Vec2(minU, sMinV);
+                    Vec2 sUVPN = new Vec2(maxU, sMinV);
+                    Vec2 sUVNP = new Vec2(minU, sMaxV);
+                    Vec2 sUVPP = new Vec2(maxU, sMaxV);
+                    // min z
+                    //if (!connectN)
+                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sBL, BLT, BRT, sBR, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(0, 0, 1));
+                    // max z
+                    //if (!connectS)
+                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sFR, FRT, FLT, sFL, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(0, 0, 1));
+                    // min x
+                    //if (!connectW)
+                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sFL, FLT, BLT, sBL, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(-1, 0, 0));
+                    // max x
+                    //if (!connectE)
+                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sBR, BRT, FRT, sFR, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(-1, 0, 0));
+                }
+                BLT = sBL;
+                BRT = sBR;
+                FLT = sFL;
+                FRT = sFR;
             }
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BRT, FRT, FLT, BLT, UVPN, UVPPFlat, UVNPFlat, UVNN, light, color);
         }

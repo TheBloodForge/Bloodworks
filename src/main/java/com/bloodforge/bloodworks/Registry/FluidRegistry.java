@@ -19,7 +19,7 @@ public class FluidRegistry
     public static final Material MATERIAL_CRANIAL = (new Material.Builder(MaterialColor.TERRACOTTA_CYAN)).noCollider().nonSolid().replaceable().liquid().build();
     public static final FluidRegistryContainer FLUID_BLOOD = new FluidRegistryContainer(
             "fluid_blood",
-            FluidType.Properties.create().canSwim(true).canDrown(true).canPushEntity(true).supportsBoating(true),
+            FluidType.Properties.create().canSwim(true).canDrown(true).canPushEntity(true).supportsBoating(true).viscosity(4000),
             () -> FluidRegistryContainer.createExtension(
                     new FluidRegistryContainer.ClientExtensions(
                             Globals.MODID,
@@ -34,7 +34,7 @@ public class FluidRegistry
     );
     public static final FluidRegistryContainer FLUID_CRANIAL = new FluidRegistryContainer(
             "fluid_cranial",
-            FluidType.Properties.create().canSwim(true).canDrown(false).canPushEntity(false).supportsBoating(false).lightLevel(2),
+            FluidType.Properties.create().canSwim(true).canDrown(false).canPushEntity(false).supportsBoating(false).lightLevel(2).viscosity(2000),
             () -> FluidRegistryContainer.createExtension(
                     new FluidRegistryContainer.ClientExtensions(
                             Globals.MODID,
