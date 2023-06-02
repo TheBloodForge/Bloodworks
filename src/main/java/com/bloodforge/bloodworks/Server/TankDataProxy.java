@@ -6,6 +6,7 @@ import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Networking.TankDataSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.TankSyncS2CPacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -207,4 +208,14 @@ public class TankDataProxy
 
     public static void setTankTier(String tank_id, int newTier, boolean isClient)
     { getDataForTank(tank_id).setTankTier(newTier, isClient); }
+
+    public static void updateLighting(String parentName)
+    {
+        for (BlockPos child : getDataForTank(parentName).getChildren())
+        {
+            Level level = Minecraft.getInstance().level;
+            if (level == null) continue;
+            level.getLightEngine().checkBlock(child);
+        }
+    }
 }

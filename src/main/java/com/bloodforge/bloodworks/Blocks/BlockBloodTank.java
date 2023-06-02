@@ -78,6 +78,18 @@ public class BlockBloodTank extends BlockMachineBase
     }
 
     @Override
+    public boolean propagatesSkylightDown(BlockState p_49928_, BlockGetter p_49929_, BlockPos p_49930_)
+    {
+        return true;
+    }
+
+    @Override
+    public float getShadeBrightness(BlockState p_60472_, BlockGetter p_60473_, BlockPos p_60474_)
+    {
+        return 1.0f;
+    }
+
+    @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos)
     {
         if (level.getBlockEntity(pos) instanceof BE_Tank tank)
@@ -160,25 +172,19 @@ public class BlockBloodTank extends BlockMachineBase
                         stack = FluidUtil.getFluidContained(player.getItemInHand(interactionHand)).get();
                     if (machine.isFluidValid(0, stack))
                     {
+//                        stack.setAmount(90000000);
                         machine.fill(stack, IFluidHandler.FluidAction.EXECUTE);
                         return InteractionResult.sidedSuccess(!level.isClientSide());
                     }
-                } else if (heldItem.is(Items.DEBUG_STICK))
-                {
+                } else if (heldItem.is(Items.DEBUG_STICK)) {
                     machine.setTier(0);
                     return InteractionResult.CONSUME;
-                } else if (heldItem.getItem() instanceof BlockItem)
-                {
+                } else if (heldItem.getItem() instanceof BlockItem) {
                     return super.use(cState, level, pos, player, interactionHand, blockHitResult);
-                } else
-                {
+                } else {
                     PacketManager.sendToClients(new MessageS2CPacket(Component.literal(Component.translatable(machine.getFluidInTank(0).getTranslationKey()).getString() + " : " + machine.getFluidInTank(0).getAmount() + " | " + machine.getTankCapacity(0) + " -- " + machine.getID()), false));
                 }
             }
-        }
-        if (level.isClientSide())
-        {
-            level.getLightEngine().checkBlock(pos);
         }
         return InteractionResult.sidedSuccess(!level.isClientSide());
     }

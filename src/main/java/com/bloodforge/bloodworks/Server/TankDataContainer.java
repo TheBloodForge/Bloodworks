@@ -82,6 +82,7 @@ public class TankDataContainer
     private void updateCapacity(boolean isClient)
     {
         tank.setCapacity(children.size() * (tier > 0 ? tier : 1) * BloodworksCommonConfig.TANK_STORAGE_PER_TIER.get());
+        syncTankName(tank_name);
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Updating Capacity for [" + tank_name + "]. New Capacity : " + tank.getCapacity(), isClient);
     }
 

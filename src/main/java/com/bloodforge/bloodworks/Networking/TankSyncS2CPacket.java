@@ -34,7 +34,10 @@ public class TankSyncS2CPacket
     public boolean handle(Supplier<NetworkEvent.Context> supplier)
     {
         NetworkEvent.Context context = supplier.get();
-        context.enqueueWork(() -> TankDataProxy.getTankByName(parentName).setFluid(fluidStack));
+        context.enqueueWork(() -> {
+            TankDataProxy.getTankByName(parentName).setFluid(fluidStack);
+            TankDataProxy.updateLighting(parentName);
+        });
         return true;
     }
 }
