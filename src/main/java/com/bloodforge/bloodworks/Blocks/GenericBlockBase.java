@@ -13,6 +13,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -52,5 +55,18 @@ public class GenericBlockBase extends Block
     {
         super.stepOn(level, pos, blockState, stepperOnner);
         ParticleHelper.DoStepParticle(ParticleRegistry.PARTICLE_FLESH_STEP.get(), level, pos, blockState, stepperOnner);
+    }
+
+
+    public VoxelShape getVisualShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+        return isHalfTransparent?Shapes.empty():super.getVisualShape(blockState, blockGetter, blockPos, collisionContext);
+    }
+
+    public float getShadeBrightness(BlockState blockState, BlockGetter shadeBrightness, BlockPos pos) {
+        return isHalfTransparent?1.0f:super.getShadeBrightness(blockState, shadeBrightness, pos);
+    }
+
+    public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return isHalfTransparent;
     }
 }

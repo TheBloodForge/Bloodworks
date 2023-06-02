@@ -13,13 +13,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 @SuppressWarnings({"unused", "SameReturnValue"})
-public class BE_Braincase_Controller extends BlockEntityMachineBase
+public class BE_Braincase_Controller extends BlockEntity
 {
 
     public static final MultiblockBraincase MULTIBLOCK_BRAINCASE_GETTER = new MultiblockBraincase();
@@ -28,6 +28,10 @@ public class BE_Braincase_Controller extends BlockEntityMachineBase
     BlockPos multiblockCoordMax;
     BlockPos multiblockCoordMin;
 
+    boolean isFilling = false;
+    boolean isEmptying = false;
+    boolean isFull = false;
+
     public BE_Braincase_Controller(BlockPos pos, BlockState state)
     {
         super(BlockRegistry.BLOCK_INFUSION_CHAMBER.blockEntity().get(), pos, state);
@@ -35,44 +39,49 @@ public class BE_Braincase_Controller extends BlockEntityMachineBase
         multiblockCoordMax = pos;
     }
 
-    public ContainerData getContainerData()
-    {
-        return this.data;
-    }
-
 
     @Override
     public void onLoad()
     {
         super.onLoad();
+        if(getLevel().isClientSide()) return;
+        //verify structure
+
     }
 
 
     @Override
     protected void saveAdditional(CompoundTag nbt)
     {
-        nbt.putInt("progress", this.progress);
         nbt.putIntArray("minCorner", Util.getBlockPosAsIntArr(multiblockCoordMin));
         nbt.putIntArray("maxCorner", Util.getBlockPosAsIntArr(multiblockCoordMax));
+        nbt.putBoolean("isFilling", isFilling);
+        nbt.putBoolean("isEmptying", isEmptying);
+        nbt.putBoolean("isFull", isFull);
         super.saveAdditional(nbt);
     }
 
     @Override
     public void load(CompoundTag nbt)
     {
-        progress = nbt.getInt("progress");
         multiblockCoordMin = Util.getBlockPosFromIntArr(nbt.getIntArray("minCorner"));
         multiblockCoordMax = Util.getBlockPosFromIntArr(nbt.getIntArray("maxCorner"));
+        isFilling = nbt.getBoolean("isFilling");
+        isEmptying = nbt.getBoolean("isEmptying");
+        isFull = nbt.getBoolean("isFull");
         super.load(nbt);
     }
 
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_Braincase_Controller entity)
     {
-        if (level.isClientSide())
-        {
-        }
+        if (level.isClientSide()) return;
 
+    }
+
+    private boolean verifyStructureOK()
+    {
+        return true;
     }
 
     public void use(Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)

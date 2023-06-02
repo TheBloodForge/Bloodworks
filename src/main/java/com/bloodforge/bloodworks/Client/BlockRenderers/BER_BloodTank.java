@@ -56,7 +56,7 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
         if (!fluidStack.isEmpty())
         {
             float relativeFill = tank.getRelativeFill();
-            if (relativeFill > 0.0f)
+            if (relativeFill >= 0.0f)
             {
                 //TODO: this is currently set by every renderer, which isn't really ideal though it should be _fine_ and the fix would be annoying
                 cFluidFrame = (int) Math.floor(Minecraft.getInstance().level.getGameTime() / 3.0) % NUM_FLUID_FRAMES; //don't use individual iterators so animations stay in sync
@@ -83,6 +83,11 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
         float red = (color >> 16 & 255) / 255f;
         float green = (color >> 8 & 255) / 255f;
         float blue = (color & 255) / 255f;
+        int lighting = combinedLight;
+        if(fluidStack.getFluid().getFluidType().getLightLevel() > 1)
+        {
+            lighting = 0xFFFFFFFF;
+        }
         renderLiquidQuads(matrixStack.last().pose(), renderTypeBuffer.getBuffer(RenderType.entityTranslucentCull(fluidResource)), red, green, blue, alpha, heightPercentage, combinedLight, blockPos, connectU, connectD, connectN, connectE, connectS, connectW);
     }
 
