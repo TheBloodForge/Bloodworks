@@ -8,11 +8,11 @@ import com.bloodforge.bloodworks.Networking.TankDataSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.TankSyncS2CPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -41,7 +41,9 @@ public class TankDataProxy
         String tank_id = "TCT-" + (System.currentTimeMillis() - 1685405500000L);
         TankDataContainer tank_data = new TankDataContainer(tank_id, block_pos);
         addToMasterContainer(tank_id, tank_data, false);
+        updateDataTag(tank_id);
         saveTanks(ServerLifecycleHooks.getCurrentServer().overworld());
+        syncTankName(tank_id);
         return tank_id;
     }
 
@@ -79,11 +81,11 @@ public class TankDataProxy
         TankDataManager.read();
         resetMaster(isClient);
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Loaded TankData : " + TankDataTag.getAllKeys(), isClient);
-        for (String tankName : Collections.unmodifiableSet(TankDataTag.getAllKeys()))
+        for (String tankName : TankDataTag.getAllKeys())
         {
             loadTank(tankName, TankDataTag.getCompound(tankName), isClient);
-            syncTankName(tankName);
-            syncFluid(tankName);
+            if (ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerCount() > 0)
+                syncFluid(tankName);
         }
     }
 
@@ -93,6 +95,8 @@ public class TankDataProxy
             Globals.LogDebug("Loading Tank [" + tankName + "]", isClient);
         TankDataContainer tc = TankDataPacker.getTankDataFromCompound(tankName, tag, isClient);
         addToMasterContainer(tankName, tc, isClient);
+        if (!isClient && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerCount() > 0)
+            syncTankName(tankName);
     }
 
     private static void resetMaster(boolean isClient)
@@ -105,10 +109,7 @@ public class TankDataProxy
     {
         MASTER_TANK_CONTAINER.remove(tankName);
         MASTER_TANK_CONTAINER.put(tankName, tc);
-        updateDataTag(tankName);
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Put Tank Into Master Tank Container", isClient);
-        if (!isClient)
-            syncTankName(tankName);
     }
 
     public static String recoverTankName(BlockPos blockPos, Level level)
@@ -219,6 +220,15 @@ public class TankDataProxy
             Level level = ServerLifecycleHooks.getCurrentServer().overworld();
             if (level == null) continue;
             level.getLightEngine().checkBlock(child);
+        }
+    }
+
+    public static void syncTankDataWithPlayer(ServerPlayer player)
+    {
+        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Synchronizing Tank Data with " + player.getDisplayName().getString(), false);
+        for (String tank_id : MASTER_TANK_CONTAINER.keySet())
+        {
+            PacketManager.sendToPlayer(new TankDataSyncS2CPacket(tank_id, TankDataPacker.getTankDataTag(tank_id)), player);
         }
     }
 }

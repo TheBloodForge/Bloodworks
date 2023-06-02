@@ -3,11 +3,8 @@ package com.bloodforge.bloodworks;
 import com.bloodforge.bloodworks.Compatability.OneProbeCompat;
 import com.bloodforge.bloodworks.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Registry.*;
-import com.bloodforge.bloodworks.Registry.DataGen.BloodworksLangProvidor;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -42,8 +39,6 @@ public class BloodworksMod
 
 //        modEventBus.addListener(this::onInterModEnqueue);
         modEventBus.addListener(this::InterModResponses);
-        modEventBus.addListener(this::onGatherDataEvent);
-//        modEventBus.addListener(this::onPlayerConnect);
 
         // -------- Register Configs --------
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BloodworksCommonConfig.CONFIG_SPEC);
@@ -66,15 +61,4 @@ public class BloodworksMod
     {
         InterModComms.sendTo("theoneprobe", "getTheOneProbe", OneProbeCompat::new);
     }
-
-    @SubscribeEvent
-    public void onGatherDataEvent(GatherDataEvent event)
-    {
-        System.out.println("ON GATHER DATA EVENT");
-        event.getGenerator().addProvider(true, new ItemProvidor(event.getGenerator(), Globals.MODID, event.getExistingFileHelper()));
-
-        event.getGenerator().addProvider(true, new BloodworksLangProvidor(event.getGenerator()));
-        System.out.println("FIN ON GATHER DATA EVENT");
-    }
-
 }

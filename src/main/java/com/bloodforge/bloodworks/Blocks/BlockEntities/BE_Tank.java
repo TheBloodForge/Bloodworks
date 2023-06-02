@@ -113,6 +113,7 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
 
     public void setID(String newTankID)
     {
+        if (newTankID.isEmpty()) return;
         if (tank_id.isEmpty() || (level != null && level.isClientSide))
         {
             tank_id = newTankID;

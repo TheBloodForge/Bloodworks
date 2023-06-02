@@ -46,7 +46,7 @@ public class Globals
 
     };
 
-    public static final boolean KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS = false;
+    public static final boolean KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS = true;
     public static boolean IS_CLIENT = false, IS_SERVER = false;
 
     public static void LogInfo(String toLog)
