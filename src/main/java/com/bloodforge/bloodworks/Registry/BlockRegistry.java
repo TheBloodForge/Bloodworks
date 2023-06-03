@@ -84,6 +84,13 @@ public class BlockRegistry
             BlockBloodTank::new,
             BE_Tank.class
     );
+
+    public static final BlockEntityRegister BLOCK_FLUID_PIPE = createBlockEntity2(
+            "fluid_pipe",
+            BlockFluidPipe::new,
+            BE_FluidPipe.class
+    );
+
     public static final BlockEntityRegister BLOCK_NEURON = createBlockEntity2(
             "neuron",
             BlockNeuron::new,

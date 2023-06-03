@@ -1,0 +1,263 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe"
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "false",
+        "east_connected": "false",
+        "south_connected": "false",
+        "west_connected": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_straight",
+        "y": 90
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "true",
+        "south_connected": "true",
+        "east_connected": "false",
+        "west_connected": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_straight",
+        "z": 90
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "false",
+        "south_connected": "false",
+        "east_connected": "true",
+        "west_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_straight",
+        "y": -90
+      },
+      "when": {
+        "up_connected": "true",
+        "down_connected": "true",
+        "north_connected": "false",
+        "south_connected": "false",
+        "east_connected": "false",
+        "west_connected": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_corner",
+        "x": -90
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "true",
+        "north_connected": "false",
+        "south_connected": "false",
+        "east_connected": "true",
+        "west_connected": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_corner",
+        "x": 90
+      },
+      "when": {
+        "up_connected": "true",
+        "down_connected": "false",
+        "north_connected": "false",
+        "south_connected": "false",
+        "east_connected": "true",
+        "west_connected": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_corner",
+        "y": -90
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "true",
+        "south_connected": "false",
+        "east_connected": "true",
+        "west_connected": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_corner",
+        "y": 180
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "true",
+        "south_connected": "false",
+        "east_connected": "false",
+        "west_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_corner"
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "false",
+        "south_connected": "true",
+        "east_connected": "true",
+        "west_connected": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_corner",
+        "y": 90
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "false",
+        "south_connected": "true",
+        "east_connected": "false",
+        "west_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_tri",
+        "y": 90
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "true",
+        "south_connected": "true",
+        "east_connected": "false",
+        "west_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_tri",
+        "y": 180
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "true",
+        "south_connected": "false",
+        "east_connected": "true",
+        "west_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_tri"
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "false",
+        "south_connected": "true",
+        "east_connected": "true",
+        "west_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_tri",
+        "y": -90
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "true",
+        "south_connected": "true",
+        "east_connected": "true",
+        "west_connected": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_quad"
+      },
+      "when": {
+        "up_connected": "false",
+        "down_connected": "false",
+        "north_connected": "true",
+        "south_connected": "true",
+        "east_connected": "true",
+        "west_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_connection",
+        "x": -90
+      },
+      "when": {
+        "up_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_connection",
+        "x": 90
+      },
+      "when": {
+        "down_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_connection",
+        "y": -90
+      },
+      "when": {
+        "west_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_connection",
+        "y": 90
+      },
+      "when": {
+        "east_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_connection"
+      },
+      "when": {
+        "north_connected": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "bloodworks:block/block_fluid_pipe_connection",
+        "x": 180
+      },
+      "when": {
+        "south_connected": "true"
+      }
+    }
+  ]
+}
