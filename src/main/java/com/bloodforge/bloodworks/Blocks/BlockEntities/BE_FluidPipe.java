@@ -33,7 +33,7 @@ import static com.bloodforge.bloodworks.Blocks.BlockFluidPipe.*;
 public class BE_FluidPipe extends BlockEntity implements IFluidHandler
 {
     private int cooldown = 8;
-    private FluidTank PIPE_TANK;
+    private FluidTank PIPE_TANK = new FluidTank(1000);
     private HashMap<Direction, IOMode> pipeModes;
     private HashMap<IOMode, List<BE_FluidPipe>> connectedPipes;
 
