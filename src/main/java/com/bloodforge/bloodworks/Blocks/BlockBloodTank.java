@@ -2,6 +2,7 @@ package com.bloodforge.bloodworks.Blocks;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank;
 import com.bloodforge.bloodworks.Client.ClientUtils;
+import com.bloodforge.bloodworks.Common.IOMode;
 import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
@@ -27,7 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -47,7 +48,7 @@ public class BlockBloodTank extends BlockMachineBase
 {
 
     //    public static final BlockShape SHAPE = BlockShape.createBlockShape(2.5, 0, 2.5, 13.5, 16, 13.5);
-    public static final BooleanProperty OUTPUT = BooleanProperty.create("output");
+    public static final EnumProperty<IOMode> OUTPUT = EnumProperty.create("mode", IOMode.class);
     public static final IntegerProperty TIER = IntegerProperty.create("tier", 0, 10);
 
     public BlockBloodTank()
@@ -147,7 +148,7 @@ public class BlockBloodTank extends BlockMachineBase
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext)
     {
-        return this.defaultBlockState().setValue(TIER, 1);
+        return this.defaultBlockState().setValue(TIER, 1).setValue(OUTPUT, IOMode.NONE);
     }
 
     @Override
@@ -172,7 +173,6 @@ public class BlockBloodTank extends BlockMachineBase
                         stack = FluidUtil.getFluidContained(player.getItemInHand(interactionHand)).get();
                     if (tank.isFluidValid(0, stack))
                     {
-//                        stack.setAmount(90000000);
                         tank.fill(stack, IFluidHandler.FluidAction.EXECUTE);
                         return InteractionResult.sidedSuccess(!level.isClientSide());
                     }

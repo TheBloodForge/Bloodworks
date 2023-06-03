@@ -106,7 +106,7 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
     }
 
     public int getFluidContained()
-    { return Math.round(getRelativeFill() * BloodworksCommonConfig.TANK_STORAGE_PER_TIER.get()); }
+    { return Math.round(Mth.clamp(getRelativeFill(), 0f, 1f) * BloodworksCommonConfig.TANK_STORAGE_PER_TIER.get()); }
 
     public int getRelativeHeight()
     { return getBlockPos().getY() - TankDataProxy.getTankMin(tank_id); }
