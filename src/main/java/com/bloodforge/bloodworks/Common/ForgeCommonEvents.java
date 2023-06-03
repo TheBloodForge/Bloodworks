@@ -1,5 +1,6 @@
-package com.bloodforge.bloodworks;
+package com.bloodforge.bloodworks.Common;
 
+import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Registry.DataGen.BloodworksLangProvidor;
 import com.bloodforge.bloodworks.Registry.ItemProvidor;
 import com.bloodforge.bloodworks.Server.TankDataProxy;
@@ -10,7 +11,7 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class MainEventListeners
+public class ForgeCommonEvents
 {
 
     @SubscribeEvent

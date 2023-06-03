@@ -1,7 +1,7 @@
 package com.bloodforge.bloodworks.Blocks;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank;
-import com.bloodforge.bloodworks.ClientUtils;
+import com.bloodforge.bloodworks.Client.ClientUtils;
 import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;

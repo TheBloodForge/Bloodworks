@@ -1,5 +1,6 @@
-package com.bloodforge.bloodworks;
+package com.bloodforge.bloodworks.Common;
 
+import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.RecipeRegistry;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,6 +19,6 @@ public class CommonProxy
         RecipeRegistry.init();
         PacketManager.register();
 
-        MinecraftForge.EVENT_BUS.register(new MainEventListeners());
+        MinecraftForge.EVENT_BUS.register(new ForgeCommonEvents());
     }
 }

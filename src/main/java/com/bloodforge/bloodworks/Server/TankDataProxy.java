@@ -1,6 +1,6 @@
 package com.bloodforge.bloodworks.Server;
 
-import com.bloodforge.bloodworks.Config.BloodworksCommonConfig;
+import com.bloodforge.bloodworks.Common.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;

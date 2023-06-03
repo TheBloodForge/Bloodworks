@@ -1,6 +1,6 @@
 package com.bloodforge.bloodworks.Blocks;
 
-import com.bloodforge.bloodworks.ClientUtils;
+import com.bloodforge.bloodworks.Client.ClientUtils;
 import com.bloodforge.bloodworks.Particles.ParticleHelper;
 import com.bloodforge.bloodworks.Registry.ParticleRegistry;
 import net.minecraft.core.BlockPos;

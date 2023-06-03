@@ -1,7 +1,8 @@
 package com.bloodforge.bloodworks;
 
-import com.bloodforge.bloodworks.Compatability.OneProbeCompat;
-import com.bloodforge.bloodworks.Config.BloodworksCommonConfig;
+import com.bloodforge.bloodworks.Common.CommonProxy;
+import com.bloodforge.bloodworks.Common.Compatability.OneProbeCompat;
+import com.bloodforge.bloodworks.Common.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Registry.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;

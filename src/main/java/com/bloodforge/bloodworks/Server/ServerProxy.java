@@ -1,6 +1,8 @@
-package com.bloodforge.bloodworks;
+package com.bloodforge.bloodworks.Server;
 
+import com.bloodforge.bloodworks.Globals;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,5 +19,7 @@ public class ServerProxy
         // Do something when the server starts
         Globals.LogInfo("Initializing Server.");
         Globals.IS_SERVER = true;
+
+        MinecraftForge.EVENT_BUS.register(new ForgeServerEvents());
     }
 }

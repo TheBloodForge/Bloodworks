@@ -1,4 +1,4 @@
-package com.bloodforge.bloodworks;
+package com.bloodforge.bloodworks.Client;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;

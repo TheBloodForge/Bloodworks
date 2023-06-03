@@ -1,6 +1,6 @@
 package com.bloodforge.bloodworks.Items;
 
-import com.bloodforge.bloodworks.ClientUtils;
+import com.bloodforge.bloodworks.Client.ClientUtils;
 import com.bloodforge.bloodworks.Globals;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;

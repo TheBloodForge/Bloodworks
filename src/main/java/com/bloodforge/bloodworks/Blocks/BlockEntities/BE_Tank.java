@@ -1,7 +1,7 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
 import com.bloodforge.bloodworks.Blocks.BlockBloodTank;
-import com.bloodforge.bloodworks.Config.BloodworksCommonConfig;
+import com.bloodforge.bloodworks.Common.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Items.TankItem;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.bloodforge.bloodworks.Registry.FluidRegistry;

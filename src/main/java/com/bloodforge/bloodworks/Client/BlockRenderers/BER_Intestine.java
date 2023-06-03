@@ -2,7 +2,7 @@ package com.bloodforge.bloodworks.Client.BlockRenderers;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Intestine;
 import com.bloodforge.bloodworks.Blocks.BlockIntestine;
-import com.bloodforge.bloodworks.Config.BloodworksCommonConfig;
+import com.bloodforge.bloodworks.Common.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Util;
 import com.mojang.blaze3d.vertex.PoseStack;

@@ -1,6 +1,6 @@
 package com.bloodforge.bloodworks.Particles;
 
-import com.bloodforge.bloodworks.Config.BloodworksCommonConfig;
+import com.bloodforge.bloodworks.Common.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Globals;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;

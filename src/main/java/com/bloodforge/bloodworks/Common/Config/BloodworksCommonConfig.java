@@ -1,4 +1,4 @@
-package com.bloodforge.bloodworks.Config;
+package com.bloodforge.bloodworks.Common.Config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
