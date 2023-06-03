@@ -213,16 +213,6 @@ public class TankDataProxy
     public static void setTankTier(String tank_id, int newTier, boolean isClient)
     { getDataForTank(tank_id).setTankTier(newTier, isClient); }
 
-    public static void updateLighting(String parentName)
-    {
-        for (BlockPos child : getDataForTank(parentName).getChildren())
-        {
-            Level level = ServerLifecycleHooks.getCurrentServer().overworld();
-            if (level == null) continue;
-            level.getLightEngine().checkBlock(child);
-        }
-    }
-
     public static void syncTankDataWithPlayer(ServerPlayer player)
     {
         if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Synchronizing Tank Data with " + player.getDisplayName().getString(), false);

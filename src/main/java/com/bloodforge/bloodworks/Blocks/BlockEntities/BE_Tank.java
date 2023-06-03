@@ -14,6 +14,8 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -49,10 +51,11 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
         cooldown = getCooldown();
     }
 
-    private int getCooldown()
+    @OnlyIn(Dist.CLIENT)
+    private void clientTick()
     {
-        int cdr = TankDataProxy.getTankTier(tank_id) * BloodworksCommonConfig.TANK_COOLDOWN_REDUCTION.get();
-        return TankDataProxy.getTankTier(tank_id) == 0 ? 0 : Math.max(0, BloodworksCommonConfig.MAX_TANK_COOLDOWN.get() - cdr);
+        if (getFluidInTank(0).getFluid().getFluidType().getLightLevel() > 0)
+            level.getLightEngine().checkBlock(getBlockPos());
     }
 
     private void tryAndFillNeighbors()
@@ -74,6 +77,12 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
 //######################################################################\\
 //                        BELOW IS DATA HANDLING                        \\
 //######################################################################\\
+
+    private int getCooldown()
+    {
+        int cdr = TankDataProxy.getTankTier(tank_id) * BloodworksCommonConfig.TANK_COOLDOWN_REDUCTION.get();
+        return TankDataProxy.getTankTier(tank_id) == 0 ? 0 : Math.max(0, BloodworksCommonConfig.MAX_TANK_COOLDOWN.get() - cdr);
+    }
 
     private void setTankLabel()
     {
@@ -168,7 +177,11 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
 //######################################################################\\
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_Tank entity)
     {
-        if (level == null || level.isClientSide) return;
+        if (level == null) return;
+        if (level.isClientSide)
+        {
+            entity.clientTick();
+        }
         if (!entity.tank_id.isEmpty() && entity.getTank().getCapacity() == 404)
             TankDataProxy.loadTanks(false);
         if (entity.tank_id.isEmpty()) // Try to find Neighbor ID before attempting to Recover.
