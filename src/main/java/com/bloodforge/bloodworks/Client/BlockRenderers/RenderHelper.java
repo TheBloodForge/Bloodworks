@@ -37,9 +37,10 @@ public class RenderHelper
 
     public static ResourceLocation getResourceForFluid(FluidStack fluidStack)
     {
-        IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-        String[] strArr = fluidTypeExtensions.getTextures().findFirst().get().toString().split(":");
-        return new ResourceLocation(strArr[0], "textures/" + strArr[1] + ".png");
+        //IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+        //String[] strArr = fluidTypeExtensions.getTextures().findFirst().get().toString().split(":");
+        //return new ResourceLocation(strArr[0], "textures/" + strArr[1] + ".png");
+        return IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture(fluidStack);
     }
 
     public static int getColorFromFluid(FluidStack fluidStack)

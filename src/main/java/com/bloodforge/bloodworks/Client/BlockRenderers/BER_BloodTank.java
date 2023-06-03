@@ -9,15 +9,19 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
@@ -81,11 +85,17 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
 
     }
 
-    private static void renderFluid(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, FluidStack fluidStack, float alpha, float heightPercentage, float flowAmt, int combinedLight, BlockPos blockPos,
+    private static void setupLiquidRendering(FluidStack stack)
+    {
+        IClientFluidTypeExtensions.of(stack.getFluid()).getStillTexture(stack);
+    }
+
+    private static void renderFluid(PoseStack matrixStack, MultiBufferSource bufferSource, FluidStack fluidStack, float alpha, float heightPercentage, float flowAmt, int combinedLight, BlockPos blockPos,
                                     boolean connectU, boolean connectD, boolean connectN, boolean connectE, boolean connectS, boolean connectW)
     {
-        VertexConsumer vertexBuilder = renderTypeBuffer.getBuffer(RenderType.translucent());
+        VertexConsumer vertexBuilder = bufferSource.getBuffer(RenderType.translucent());
         ResourceLocation fluidResource = RenderHelper.getResourceForFluid(fluidStack);
+        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidResource);
         int color = RenderHelper.getColorFromFluid(fluidStack);
         alpha *= (color >> 24 & 255) / 255f;
         float red = (color >> 16 & 255) / 255f;
@@ -96,7 +106,8 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
         {
             lighting = 15728880;
         }
-        renderLiquidQuads(matrixStack.last().pose(), renderTypeBuffer.getBuffer(RenderType.entityTranslucentCull(fluidResource)), red, green, blue, alpha, heightPercentage, flowAmt, lighting, blockPos, connectU, connectD, connectN, connectE, connectS, connectW);
+        VertexConsumer buf = bufferSource.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluidStack.getFluid().defaultFluidState()));
+        renderLiquidQuads(matrixStack.last().pose(), buf, sprite, red, green, blue, alpha, heightPercentage, flowAmt, lighting, blockPos, connectU, connectD, connectN, connectE, connectS, connectW);
     }
 
     private static Vec3 clampVec3Y(Vec3 in, float minY, float maxY)
@@ -104,16 +115,16 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
         return new Vec3(in.x, Mth.clamp(in.y, minY, maxY), in.z);
     }
 
-    private static void renderLiquidQuads(Matrix4f matrix, VertexConsumer vertexBuilder, float r, float g, float b, float alpha, float heightPercentage, float flowAmt, int light, BlockPos blockPos,
+    private static void renderLiquidQuads(Matrix4f matrix, VertexConsumer vertexBuilder, TextureAtlasSprite sprite, float r, float g, float b, float alpha, float heightPercentage, float flowAmt, int light, BlockPos blockPos,
                                           boolean connectU, boolean connectD, boolean connectN, boolean connectE, boolean connectS, boolean connectW)
     {
 
         float height = MIN_Y + (MAX_Y - MIN_Y) * Mth.clamp(heightPercentage, 0, 1);
-        float minU = 0, maxU = 1;
+        float minU = sprite.getU0(), maxU = sprite.getU1();
         float frameVOff = cFluidFrame / (float) NUM_FLUID_FRAMES;
-        float minV = MIN_Y + frameVOff;
-        float maxV = minV + (((height) / NUM_FLUID_FRAMES));
-        float maxVFlat = (1f / NUM_FLUID_FRAMES) + frameVOff;
+        float minV = sprite.getV0();
+        float maxV = Util.Lerp(sprite.getV0(), sprite.getV1(), heightPercentage);
+        float maxVFlat = sprite.getV1();
 //      Globals.LogInfo(heightPercentage + "");
         Vec3 BL = new Vec3(connectW ? 0 : FLUID_SIDE_MARGIN, connectD ? 0 : MIN_Y, connectN ? 0 : FLUID_SIDE_MARGIN);
         Vec3 BR = new Vec3(connectE ? 1 : 1 - FLUID_SIDE_MARGIN, connectD ? 0 : MIN_Y, connectN ? 0 : FLUID_SIDE_MARGIN);
