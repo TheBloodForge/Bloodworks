@@ -1,14 +1,10 @@
 package com.bloodforge.bloodworks.Blocks;
 
-import com.bloodforge.bloodworks.Client.ClientUtils;
 import com.bloodforge.bloodworks.Particles.ParticleHelper;
 import com.bloodforge.bloodworks.Registry.ParticleRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -16,9 +12,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 @SuppressWarnings({"NullableProblems", "Unused", "unused"})
 public class GenericBlockBase extends Block
@@ -41,13 +34,6 @@ public class GenericBlockBase extends Block
     {
         if (!this.isHalfTransparent) return super.skipRendering(p_53972_, p_53973_, p_53974_);
         return p_53973_.is(this) || super.skipRendering(p_53972_, p_53973_, p_53974_);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag)
-    {
-        ClientUtils.AddChatComponents(components, stack);
-        super.appendHoverText(stack, blockGetter, components, tooltipFlag);
     }
 
     @Override

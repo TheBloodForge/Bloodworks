@@ -165,16 +165,16 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
                     Vec2 sUVNP = new Vec2(minU, sMaxV);
                     Vec2 sUVPP = new Vec2(maxU, sMaxV);
                     // min z
-                    //if (!connectN)
+                    if (!connectN)
                     RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sBL, BLT, BRT, sBR, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(0, 0, 1));
                     // max z
-                    //if (!connectS)
+                    if (!connectS)
                     RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sFR, FRT, FLT, sFL, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(0, 0, 1));
                     // min x
-                    //if (!connectW)
+                    if (!connectW)
                     RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sFL, FLT, BLT, sBL, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(-1, 0, 0));
                     // max x
-                    //if (!connectE)
+                    if (!connectE)
                     RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sBR, BRT, FRT, sFR, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(-1, 0, 0));
                 }
                 BLT = sBL;

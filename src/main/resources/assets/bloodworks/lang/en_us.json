@@ -14,69 +14,89 @@
 
   "block.bloodworks.block_coagulated_blood_wall": "Coagulated Blood Wall",
   "block.bloodworks.block_coagulated_blood_wall.selfquote": "Clotted blood wall. Still a bit mushy..",
-  "block.bloodworks.block_coagulated_blood_wall.use": "Used for decoration",
+  "block.bloodworks.block_coagulated_blood_wall.use": "[❀,⚗] Used for decoration",
 
   "block.bloodworks.block_flesh": "Flesh Block",
   "block.bloodworks.block_flesh.selfquote": "Oh no.",
-  "block.bloodworks.block_flesh.use": "Used for decoration",
+  "block.bloodworks.block_flesh.use": "[❀] Used for decoration",
 
   "block.bloodworks.block_flesh_stairs": "Flesh Stairs",
   "block.bloodworks.block_flesh_stairs.selfquote": "Oh no.",
-  "block.bloodworks.block_flesh_stairs.use": "Used for decoration",
+  "block.bloodworks.block_flesh_stairs.use": "[❀] Used for decoration",
 
   "block.bloodworks.block_flesh_slab": "Flesh Slab",
   "block.bloodworks.block_flesh_slab.selfquote": "So we're cutting it up now??",
-  "block.bloodworks.block_flesh_slab.use": "Used for decoration",
+  "block.bloodworks.block_flesh_slab.use": "[❀] Used for decoration",
 
   "block.bloodworks.block_flesh_wall": "Flesh Wall",
   "block.bloodworks.block_flesh_wall.selfquote": "Sinewy!",
-  "block.bloodworks.block_flesh_wall.use": "Used for decoration",
+  "block.bloodworks.block_flesh_wall.use": "[❀] Used for decoration",
 
   "block.bloodworks.block_flesh_porthole": "Flesh Porthole",
   "block.bloodworks.block_flesh_porthole.selfquote": "What an awful way to see through an awful wall.",
-  "block.bloodworks.block_flesh_porthole.use": "Used for decoration",
+  "block.bloodworks.block_flesh_porthole.use": "[❀] Used for decoration",
 
 
   "block.bloodworks.block_intestine": "Intestine",
   "block.bloodworks.block_intestine.selfquote": "Some ..intestines? Smells funny.",
-  "block.bloodworks.block_intestine.use": "Processes mush to produce nutrients",
+  "block.bloodworks.block_intestine.use": "[❀,⚗] Processes mush to produce nutrients",
 
   "block.bloodworks.block_flesh_light": "Flesh Light",
   "block.bloodworks.block_flesh_light.selfquote": "Wow, this joke is pretty on the nose.",
-  "block.bloodworks.block_flesh_light.use": "Used for decoration",
+  "block.bloodworks.block_flesh_light.use": "[❀] Used for decoration",
 
   "block.bloodworks.block_flesh_light_large": "Jumbo Flesh Light",
   "block.bloodworks.block_flesh_light_large.selfquote": "...No comment.",
-  "block.bloodworks.block_flesh_light_large.use": "Used for decoration",
+  "block.bloodworks.block_flesh_light_large.use": "[❀] Used for decoration",
 
   "block.bloodworks.block_blood_tank": "Blood Tank",
   "block.bloodworks.block_blood_tank.selfquote": "What a piece of equipment! I wonder if anyone else has made a block like this one. Surely, this is a completely unique and novel concept.",
-  "block.bloodworks.block_blood_tank.use": "Holds fluids",
+  "block.bloodworks.block_blood_tank.use": "[⚗] Holds fluids",
 
   "block.bloodworks.block_neuron": "Neuron",
   "block.bloodworks.block_neuron.selfquote": "Awwwww, he's just a little guy!!! I wonder what he's thinking about.",
-  "block.bloodworks.block_neuron.use": "Must be placed inside a Braincase",
+  "block.bloodworks.block_neuron.use": "[⚗] Must be placed inside a Braincase",
 
   "_comment": "------------------------------------------MACHINES--------------------------------------------------",
   "bloodworks.block_entity.infusion_chamber": "Infusion Chamber",
   "bloodworks.infusion_chamber": "Infusion Chamber",
   "block.bloodworks.block_infusion_chamber": "Infusion Chamber",
   "block.bloodworks.block_infusion_chamber.selfquote": "What's better than a thing? A thing with blood dropped onto it!",
-  "block.bloodworks.block_infusion_chamber.use": "Functional Machine",
+  "block.bloodworks.block_infusion_chamber.use": "[⚗] Functional Machine",
 
   "block.bloodworks.block_braincase": "Braincase Block",
   "block.bloodworks.block_braincase.selfquote": "For a brain, in case you were wondering.",
-  "block.bloodworks.block_braincase.use": "Used for Braincase construction",
+  "block.bloodworks.block_braincase.use": "[❀,⚗] Used for Braincase construction",
 
   "block.bloodworks.block_braincase_window": "Braincase Window",
   "block.bloodworks.block_braincase_window.selfquote": "Hello little neurons! :D",
-  "block.bloodworks.block_braincase_window.use": "Used for Braincase construction",
+  "block.bloodworks.block_braincase_window.use": "[❀,⚗] Used for Braincase construction",
+
+  "block.bloodworks.block_braincase_airlock_door": "Braincase Airlock",
+  "block.bloodworks.block_braincase_airlock_door.selfquote": "Made of ___. How sturdy!",
+  "block.bloodworks.block_braincase_airlock_door.use": "[❀,⚗] Used for Braincase construction",
+
+  "block.bloodworks.block_braincase_controller": "Braincase Window",
+  "block.bloodworks.block_braincase_controller.selfquote": "Hello little neurons! :D",
+  "block.bloodworks.block_braincase_controller.use": "[❀,⚗] Used for Braincase construction",
+
+  "block.bloodworks.block_fluid_pipe": "Fluid Pipe",
+  "block.bloodworks.block_fluid_pipe.selfquote": "A pipe, for fluids!",
+  "block.bloodworks.block_fluid_pipe.use": "[⚗] Transports fluids",
 
 
   "_comment": "-------------------------------------------ITEMS----------------------------------------------------",
   "item.bloodworks.item_stabilizer": "Stabilizer",
+  "item.bloodworks.item_stabilizer.selfquote": "Some type of anti-coagulant material.",
+  "item.bloodworks.item_stabilizer.use": "[⚗] Used in the Infusion Chamber",
+
   "item.bloodworks.item_sinew": "Sinew",
+  "item.bloodworks.item_sinew.selfquote": "Hmm, stringy.",
+  "item.bloodworks.item_sinew.use": "[⚗] Material",
+
   "item.bloodworks.item_coagulated_blood": "Coagulated Blood",
+  "item.bloodworks.item_coagulated_blood.selfquote": "Why do I want to take a bite of this?",
+  "item.bloodworks.item_coagulated_blood.use": "[⚗] Material",
 
   "_comment": "-------------------------------------------FLUIDS---------------------------------------------------",
   "block.bloodworks.block_fluid_blood": "Blood",
@@ -84,6 +104,11 @@
   "block.bloodworks.block_fluid_blood_still": "Still Blood",
   "item.bloodworks.fluid_blood_bucket": "Blood Bucket",
   "fluid_type.bloodworks.fluid_blood": "Blood",
+
+  "fluid_type.bloodworks.fluid_cranial": "Cranial Fluid",
+  "block.bloodworks.block_fluid_cranial_flowing": "Flowing Cranial Fluid",
+  "block.bloodworks.block_fluid_cranial_still": "Still Cranial Fluid",
+  "item.bloodworks.fluid_cranial_bucket": "Cranial Fluid Bucket",
   "fluid_type.bloodworks.fluid_cranial": "Cranial Fluid",
 
   "_comment": "--------------------------------------------MISC----------------------------------------------------",
