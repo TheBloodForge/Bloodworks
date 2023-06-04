@@ -1,6 +1,5 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
-import com.bloodforge.bloodworks.Blocks.BlockBloodTank;
 import com.bloodforge.bloodworks.Common.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Items.TankItem;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
@@ -45,10 +44,10 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
 
     public void tick()
     {
-        if (level.getBlockState(getBlockPos()).getValue(BlockBloodTank.TIER) != TankDataProxy.getTankTier(tank_id))
-            level.getBlockState(getBlockPos()).setValue(BlockBloodTank.TIER, TankDataProxy.getTankTier(tank_id));
-        tryAndFillNeighbors();
-        cooldown = getCooldown();
+//        if (level.getBlockState(getBlockPos()).getValue(BlockBloodTank.TIER) != TankDataProxy.getTankTier(tank_id))
+//            level.getBlockState(getBlockPos()).setValue(BlockBloodTank.TIER, TankDataProxy.getTankTier(tank_id));
+//        tryAndFillNeighbors();
+//        cooldown = getCooldown();
     }
 
     @OnlyIn(Dist.CLIENT)

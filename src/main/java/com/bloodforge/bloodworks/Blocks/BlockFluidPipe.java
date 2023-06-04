@@ -31,6 +31,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -85,6 +87,40 @@ public class BlockFluidPipe extends BaseEntityBlock
     {
         ClientUtils.AddAdditionalShiftInfo(components, "Transfer Rate: Unimplemented!");
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
+    }
+
+    @Override
+    public boolean hasDynamicShape()
+    {
+        return true;
+    }
+    
+    private static final double CONNECTION_SIZE = 0.25f, BLOCK_SIZE = 0.5f;
+    private static final VoxelShape DEFAULT_SHAPE = Shapes.box(CONNECTION_SIZE, CONNECTION_SIZE, CONNECTION_SIZE, CONNECTION_SIZE + BLOCK_SIZE, CONNECTION_SIZE + BLOCK_SIZE, CONNECTION_SIZE + BLOCK_SIZE);
+    private static final VoxelShape SOUTH_SHAPE = Shapes.box(CONNECTION_SIZE, CONNECTION_SIZE, CONNECTION_SIZE + BLOCK_SIZE, CONNECTION_SIZE + BLOCK_SIZE, CONNECTION_SIZE + BLOCK_SIZE, 1.0f);
+    private static final VoxelShape NORTH_SHAPE = Shapes.box(CONNECTION_SIZE, CONNECTION_SIZE, 0.0f, CONNECTION_SIZE + BLOCK_SIZE, CONNECTION_SIZE + BLOCK_SIZE, CONNECTION_SIZE);
+    private static final VoxelShape DOWN_SHAPE = Shapes.box(CONNECTION_SIZE, 0.0f, CONNECTION_SIZE, CONNECTION_SIZE + BLOCK_SIZE, CONNECTION_SIZE, CONNECTION_SIZE + BLOCK_SIZE);
+    private static final VoxelShape UP_SHAPE = Shapes.box(CONNECTION_SIZE, CONNECTION_SIZE + BLOCK_SIZE, CONNECTION_SIZE, CONNECTION_SIZE + BLOCK_SIZE, 1.0f, CONNECTION_SIZE + BLOCK_SIZE);
+    private static final VoxelShape WEST_SHAPE = Shapes.box(0.0f, CONNECTION_SIZE, CONNECTION_SIZE, CONNECTION_SIZE, CONNECTION_SIZE + BLOCK_SIZE, CONNECTION_SIZE + BLOCK_SIZE);
+    private static final VoxelShape EAST_SHAPE = Shapes.box(CONNECTION_SIZE + BLOCK_SIZE, CONNECTION_SIZE, CONNECTION_SIZE, 1.0f, CONNECTION_SIZE + BLOCK_SIZE, CONNECTION_SIZE + BLOCK_SIZE);
+
+    @Override /* This handles bounding box */
+    public VoxelShape getShape(BlockState state, BlockGetter get, BlockPos pos, CollisionContext cc)
+    {
+        VoxelShape currentShape = DEFAULT_SHAPE;
+        if (state.getValue(UP)) currentShape = Shapes.join(currentShape, UP_SHAPE, BooleanOp.OR);
+        if (state.getValue(DOWN)) currentShape = Shapes.join(currentShape, DOWN_SHAPE, BooleanOp.OR);
+        if (state.getValue(NORTH)) currentShape = Shapes.join(currentShape, NORTH_SHAPE, BooleanOp.OR);
+        if (state.getValue(SOUTH)) currentShape = Shapes.join(currentShape, SOUTH_SHAPE, BooleanOp.OR);
+        if (state.getValue(WEST)) currentShape = Shapes.join(currentShape, WEST_SHAPE, BooleanOp.OR);
+        if (state.getValue(EAST)) currentShape = Shapes.join(currentShape, EAST_SHAPE, BooleanOp.OR);
+        return currentShape;
+    }
+
+    @Override
+    public VoxelShape getInteractionShape(BlockState p_60547_, BlockGetter p_60548_, BlockPos p_60549_)
+    {
+        return Shapes.box(0.25f, 0.25f, 0.25f, 0.75f, 0.75f, 0.75f);
     }
 
     @Override
@@ -166,21 +202,19 @@ public class BlockFluidPipe extends BaseEntityBlock
     }
     public boolean hasConnection(LevelAccessor world, BlockPos pos, Direction facing)
     {
-        if (!(world.getBlockEntity(pos) instanceof BE_FluidPipe self) || !(world.getBlockEntity(pos.relative(facing)) instanceof BE_FluidPipe other))
+        if (!(world.getBlockEntity(pos) instanceof BE_FluidPipe self)) return false;
+        if (!(world.getBlockEntity(pos.relative(facing)) instanceof BE_FluidPipe other))
         {
-//            System.out.println(facing.getName() + " - Returning False Step 1");
-            return false;
-        }
+            System.out.println("Not a pipe in " + facing.getName() + " returning : " + self.isForceConnected(facing));
+            return self.isForceConnected(facing); }
 
         if (!shouldConnect(world, pos, facing) && self.isDisconnected(facing))
         {
-            System.out.println(facing.getName() + " - Returning False Step 2");
-            System.out.println(shouldConnect(world, pos, facing));
-            System.out.println(self.isDisconnected(facing));
+            System.out.println("Returning False because " + (shouldConnect(world, pos, facing) ? "should connect" : "should not connect") + " and " + (self.isDisconnected(facing) ? " is disconnected." : " not disconnected."));
             return false;
         }
 
-        System.out.println(facing.getName() + " - Returning Step 3");
+        System.out.println("Returning " + !other.isDisconnected(facing.getOpposite()));
         return !other.isDisconnected(facing.getOpposite());
     }
 
@@ -215,11 +249,28 @@ public class BlockFluidPipe extends BaseEntityBlock
                     handleModeSwitch(heldItem, pipe, blockHitResult, player, level, cState, pos);
                     return InteractionResult.sidedSuccess(!level.isClientSide());
                 } else {
-                    pipe.printInformation();
+                    Vec3 adjustedLoc = blockHitResult.getLocation().subtract(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
+                    Direction dir = getClickedDir(adjustedLoc);
+                    String clickZone = dir == null ? "Center" : dir.getName();
+                    if (heldItem.isEmpty() && player.isCrouching())
+                        pipe.setOutput(dir, level, player, interactionHand, blockHitResult);
+//                    PacketManager.sendToPlayer(new MessageS2CPacket(Component.literal(clickZone + " " + adjustedLoc), true), (ServerPlayer) player);
+//                    pipe.printInformation();
                 }
             }
         }
         return InteractionResult.sidedSuccess(!level.isClientSide());
+    }
+
+    private Direction getClickedDir(Vec3 clickLoc)
+    {
+        if (UP_SHAPE.bounds().inflate(0.005f).contains(clickLoc)) return Direction.UP;
+        if (DOWN_SHAPE.bounds().inflate(0.005f).contains(clickLoc)) return Direction.DOWN;
+        if (NORTH_SHAPE.bounds().inflate(0.005f).contains(clickLoc)) return Direction.NORTH;
+        if (SOUTH_SHAPE.bounds().inflate(0.005f).contains(clickLoc)) return Direction.SOUTH;
+        if (EAST_SHAPE.bounds().inflate(0.005f).contains(clickLoc)) return Direction.EAST;
+        if (WEST_SHAPE.bounds().inflate(0.005f).contains(clickLoc)) return Direction.WEST;
+        return null;
     }
 
     private void handleModeSwitch(ItemStack heldItem, BE_FluidPipe pipe, BlockHitResult blockHitResult, Player player, Level level, BlockState cState, BlockPos pos)

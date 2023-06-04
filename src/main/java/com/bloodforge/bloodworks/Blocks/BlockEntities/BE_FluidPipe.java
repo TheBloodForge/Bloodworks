@@ -10,10 +10,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -24,8 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.bloodforge.bloodworks.Blocks.BlockFluidPipe.*;
@@ -34,15 +36,14 @@ public class BE_FluidPipe extends BlockEntity implements IFluidHandler
 {
     private int cooldown = 8;
     private FluidTank PIPE_TANK = new FluidTank(1000);
-    private HashMap<Direction, IOMode> pipeModes;
-    private HashMap<IOMode, List<BE_FluidPipe>> connectedPipes;
+//    private List<BE_FluidPipe> outputPipes;
+    /* Down Up South North West East ??? Why Mojang @Direction.get3DDataValue() */
+    boolean[] forcedDisconnects = new boolean[]{false, false, false, false, false, false};
+    private IOMode[] pipeModes = new IOMode[]{IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE};
 
     public BE_FluidPipe(BlockPos pos, BlockState state)
     {
         super(BlockRegistry.BLOCK_FLUID_PIPE.blockEntity().get(), pos, state);
-        pipeModes = new HashMap<>();
-        for (Direction value : Direction.values())
-        { pipeModes.put(value, IOMode.NONE); }
         setChanged();
     }
 
@@ -51,34 +52,76 @@ public class BE_FluidPipe extends BlockEntity implements IFluidHandler
 
     private void tick()
     {
-        if (connectedPipes == null) return;
-        validateTank();
-        /*if (pipeModes == IOMode.INPUT && getFluidInTank(0).getAmount() > 0) {
-            for (BE_FluidPipe be_fluidPipe : connectedPipes.get(IOMode.OUTPUT))
+        for (Direction value : Direction.values())
+        {
+            if (pipeModes[value.get3DDataValue()] == IOMode.INPUT)
             {
-                if (be_fluidPipe.getSpace() > 0) {
-                    be_fluidPipe.fill(drain(250, FluidAction.EXECUTE), FluidAction.EXECUTE);
+                pullFluid(value);
+            }
+            if (pipeModes[value.get3DDataValue()] == IOMode.OUTPUT)
+            {
+                pushFluid(value);
+            }
+            if (pipeModes[value.get3DDataValue()] == IOMode.CONNECTED)
+            {
+                balanceFluid(value);
+            }
+        }
+    }
+
+    private void balanceFluid(Direction value)
+    {
+        if (getLevel().getBlockEntity(getBlockPos().relative(value)) instanceof BE_FluidPipe pipe)
+        {
+            int volumeToBalance = (getTank().getFluidAmount() + pipe.getTank().getFluidAmount()) / 2;
+            if (pipe.getTank().getFluidAmount() > volumeToBalance)
+            {
+                fill(pipe.drain(pipe.getTank().getFluidAmount() - volumeToBalance, FluidAction.EXECUTE), FluidAction.EXECUTE);
+            }
+            if (getTank().getFluidAmount() > volumeToBalance)
+            {
+                pipe.fill(drain(getTank().getFluidAmount() - volumeToBalance, FluidAction.EXECUTE), FluidAction.EXECUTE);
+            }
+        }
+    }
+
+    private void pullFluid(Direction value)
+    {
+        if (getLevel().getBlockEntity(getBlockPos().relative(value)) instanceof IFluidHandler source)
+        {
+            for (int i = 0; i < source.getTanks(); i++)
+            {
+                FluidStack sourceStack = source.getFluidInTank(i);
+                if (isFluidValid(0, sourceStack) && getSpace() > 0)
+                {
+                    FluidStack drainedStack = source.drain(Math.min(getSpace(), getTransferRate()), FluidAction.EXECUTE);
+                    fill(drainedStack, FluidAction.EXECUTE);
                 }
             }
         }
-
-        List<IFluidHandler> blocks;
-        if (pipeModes == IOMode.OUTPUT && !(blocks = getNeighborFluidHandlersNotPipes(getBlockPos(), getLevel())).isEmpty()) {
-            for (IFluidHandler block : blocks)
-            {
-                block.fill(drain(500, FluidAction.EXECUTE), FluidAction.EXECUTE);
-            }
-        }*/
     }
 
-    private void validateTank()
+    private void pushFluid(Direction value)
     {
-        if (pipeModes.containsValue(IOMode.INPUT) || pipeModes.containsValue(IOMode.OUTPUT))
+        if (getLevel().getBlockEntity(getBlockPos().relative(value)) instanceof IFluidHandler destination)
         {
-            if (PIPE_TANK == null)
-                PIPE_TANK = new FluidTank(1000);
+            for (int i = 0; i < destination.getTanks(); i++)
+            {
+                int space = destination.getTankCapacity(i) - destination.getFluidInTank(i).getAmount();
+                if (destination.isFluidValid(i, getFluidInTank(0)) && space > 0)
+                {
+                    FluidStack drainedStack = drain(Math.min(space, getTransferRate()), FluidAction.EXECUTE);
+                    destination.fill(drainedStack, FluidAction.EXECUTE);
+                }
+            }
         }
     }
+
+    private int getTransferRate()
+    { return getTier() * BloodworksCommonConfig.TANK_TRANSFER_PER_ACTION.get(); }
+
+    private int getTier()
+    { return 1; }
 
     private int getSpace()
     { return getTank().getSpace(); }
@@ -125,17 +168,8 @@ public class BE_FluidPipe extends BlockEntity implements IFluidHandler
     public void printInformation()
     {
         PacketManager.sendToClients(new MessageS2CPacket(Component.literal("isConnected:" + getBlockState().getValues().values()), true));
-        if (PIPE_TANK == null) return;
-        PacketManager.sendToClients(new MessageS2CPacket(Component.literal(Component.translatable(getFluidInTank(0).getTranslationKey()).getString() + ": " + getFluidInTank(0).getAmount() + getModeListStrings(IOMode.INPUT) + getModeListStrings(IOMode.OUTPUT)), true));
-    }
-
-    private String getModeListStrings(IOMode mode)
-    {
-        StringBuilder ret = new StringBuilder();
-        if (connectedPipes.get(mode).isEmpty()) return " NO " + (mode == IOMode.OUTPUT ? "OUTPUTS" : "INPUTS");
-        else for (BE_FluidPipe be_fluidPipe : connectedPipes.get(mode))
-            ret.append((ret.length() == 0) ? "" : ", ").append(Arrays.toString(be_fluidPipe.worldPosition.toShortString().split(" ")));
-        return (mode == IOMode.OUTPUT ? "OUTPUTS: " : "INPUTS: ") + ret;
+//        if (PIPE_TANK == null) return;
+//        PacketManager.sendToClients(new MessageS2CPacket(Component.literal(Component.translatable(getFluidInTank(0).getTranslationKey()).getString() + ": " + getFluidInTank(0).getAmount()), true));
     }
 
 //######################################################################\\
@@ -144,21 +178,10 @@ public class BE_FluidPipe extends BlockEntity implements IFluidHandler
 //######################################################################\\
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_FluidPipe pipe)
     {
-        if (level == null || level.isClientSide || !pipe.shouldTick()) return;
+        if (level == null || level.isClientSide) return;
         List<BE_FluidPipe> pipes;
-        if ((pipes = getNearbyPipes(level, blockPos)).isEmpty())
-            pipe.initMap();
-        else pipe.copyData(pipes);
         if (pipe.cooldown > 0) pipe.cooldown--;
         if (pipe.cooldown <= 0) pipe.tick();
-    }
-
-    private boolean shouldTick()
-    {
-        return pipeModes.containsValue(IOMode.INPUT) ||
-               pipeModes.containsValue(IOMode.OUTPUT) ||
-               pipeModes.containsValue(IOMode.INPUT_POWERED) ||
-               pipeModes.containsValue(IOMode.OUTPUT_POWERED);
     }
 
     private void copyData(List<BE_FluidPipe> pipes)
@@ -172,15 +195,6 @@ public class BE_FluidPipe extends BlockEntity implements IFluidHandler
 //                break;
 //            }
 //        }
-    }
-
-    private void initMap()
-    {
-        connectedPipes = new HashMap<>();
-        for (IOMode value : IOMode.values())
-        { connectedPipes.put(value, new ArrayList<>()); }
-
-        connectedPipes.get(IOMode.NONE).add(this);
     }
 
     @Override
@@ -311,21 +325,57 @@ public class BE_FluidPipe extends BlockEntity implements IFluidHandler
 
     public void updateState(BlockState oldState, BlockState newState)
     {
-        /*if (newState.getValue(BlockFluidPipe.NORTH))
+        if (oldState.getBlock() != BlockRegistry.BLOCK_FLUID_PIPE.block().get() || newState.getBlock() != BlockRegistry.BLOCK_FLUID_PIPE.block().get()) return;
+        System.out.println("updating modes");
+        if (newState.getValue(NORTH))
         {
-            if (pipeMode == IOMode.NONE)
-            {
-                PIPE_TANK = new FluidTank(1000);
-                pushToMap(newState.getValue(BlockFluidPipe.OUTPUT));
-            }
-        }*/
-    }
+            System.out.println("Connecting North.");
+            if (pipeModes[Direction.NORTH.get3DDataValue()] == IOMode.NONE)
+                pipeModes[Direction.NORTH.get3DDataValue()] = IOMode.CONNECTED;
+        }
+        else if (oldState.getValue(NORTH))
+            pipeModes[Direction.NORTH.get3DDataValue()] = IOMode.NONE;
+        if (newState.getValue(SOUTH))
+        {
+            System.out.println("Connecting South.");
+            if (pipeModes[Direction.SOUTH.get3DDataValue()] == IOMode.NONE)
+                pipeModes[Direction.SOUTH.get3DDataValue()] = IOMode.CONNECTED;
+        }
+        else if (oldState.getValue(SOUTH))
+            pipeModes[Direction.SOUTH.get3DDataValue()] = IOMode.NONE;
+        if (newState.getValue(UP))
+        {
+            System.out.println("Connecting Up.");
+            if (pipeModes[Direction.UP.get3DDataValue()] == IOMode.NONE)
+                pipeModes[Direction.UP.get3DDataValue()] = IOMode.CONNECTED;
 
-    private void pushToMap(IOMode value)
-    {
-//        connectedPipes.get(pipeModes).remove(this);
-//        pipeModes = value;
-//        connectedPipes.get(value).add(this);
+        }
+        else if (oldState.getValue(UP))
+            pipeModes[Direction.UP.get3DDataValue()] = IOMode.NONE;
+        if (newState.getValue(DOWN))
+        {
+            System.out.println("Connecting Down.");
+            if (pipeModes[Direction.DOWN.get3DDataValue()] == IOMode.NONE)
+                pipeModes[Direction.DOWN.get3DDataValue()] = IOMode.CONNECTED;
+        }
+        else if (oldState.getValue(DOWN))
+            pipeModes[Direction.DOWN.get3DDataValue()] = IOMode.NONE;
+        if (newState.getValue(EAST))
+        {
+            System.out.println("Connecting East.");
+            if (pipeModes[Direction.EAST.get3DDataValue()] == IOMode.NONE)
+                pipeModes[Direction.EAST.get3DDataValue()] = IOMode.CONNECTED;
+        }
+        else if (oldState.getValue(EAST))
+            pipeModes[Direction.EAST.get3DDataValue()] = IOMode.NONE;
+        if (newState.getValue(WEST))
+        {
+            System.out.println("Connecting West.");
+            if (pipeModes[Direction.WEST.get3DDataValue()] == IOMode.NONE)
+                pipeModes[Direction.WEST.get3DDataValue()] = IOMode.CONNECTED;
+        }
+        else if (oldState.getValue(WEST))
+            pipeModes[Direction.WEST.get3DDataValue()] = IOMode.NONE;
     }
 
     public void breakPipe(BlockPos blockPos, Level level)
@@ -337,41 +387,6 @@ public class BE_FluidPipe extends BlockEntity implements IFluidHandler
     public void setMode(Direction direction, boolean isRedstone)
     {
 
-    }
-
-    public void connect(BlockState state, Direction dir)
-    {
-        System.out.println("Checking Connection");
-        if (isConnected(dir)) return;
-        System.out.println("Connecting...");
-        BlockState oldState = state;
-        BlockState newState = state.getBlock().defaultBlockState();
-        newState.setValue(DOWN, oldState.getValue(DOWN).booleanValue()).setValue(UP, oldState.getValue(UP).booleanValue()).setValue(NORTH, oldState.getValue(NORTH).booleanValue())
-                .setValue(EAST, oldState.getValue(EAST).booleanValue()).setValue(WEST, oldState.getValue(WEST).booleanValue()).setValue(SOUTH, oldState.getValue(SOUTH).booleanValue());
-        switch (dir)
-        {
-            case DOWN -> {
-                newState.setValue(DOWN, true);
-            }
-            case UP -> {
-                newState.setValue(UP, true);
-            }
-            case NORTH -> {
-                newState.setValue(NORTH, true);
-            }
-            case SOUTH -> {
-                newState.setValue(SOUTH, true);
-            }
-            case WEST -> {
-                newState.setValue(WEST, true);
-            }
-            case EAST -> {
-                newState.setValue(EAST, true);
-            }
-        }
-        System.out.println("Sending State");
-        if (getLevel() != null)
-            getLevel().setBlockAndUpdate(getBlockPos(), newState);
     }
 
     private boolean isConnected(Direction dir)
@@ -387,10 +402,20 @@ public class BE_FluidPipe extends BlockEntity implements IFluidHandler
         };
     }
 
-    /* Down Up South North West East ??? Why Mojang @Direction.get3DDataValue() */
-    boolean[] forcedDisconnects = new boolean[]{false, false, false, false, false, false};
     public boolean isDisconnected(Direction dir) {
         return forcedDisconnects[dir.get3DDataValue()];
+    }
+
+    public void setOutput(Direction dir, Level level, Player player, InteractionHand hand, BlockHitResult hitResult)
+    {
+        pipeModes[dir.get3DDataValue()] = IOMode.getNext(pipeModes[dir.get3DDataValue()]);
+        PacketManager.sendToClients(new MessageS2CPacket(Component.literal(pipeModes[dir.get3DDataValue()].name()), false));
+        level.setBlockAndUpdate(getBlockPos(), getBlockState().getBlock().getStateForPlacement(new BlockPlaceContext(level, player, hand, player.getItemInHand(hand), hitResult)));
+    }
+
+    public boolean isForceConnected(Direction facing)
+    {
+        return pipeModes[facing.get3DDataValue()] != IOMode.NONE;
     }
 
     // ####################### END OF FORGE CAPABILITIES #######################
