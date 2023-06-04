@@ -5,6 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.network.NetworkEvent;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class MessageS2CPacket
@@ -12,9 +13,15 @@ public class MessageS2CPacket
     private final Component message;
     private final boolean isChat;
 
-    public MessageS2CPacket(Component msg, boolean isChat)
+    public MessageS2CPacket(Component msg, @Nullable boolean isChat)
     {
         this.message = msg;
+        this.isChat = isChat;
+    }
+
+    public MessageS2CPacket(String msg, @Nullable boolean isChat)
+    {
+        this.message = Component.literal(msg);
         this.isChat = isChat;
     }
 

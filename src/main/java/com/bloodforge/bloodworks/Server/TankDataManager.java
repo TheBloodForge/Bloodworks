@@ -6,7 +6,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import static com.bloodforge.bloodworks.Globals.KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS;
+import static com.bloodforge.bloodworks.Globals.DEBUG_TANKS;
 import static com.bloodforge.bloodworks.Server.TankDataProxy.TankDataTag;
 import static com.bloodforge.bloodworks.Server.TankDataProxy.syncFluid;
 
@@ -37,7 +37,7 @@ public class TankDataManager extends SavedData
 
     public static TankDataManager load(CompoundTag tag)
     {
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Loading Compound : " + tag.getAllKeys(), false);
+        if (DEBUG_TANKS) Globals.LogDebug("Loading Compound : " + tag.getAllKeys(), false);
         TankDataManager data = create();
         data.tagLoadedFromWorld = tag;
         return data;
@@ -46,7 +46,7 @@ public class TankDataManager extends SavedData
     {
         if (level.getServer() == null)
         {
-            if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Level Server is Null", false);
+            if (DEBUG_TANKS) Globals.LogDebug("Level Server is Null", false);
             return create();
         }
         return level.getServer().overworld().getDataStorage().computeIfAbsent(TankDataManager::load, TankDataManager::create, "BloodworksTankData");
@@ -57,7 +57,7 @@ public class TankDataManager extends SavedData
 
 
     public static void read()
-    { if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Read Tank Data", false); read(ServerLifecycleHooks.getCurrentServer().overworld()); }
+    { if (DEBUG_TANKS) Globals.LogDebug("Read Tank Data", false); read(ServerLifecycleHooks.getCurrentServer().overworld()); }
 
     private static void save(LevelAccessor level)
     {
@@ -75,7 +75,7 @@ public class TankDataManager extends SavedData
         {
             TankDataManager data = TankDataManager.getDataManager(level);
             TankDataTag = data.tagLoadedFromWorld;
-            if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Read Tanks from file", false);
+            if (DEBUG_TANKS) Globals.LogDebug("Read Tanks from file", false);
             for (String keyTag : TankDataTag.getAllKeys())
                 syncFluid(keyTag);
         }

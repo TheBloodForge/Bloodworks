@@ -44,8 +44,6 @@ public class BE_Tank extends BlockEntity implements IFluidHandler
 
     public void tick()
     {
-//        if (level.getBlockState(getBlockPos()).getValue(BlockBloodTank.TIER) != TankDataProxy.getTankTier(tank_id))
-//            level.getBlockState(getBlockPos()).setValue(BlockBloodTank.TIER, TankDataProxy.getTankTier(tank_id));
 //        tryAndFillNeighbors();
 //        cooldown = getCooldown();
     }

@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 
-import static com.bloodforge.bloodworks.Globals.KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS;
+import static com.bloodforge.bloodworks.Globals.DEBUG_TANKS;
 import static com.bloodforge.bloodworks.Server.TankDataManager.saveData;
 import static com.bloodforge.bloodworks.Server.TankDataProxy.syncFluid;
 import static com.bloodforge.bloodworks.Server.TankDataProxy.syncTankName;
@@ -28,7 +28,7 @@ public class TankDataContainer
         tank_name = name;
         tank = makeTank(name);
         children.put(blockPos.toShortString(), blockPos);
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Creating Tank Container for [" + name + "] from nothing. First Child : " + blockPos, false);
+        if (DEBUG_TANKS) Globals.LogDebug("Creating Tank Container for [" + name + "] from nothing. First Child : " + blockPos, false);
     }
 
     public TankDataContainer(String name, int[] params, HashMap<String, BlockPos> readChildren, CompoundTag tankTag, boolean isClient)
@@ -39,7 +39,7 @@ public class TankDataContainer
         tank = makeTank(name);
         tank.readFromNBT(tankTag);
         updateCapacity(isClient);
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Creating Tank Container for [" + name + "] with params" + Arrays.toString(params) + " with [" + readChildren.size() + "] children at locations " + readChildren.keySet(), isClient);
+        if (DEBUG_TANKS) Globals.LogDebug("Creating Tank Container for [" + name + "] with params" + Arrays.toString(params) + " with [" + readChildren.size() + "] children at locations " + readChildren.keySet(), isClient);
     }
 
     public FluidTank getTank()
@@ -56,7 +56,7 @@ public class TankDataContainer
     {
         if (hasChild(pos)) return;
         children.put(pos.toShortString(), pos);
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Added Child to [" + tank_name + "]. Child : " + pos, isClient);
+        if (DEBUG_TANKS) Globals.LogDebug("Added Child to [" + tank_name + "]. Child : " + pos, isClient);
         syncTankName(tank_name, pos);
         updateSize(pos.getY(), true, isClient);
         updateCapacity(isClient);
@@ -66,7 +66,7 @@ public class TankDataContainer
     {
         if (!hasChild(pos)) return;
         children.remove(pos.toShortString());
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Removed Child from [" + tank_name + "]. Child : " + pos, isClient);
+        if (DEBUG_TANKS) Globals.LogDebug("Removed Child from [" + tank_name + "]. Child : " + pos, isClient);
         if (children.isEmpty())
         {
             TankDataProxy.deleteTank(tank_name);
@@ -84,7 +84,7 @@ public class TankDataContainer
         tank.setCapacity(children.size() * (tier > 0 ? tier : 1) * BloodworksCommonConfig.TANK_STORAGE_PER_TIER.get());
         if (!isClient)
             syncTankName(tank_name);
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Updating Capacity for [" + tank_name + "]. New Capacity : " + tank.getCapacity(), isClient);
+        if (DEBUG_TANKS) Globals.LogDebug("Updating Capacity for [" + tank_name + "]. New Capacity : " + tank.getCapacity(), isClient);
     }
 
     private void updateSize(int yPos, boolean adding, boolean isClient)
@@ -94,7 +94,7 @@ public class TankDataContainer
 
         if (yPos > topY) topY = yPos;
         if (yPos < bottomY) bottomY = yPos;
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Updating Size for [" + tank_name + "]. New Size bottom:" + bottomY + " top:" + topY + " height:" + getHeight(), isClient);
+        if (DEBUG_TANKS) Globals.LogDebug("Updating Size for [" + tank_name + "]. New Size bottom:" + bottomY + " top:" + topY + " height:" + getHeight(), isClient);
     }
 
     private void recalculateSize(boolean isClient)
@@ -106,7 +106,7 @@ public class TankDataContainer
             if (child.getY() < min) min = child.getY();
         }
         topY = max; bottomY = min;
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Recalculating Size for [" + tank_name + "].", isClient);
+        if (DEBUG_TANKS) Globals.LogDebug("Recalculating Size for [" + tank_name + "].", isClient);
     }
 
     public void setTankTier(int newTier, boolean isClient)

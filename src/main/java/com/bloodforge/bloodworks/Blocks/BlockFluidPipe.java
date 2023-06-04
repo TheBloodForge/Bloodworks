@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -36,13 +35,12 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "deprecation"})
 public class BlockFluidPipe extends BaseEntityBlock
 {
     public static final BooleanProperty UP = BooleanProperty.create("up_connected");
@@ -51,7 +49,6 @@ public class BlockFluidPipe extends BaseEntityBlock
     public static final BooleanProperty SOUTH = BooleanProperty.create("south_connected");
     public static final BooleanProperty EAST = BooleanProperty.create("east_connected");
     public static final BooleanProperty WEST = BooleanProperty.create("west_connected");
-    public static final IntegerProperty TIER = IntegerProperty.create("tier", 0, 10);
 
     public BlockFluidPipe()
     {
@@ -242,7 +239,6 @@ public class BlockFluidPipe extends BaseEntityBlock
         {
             if (level.getBlockEntity(pos) instanceof BE_FluidPipe pipe)
             {
-                FluidStack stack = FluidStack.EMPTY;
                 ItemStack heldItem;
                 if ((heldItem = player.getItemInHand(interactionHand)).is(Items.STICK) || heldItem.is(Items.REDSTONE))
                 {
@@ -252,7 +248,7 @@ public class BlockFluidPipe extends BaseEntityBlock
                     Vec3 adjustedLoc = blockHitResult.getLocation().subtract(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
                     Direction dir = getClickedDir(adjustedLoc);
                     String clickZone = dir == null ? "Center" : dir.getName();
-                    if (heldItem.isEmpty() && player.isCrouching())
+                    if (heldItem.isEmpty() && player.isCrouching() && dir != null)
                         pipe.setOutput(dir, level, player, interactionHand, blockHitResult);
 //                    PacketManager.sendToPlayer(new MessageS2CPacket(Component.literal(clickZone + " " + adjustedLoc), true), (ServerPlayer) player);
 //                    pipe.printInformation();

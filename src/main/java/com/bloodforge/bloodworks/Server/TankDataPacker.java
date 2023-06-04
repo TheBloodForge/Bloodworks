@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import java.util.Collection;
 import java.util.HashMap;
 
-import static com.bloodforge.bloodworks.Globals.KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS;
+import static com.bloodforge.bloodworks.Globals.DEBUG_TANKS;
 import static com.bloodforge.bloodworks.Server.TankDataProxy.MASTER_TANK_CONTAINER;
 
 public class TankDataPacker
@@ -31,7 +31,7 @@ public class TankDataPacker
 
     public static TankDataContainer getTankDataFromCompound(String tankName, CompoundTag masterTag, boolean isClient)
     {
-        if (KELDON_IS_DEBUGGING_TANKS_AGAIN_FFS) Globals.LogDebug("Loading Tank [" + tankName + "] from compound", isClient);
+        if (DEBUG_TANKS) Globals.LogDebug("Loading Tank [" + tankName + "] from compound", isClient);
         int[] params = unwrapData(masterTag.getCompound("tankData"));
         HashMap<String, BlockPos> children = unwrapChildren(masterTag.getCompound("tankChildren"));
         return new TankDataContainer(tankName, params, children, masterTag.getCompound("fluidTank"), isClient);

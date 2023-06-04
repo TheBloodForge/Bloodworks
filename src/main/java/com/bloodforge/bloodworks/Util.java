@@ -78,4 +78,12 @@ public class Util
     {
         return p1.toShortString().equalsIgnoreCase(p2.toShortString());
     }
+
+    public static Direction getDirectionOf(BlockPos originPos, BlockPos neighborPos)
+    {
+        for (Direction dir : Direction.values())
+            if (originPos.relative(dir).toShortString().equalsIgnoreCase(neighborPos.toShortString()))
+                return dir;
+        return Direction.UP;
+    }
 }

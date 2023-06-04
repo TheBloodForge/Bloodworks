@@ -2,7 +2,6 @@ package com.bloodforge.bloodworks.Blocks;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank;
 import com.bloodforge.bloodworks.Client.ClientUtils;
-import com.bloodforge.bloodworks.Common.IOMode;
 import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
@@ -16,10 +15,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -27,9 +24,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -46,11 +40,6 @@ import java.util.List;
 @SuppressWarnings({"unchecked", "deprecation"})
 public class BlockBloodTank extends BlockMachineBase
 {
-
-    //    public static final BlockShape SHAPE = BlockShape.createBlockShape(2.5, 0, 2.5, 13.5, 16, 13.5);
-    public static final EnumProperty<IOMode> OUTPUT = EnumProperty.create("mode", IOMode.class);
-    public static final IntegerProperty TIER = IntegerProperty.create("tier", 0, 10);
-
     public BlockBloodTank()
     {
         super(
@@ -146,19 +135,6 @@ public class BlockBloodTank extends BlockMachineBase
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext)
-    {
-        return this.defaultBlockState().setValue(TIER, 1).setValue(OUTPUT, IOMode.NONE);
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> blockStateDefinition)
-    {
-        super.createBlockStateDefinition(blockStateDefinition.add(OUTPUT).add(TIER));
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState cState, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
         if (!level.isClientSide())

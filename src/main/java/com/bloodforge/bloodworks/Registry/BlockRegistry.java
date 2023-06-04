@@ -55,43 +55,49 @@ public class BlockRegistry
     public static final RegistryPair BLOCK_AIRLOCK_DRAIN = createBlock("braincase_airlock_drain", () ->
             new GenericBlockBase(BlockBehaviour.Properties.of(Material.METAL).strength(3f, 7f).sound(SoundType.METAL)));
 
-    public static final BlockEntityRegister BLOCK_AIRLOCK_DOOR = createBlockEntity2(
+    public static final BlockEntityRegister BLOCK_AIRLOCK_DOOR = createBlockEntity(
             "braincase_airlock_door",
             BlockAirlockDoor::new,
             BE_AirlockDoor.class
     );
 
-    public static final BlockEntityRegister BLOCK_INFUSION_CHAMBER = createBlockEntity2(
+    public static final BlockEntityRegister BLOCK_INFUSION_CHAMBER = createBlockEntity(
             "infusion_chamber",
             BlockInfusionChamber::new,
             BE_InfusionChamber.class
     );
 
-    public static final BlockEntityRegister BLOCK_BRAINCASE_CONTROLLER = createBlockEntity2(
+    public static final BlockEntityRegister BLOCK_BRAINCASE_CONTROLLER = createBlockEntity(
             "braincase_controller",
             BlockBraincaseController::new,
             BE_Braincase_Controller.class
     );
 
-    public static final BlockEntityRegister BLOCK_INTESTINE = createBlockEntity2(
+    public static final BlockEntityRegister BLOCK_INTESTINE = createBlockEntity(
             "intestine",
             BlockIntestine::new,
             BE_Intestine.class
     );
 
-    public static final BlockEntityRegister BLOCK_BLOOD_TANK = createBlockEntity2(
+    public static final BlockEntityRegister BLOCK_BLOOD_TANK = createBlockEntity(
             "blood_tank",
             BlockBloodTank::new,
             BE_Tank.class
     );
 
-    public static final BlockEntityRegister BLOCK_FLUID_PIPE = createBlockEntity2(
+    public static final BlockEntityRegister BLOCK_FLUID_PIPE = createBlockEntity(
             "fluid_pipe",
             BlockFluidPipe::new,
             BE_FluidPipe.class
     );
 
-    public static final BlockEntityRegister BLOCK_NEURON = createBlockEntity2(
+    public static final BlockEntityRegister BLOCK_MULTI_PIPE = createBlockEntity(
+            "multi_pipe",
+            BlockMultiPipe::new,
+            BE_MultiPipe.class
+    );
+
+    public static final BlockEntityRegister BLOCK_NEURON = createBlockEntity(
             "neuron",
             BlockNeuron::new,
             BE_Neuron.class
@@ -104,7 +110,7 @@ public class BlockRegistry
         return new RegistryPair(bro, iro);
     }
 
-    private static BlockEntityRegister createBlockEntity2(String name, Supplier<Block> o, Class<? extends BlockEntity> o2)
+    private static BlockEntityRegister createBlockEntity(String name, Supplier<Block> o, Class<? extends BlockEntity> o2)
     {
         RegistryObject<Block> bro = BLOCKS.register("block_" + name, o);
         RegistryObject<Item> iro = ItemRegistry.ITEMS.register("block_" + name, () -> new BloodworksBlockItem(bro.get()));
