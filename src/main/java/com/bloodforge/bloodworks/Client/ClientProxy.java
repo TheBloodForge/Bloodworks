@@ -44,6 +44,7 @@ public class ClientProxy
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers registerRenderers)
     {
+        registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_StirlingGenerator>) BlockRegistry.BLOCK_STIRLING_GENERATOR.blockEntity().get(), BER_StirlingGenerator::new);
         registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_Intestine>) BlockRegistry.BLOCK_INTESTINE.blockEntity().get(), BER_Intestine::new);
         registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_Tank>) BlockRegistry.BLOCK_BLOOD_TANK.blockEntity().get(), BER_BloodTank::new);
         registerRenderers.registerBlockEntityRenderer((BlockEntityType<BE_Neuron>) BlockRegistry.BLOCK_NEURON.blockEntity().get(), BER_Neuron::new);
