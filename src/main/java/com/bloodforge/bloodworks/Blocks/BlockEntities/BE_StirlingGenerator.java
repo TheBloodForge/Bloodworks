@@ -1,5 +1,6 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
+import com.bloodforge.bloodworks.Blocks.BlockStirlingGenerator;
 import com.bloodforge.bloodworks.Energy.EnergyBattery;
 import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
@@ -17,10 +18,6 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.annotation.*;
-
-import java.util.*;
 
 public class BE_StirlingGenerator extends BlockEntity
 {
@@ -95,5 +92,17 @@ public class BE_StirlingGenerator extends BlockEntity
         //read by sync packet
         if(nbt.get("energyGen") != null) energyGeneration = nbt.getInt("energyGen");
         if(nbt.get("energyGenF") != null) energyGenerationF = nbt.getFloat("energyGenF");
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if(level.isClientSide()) return;
+        BlockState below = level.getBlockState(getBlockPos().below());
+        BlockState n     = level.getBlockState(getBlockPos().north());
+        BlockState e     = level.getBlockState(getBlockPos().east());
+        BlockState s     = level.getBlockState(getBlockPos().south());
+        BlockState w     = level.getBlockState(getBlockPos().west());
+        updateEnergyProduction(BlockStirlingGenerator.GetGenerationFromBlocks(below, n, e, s, w));
     }
 }

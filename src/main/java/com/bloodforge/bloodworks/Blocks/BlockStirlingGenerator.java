@@ -1,32 +1,28 @@
 package com.bloodforge.bloodworks.Blocks;
 
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Neuron;
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_StirlingGenerator;
+import com.bloodforge.bloodworks.Common.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
-import com.bloodforge.bloodworks.Registry.FluidRegistry;
-import com.bloodforge.bloodworks.Registry.ItemRegistry;
-import com.ibm.icu.impl.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.phys.BlockHitResult;
@@ -34,10 +30,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import net.minecraft.tags.TagKey;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.Hashtable;
 
 public class BlockStirlingGenerator extends BaseEntityBlock
@@ -88,6 +81,11 @@ public class BlockStirlingGenerator extends BaseEntityBlock
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
         return BlockRegistry.BLOCK_STIRLING_GENERATOR.blockEntity().get().create(pos, state);
+    }
+
+
+    public RenderShape getRenderShape(BlockState p_49232_) {
+        return RenderShape.MODEL;
     }
 
     @Nullable
@@ -153,7 +151,7 @@ public class BlockStirlingGenerator extends BaseEntityBlock
              TryGetTempForBlockState(blockE) +
              TryGetTempForBlockState(blockS) +
              TryGetTempForBlockState(blockW));
-        tempDiff /= 100.0; //FE/t/C
+        tempDiff /= BloodworksCommonConfig.STIRLING_GENERATOR_GENERATION_MOD.get(); //FE/t/C
         if(tempDiff < 0) tempDiff = 0;
         System.out.println("Total temperature diff: " + tempDiff);
         return (int)Math.floor(tempDiff);
@@ -174,4 +172,5 @@ public class BlockStirlingGenerator extends BaseEntityBlock
             stirlingGenerator.updateEnergyProduction(GetGenerationFromBlocks(below, n, e, s, w));
         }
     }
+
 }
