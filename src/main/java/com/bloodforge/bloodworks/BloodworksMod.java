@@ -36,6 +36,7 @@ public class BloodworksMod
         FluidRegistry.FLUID_TYPES.register(modEventBus);
         FluidRegistry.FLUIDS.register(modEventBus);
         MenuRegistry.MENUS.register(modEventBus);
+        SoundRegistry.SOUND_EVENTS.register(modEventBus);
 //        POIRegistry.POI_TYPES.register(modEventBus);
 
 //        modEventBus.addListener(this::onInterModEnqueue);

@@ -1,5 +1,4 @@
 {
-	"_comment": "-------------------------------------------MUSIC---------------------------------------------------",
 	"bloodworks.music.industry":
 	{
 		"subtitle":"music.bloodworks.industry",
@@ -12,9 +11,11 @@
 		]
 	},
 
-	"_comment": "------------------------------------------MACHINES--------------------------------------------------",
 
-	"_comment": "-----------INFUSION CHAMBER------------",
+
+
+
+
 	"bloodworks.infusion_chamber.idle":
 	{
 		"subtitle":"sounds.bloodworks.infusion_chamber.idle",
@@ -31,7 +32,7 @@
 		"sounds": [ "bloodworks:machines/infusion_chamber.craft_long" ]
 	},
 
-	"_comment": "---------------BRAINCASE---------------",
+
 	"bloodworks.braincase.idle":
 	{
 		"subtitle":"sounds.bloodworks.braincase.idle",
@@ -43,7 +44,7 @@
 		"sounds": ["bloodworks:machines/braincase.running"]
 	},
 
-	"_comment": "----------STIRLING GENERATOR-----------",
+
 	"bloodworks.stirling.idle":
 	{
 		"subtitle":"sounds.bloodworks.stirling.idle",

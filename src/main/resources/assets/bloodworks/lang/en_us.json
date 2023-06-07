@@ -98,6 +98,11 @@
   "item.bloodworks.item_coagulated_blood.selfquote": "Why do I want to take a bite of this?",
   "item.bloodworks.item_coagulated_blood.use": "[⚗] Material",
 
+  "item.bloodworks.music_disc_industry": "Music Disc",
+  "item.bloodworks.music_disc_industry.desc": "wiggle1000 - Industry",
+  "item.bloodworks.music_disc_industry.selfquote": "Sounds like what being stuck in space traffic would feel like.",
+  "item.bloodworks.music_disc_industry.use": "[❀] Recreational",
+
   "_comment": "-------------------------------------------FLUIDS---------------------------------------------------",
   "block.bloodworks.block_fluid_blood": "Blood",
   "block.bloodworks.block_fluid_blood_flowing": "Flowing Blood",
@@ -111,8 +116,11 @@
   "item.bloodworks.fluid_cranial_bucket": "Cranial Fluid Bucket",
   "fluid_type.bloodworks.fluid_cranial": "Cranial Fluid",
 
+  "_comment": "-------------------------------------------SOUNDS---------------------------------------------------",
+
   "_comment": "--------------------------------------------MISC----------------------------------------------------",
   "itemGroup.bloodworks": "Bloodworks",
   "bloodworks.blood_tank.info.capacity": "Capacity",
-  "bloodworks.blood_tank.info.storage": "Stored"
+  "bloodworks.blood_tank.info.storage": "Stored",
+  "music.bloodworks.industry": "wiggle1000 - Industry"
 }
