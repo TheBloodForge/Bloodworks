@@ -1,0 +1,52 @@
+{
+	"_comment": "-------------------------------------------MUSIC---------------------------------------------------",
+	"bloodworks.music.industry":
+	{
+		"subtitle":"music.bloodworks.industry",
+		"sounds":
+		[
+			{
+				"name":"bloodworks:music/industry",
+				"stream": true
+			}
+		]
+	},
+
+	"_comment": "------------------------------------------MACHINES--------------------------------------------------",
+
+	"_comment": "-----------INFUSION CHAMBER------------",
+	"bloodworks.infusion_chamber.idle":
+	{
+		"subtitle":"sounds.bloodworks.infusion_chamber.idle",
+		"sounds": [ "bloodworks:machines/infusion_chamber.idle" ]
+	},
+	"bloodworks.infusion_chamber.craft_short":
+	{
+		"subtitle":"sounds.bloodworks.infusion_chamber.craft_short",
+		"sounds": [ "bloodworks:machines/infusion_chamber.craft_short" ]
+	},
+	"bloodworks.infusion_chamber.craft_long":
+	{
+		"subtitle":"sounds.bloodworks.infusion_chamber.craft_long",
+		"sounds": [ "bloodworks:machines/infusion_chamber.craft_long" ]
+	},
+
+	"_comment": "---------------BRAINCASE---------------",
+	"bloodworks.braincase.idle":
+	{
+		"subtitle":"sounds.bloodworks.braincase.idle",
+		"sounds": [ "bloodworks:machines/braincase.idle" ]
+	},
+	"bloodworks.braincase.running":
+	{
+		"subtitle":"sounds.bloodworks.braincase.running",
+		"sounds": ["bloodworks:machines/braincase.running"]
+	},
+
+	"_comment": "----------STIRLING GENERATOR-----------",
+	"bloodworks.stirling.idle":
+	{
+		"subtitle":"sounds.bloodworks.stirling.idle",
+		"sounds": [ "bloodworks:machines/stirling.idle" ]
+	}
+}
