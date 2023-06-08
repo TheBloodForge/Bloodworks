@@ -1,7 +1,13 @@
 package com.bloodforge.bloodworks.Blocks;
 
+import com.bloodforge.bloodworks.Client.Sound.SoundHelper;
+import com.bloodforge.bloodworks.Globals;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -52,6 +58,34 @@ public class BlockMachineBase extends BaseEntityBlock
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> blockStateDefinition)
     {
         super.createBlockStateDefinition(blockStateDefinition.add(FACING));
+    }
+
+    @Override
+    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource) {
+        super.animateTick(blockState, level, blockPos, randomSource);
+        if(hasIdleSound())
+        {
+            SoundHelper.PlayTileSound(getIdleSoundResourceLocation(), blockPos);
+            //SoundHelper.SetTileSoundPitch((float) (Math.sin(level.getGameTime()/10f)+0.5f), blockPos);
+        }
+    }
+
+    public ResourceLocation getIdleSoundResourceLocation()
+    {
+        return new ResourceLocation(Globals.MODID, "bloodworks.stirling.idle");
+    }
+
+    public boolean hasIdleSound()
+    {
+        return false;
+    }
+
+    @Override
+    public void destroy(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState) {
+        super.destroy(levelAccessor, blockPos, blockState);
+        if(hasIdleSound()) {
+            SoundHelper.StopTileSound(blockPos);
+        }
     }
 
     @Nullable

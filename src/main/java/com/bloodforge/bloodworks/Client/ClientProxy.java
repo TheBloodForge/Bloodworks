@@ -3,6 +3,7 @@ package com.bloodforge.bloodworks.Client;
 import com.bloodforge.bloodworks.Blocks.BlockEntities.*;
 import com.bloodforge.bloodworks.Client.BlockRenderers.*;
 import com.bloodforge.bloodworks.Client.Screens.InfusionChamberScreen;
+import com.bloodforge.bloodworks.Client.Sound.SoundHelper;
 import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Particles.FleshStepParticle;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.event.sound.SoundEngineLoadEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -39,6 +41,13 @@ public class ClientProxy
     public static void registerParticleFactories(final RegisterParticleProvidersEvent event)
     {
         event.register(ParticleRegistry.PARTICLE_FLESH_STEP.get(), FleshStepParticle.Provider::new);
+    }
+
+    @SubscribeEvent
+    public static void onSoundEngineLoad(SoundEngineLoadEvent event)
+    {
+        if(SoundHelper.soundEngine != null) return;
+        SoundHelper.SetSoundEngine(event.getEngine());
     }
 
     @SubscribeEvent

@@ -1,8 +1,10 @@
 package com.bloodforge.bloodworks.Blocks;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_InfusionChamber;
+import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -82,5 +84,16 @@ public class BlockInfusionChamber extends BlockMachineBase
         }
 
         return InteractionResult.sidedSuccess(!level.isClientSide());
+    }
+
+
+    public ResourceLocation getIdleSoundResourceLocation()
+    {
+        return new ResourceLocation(Globals.MODID, "bloodworks.blood_infuser.idle");
+    }
+
+    public boolean hasIdleSound()
+    {
+        return true;
     }
 }

@@ -1,21 +1,25 @@
 package com.bloodforge.bloodworks.Blocks;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_StirlingGenerator;
+import com.bloodforge.bloodworks.Client.Sound.SoundHelper;
 import com.bloodforge.bloodworks.Common.Config.BloodworksCommonConfig;
+import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Hashtable;
 
-public class BlockStirlingGenerator extends BaseEntityBlock
+public class BlockStirlingGenerator extends BlockMachineBase
 {
     protected VoxelShape BLOCK_SHAPE = box(1, 1, 1, 15, 15, 15);
 
@@ -173,4 +177,23 @@ public class BlockStirlingGenerator extends BaseEntityBlock
         }
     }
 
+
+    public ResourceLocation getIdleSoundResourceLocation()
+    {
+        return new ResourceLocation(Globals.MODID, "bloodworks.stirling.idle");
+    }
+    public boolean hasIdleSound()
+    {
+        return true;
+    }
+
+    @Override
+    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource) {
+        super.animateTick(blockState, level, blockPos, randomSource);
+        if(level.getBlockEntity(blockPos) instanceof BE_StirlingGenerator stirlingGenerator)
+        {
+            SoundHelper.SetTileSoundPitch(stirlingGenerator.energyGenerationF * 0.03f, blockPos);
+            SoundHelper.SetTileSoundVolume(Mth.clamp(stirlingGenerator.energyGenerationF * 0.1f, 0, 1), blockPos);
+        }
+    }
 }

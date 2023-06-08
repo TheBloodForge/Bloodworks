@@ -122,5 +122,8 @@
   "itemGroup.bloodworks": "Bloodworks",
   "bloodworks.blood_tank.info.capacity": "Capacity",
   "bloodworks.blood_tank.info.storage": "Stored",
-  "music.bloodworks.industry": "wiggle1000 - Industry"
+  "music.bloodworks.industry": "wiggle1000 - Industry",
+  "sounds.bloodworks.braincase.idle": "Braincase Humming",
+  "sounds.bloodworks.stirling.idle": "Stirling Engine Chooching",
+  "sounds.bloodworks.blood_infuser.idle": "Machine Humming"
 }

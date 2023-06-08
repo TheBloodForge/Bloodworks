@@ -1,5 +1,6 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
+import com.bloodforge.bloodworks.Blocks.BlockMachineBase;
 import com.bloodforge.bloodworks.Blocks.BlockStirlingGenerator;
 import com.bloodforge.bloodworks.Energy.EnergyBattery;
 import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
@@ -51,7 +52,7 @@ public class BE_StirlingGenerator extends BlockEntity
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-        if(cap == ForgeCapabilities.ENERGY && side != Direction.UP && side != Direction.DOWN) {
+        if(cap == ForgeCapabilities.ENERGY && side == getBlockState().getValue(BlockMachineBase.FACING).getOpposite()) {
             return energy.cast();
         }
         return super.getCapability(cap, side);

@@ -1,8 +1,10 @@
 package com.bloodforge.bloodworks.Blocks;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Braincase_Controller;
+import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -66,5 +68,15 @@ public class BlockBraincaseController extends BlockMachineBase
 
         return super.use(cState, level, pos, player, interactionHand, blockHitResult);
         //return InteractionResult.sidedSuccess(!level.isClientSide());
+    }
+
+    public ResourceLocation getIdleSoundResourceLocation()
+    {
+        return new ResourceLocation(Globals.MODID, "bloodworks.braincase.idle");
+    }
+
+    public boolean hasIdleSound()
+    {
+        return true;
     }
 }

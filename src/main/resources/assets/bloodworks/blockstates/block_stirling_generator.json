@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "bloodworks:block/block_stirling_generator"
+    "facing=north": {
+      "model": "bloodworks:block/block_stirling_generator",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "bloodworks:block/block_stirling_generator",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "bloodworks:block/block_stirling_generator",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "bloodworks:block/block_stirling_generator",
+      "y": 90
     }
   }
 }
