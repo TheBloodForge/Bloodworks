@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings({"unused", "SameReturnValue"})
-public class BE_InfusionChamber extends BlockEntityMachineBase implements IItemHandler, MenuProvider
+public class BE_InfusionChamber extends BlockEntityFluidMachineBase implements IItemHandler, MenuProvider
 {
 
     public static final Component TITLE = Component.translatable(Globals.MODID + ".infusion_chamber");
