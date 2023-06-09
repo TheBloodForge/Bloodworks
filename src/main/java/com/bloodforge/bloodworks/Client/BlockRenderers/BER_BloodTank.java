@@ -119,11 +119,12 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
                                           boolean connectU, boolean connectD, boolean connectN, boolean connectE, boolean connectS, boolean connectW)
     {
 
-        float height = MIN_Y + (MAX_Y - MIN_Y) * Mth.clamp(heightPercentage, 0, 1);
+        float clampedHeightPercentage = Mth.clamp(heightPercentage, 0, 1);
+        float height = MIN_Y + (MAX_Y - MIN_Y) * clampedHeightPercentage;
         float minU = sprite.getU0(), maxU = sprite.getU1();
         float frameVOff = cFluidFrame / (float) NUM_FLUID_FRAMES;
         float minV = sprite.getV0();
-        float maxV = Util.Lerp(sprite.getV0(), sprite.getV1(), heightPercentage);
+        float maxV = Util.Lerp(sprite.getV0(), sprite.getV1(), clampedHeightPercentage);
         float maxVFlat = sprite.getV1();
 //      Globals.LogInfo(heightPercentage + "");
         Vec3 BL = new Vec3(connectW ? 0 : FLUID_SIDE_MARGIN, connectD ? 0 : MIN_Y, connectN ? 0 : FLUID_SIDE_MARGIN);
@@ -145,44 +146,40 @@ public class BER_BloodTank implements BlockEntityRenderer<BE_Tank>
         Vector4f color = new Vector4f(r, g, b, alpha);
 
         // top
-        if (heightPercentage < 1 || !connectU)
+        if (heightPercentage < 1 || !connectU) //should we render top at all?
         {
             double waveTime = Minecraft.getInstance().level.getGameTime() / 10.0;
-            if(heightPercentage < 1 || connectU) {
+            if(heightPercentage < 1 || connectU) { //should we do waves?
                 float minY = connectD ? -1 : MIN_Y;
                 float maxY = connectU ? 1 : MAX_Y;
-                Vec3 sBL = clampVec3Y(BLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BLT.x + BLT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
-                Vec3 sBR = clampVec3Y(BRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BRT.x + BRT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
-                Vec3 sFL = clampVec3Y(FLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FLT.x + FLT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
-                Vec3 sFR = clampVec3Y(FRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FRT.x + FRT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
-
-                if(heightPercentage == 0)
-                {
-                    float sMinV = MIN_Y + frameVOff;
-                    float sMaxV = minV + (((1 - height) / NUM_FLUID_FRAMES));
-                    Vec2 sUVNN = new Vec2(minU, sMinV);
-                    Vec2 sUVPN = new Vec2(maxU, sMinV);
-                    Vec2 sUVNP = new Vec2(minU, sMaxV);
-                    Vec2 sUVPP = new Vec2(maxU, sMaxV);
-                    // min z
-                    if (!connectN)
-                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sBL, BLT, BRT, sBR, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(0, 0, 1));
-                    // max z
-                    if (!connectS)
-                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sFR, FRT, FLT, sFL, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(0, 0, 1));
-                    // min x
-                    if (!connectW)
-                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sFL, FLT, BLT, sBL, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(-1, 0, 0));
-                    // max x
-                    if (!connectE)
-                    RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, sBR, BRT, FRT, sFR, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(-1, 0, 0));
-                }
-                BLT = sBL;
-                BRT = sBR;
-                FLT = sFL;
-                FRT = sFR;
+                BLT = clampVec3Y(BLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BLT.x + BLT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
+                BRT = clampVec3Y(BRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + BRT.x + BRT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
+                FLT = clampVec3Y(FLT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FLT.x + FLT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
+                FRT = clampVec3Y(FRT.add(new Vec3(0, Math.sin((blockPos.getX() + blockPos.getZ() + FRT.x + FRT.z) + (waveTime)), 0).scale(flowAmt)), minY, maxY);
             }
             RenderHelper.DoQuadWithColor(vertexBuilder, matrix, BRT, FRT, FLT, BLT, UVPN, UVPPFlat, UVNPFlat, UVNN, light, color);
+        }
+        if(clampedHeightPercentage == 0) //render special sides with fixed UVs
+        {
+            float sMinV = sprite.getV0();
+            float sMaxV = Util.Lerp(sprite.getV0(), sprite.getV1(), 0.05f);
+            Vec2 sUVNN = new Vec2(minU, sMinV);
+            Vec2 sUVPN = new Vec2(maxU, sMinV);
+            Vec2 sUVNP = new Vec2(minU, sMaxV);
+            Vec2 sUVPP = new Vec2(maxU, sMaxV);
+            // min z
+            if (!connectN)
+                RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, BR, BRT, BLT, BL, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(0, 0, 1));
+            // max z
+            if (!connectS)
+                RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, FL, FLT, FRT, FR, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(0, 0, 1));
+            // min x
+            if (!connectW)
+                RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, FR, FRT, BRT, BR, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(-1, 0, 0));
+            // max x
+            if (!connectE)
+                RenderHelper.DoQuadWithColorAndNormal(vertexBuilder, matrix, BL, BLT, FLT, FL, sUVPN, sUVPP, sUVNP, sUVNN, light, color, new Vector3f(-1, 0, 0));
+            return;
         }
         //bottom
         if (!connectD)
