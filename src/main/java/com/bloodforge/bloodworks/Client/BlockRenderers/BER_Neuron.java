@@ -35,7 +35,7 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean checkLOS(BlockPos blockPos, Vec3 offset)
     {
-        BlockHitResult hr = Minecraft.getInstance().level.clip(new ClipContext(Minecraft.getInstance().cameraEntity.getEyePosition(), new Vec3(blockPos.getX() + offset.x, blockPos.getY() + offset.y, blockPos.getZ() + offset.z), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, Minecraft.getInstance().player));
+        BlockHitResult hr = Minecraft.getInstance().level.clip(new ClipContext(Minecraft.getInstance().gameRenderer.getMainCamera().getPosition(), new Vec3(blockPos.getX() + offset.x, blockPos.getY() + offset.y, blockPos.getZ() + offset.z), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, Minecraft.getInstance().player));
         return hr.getType() == HitResult.Type.MISS || !Minecraft.getInstance().level.getBlockState(hr.getBlockPos()).canOcclude();
     }
 
@@ -55,7 +55,6 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
 
         long totalTicks = Minecraft.getInstance().level.getGameTime();
 
-        //TODO: why no transparent :(
         VertexConsumer buffer = RenderHelper.StartRenderingTranslucent(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_neuron.png"));
         poseStack.translate(0.5, 0.5, 0.5);
 

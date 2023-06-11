@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -80,6 +82,7 @@ public class RenderHelper
         //DoTriangle(builder, matrix, d, c, b, uvD, uvC, uvB, cLight);
     }
 
+
     public static void DoQuadWithColorAndNormal(VertexConsumer builder, Matrix4f matrix, Vec3 a, Vec3 b, Vec3 c, Vec3 d, Vec2 uvA, Vec2 uvB, Vec2 uvC, Vec2 uvD, int lightLevel, Vector4f color, Vector3f normal)
     {
         builder.vertex(matrix, (float) d.x, (float) d.y, (float) d.z).color(color.x(), color.y(), color.z(), color.w()).uv(uvD.x, uvD.y).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightLevel).normal(normal.x(), normal.y(), normal.z()).endVertex();
@@ -88,6 +91,29 @@ public class RenderHelper
         builder.vertex(matrix, (float) a.x, (float) a.y, (float) a.z).color(color.x(), color.y(), color.z(), color.w()).uv(uvA.x, uvA.y).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightLevel).normal(normal.x(), normal.y(), normal.z()).endVertex();
         //DoTriangle(builder, matrix, d, b, a, uvD, uvB, uvA, cLight);
         //DoTriangle(builder, matrix, d, c, b, uvD, uvC, uvB, cLight);
+    }
+
+    public static void DoQuadFacingCamera(VertexConsumer builder, Matrix4f matrix, int combinedLight, Vec3 center, float forwardOffset, float size, float minU, float minV, float maxU, float maxV)
+    {
+
+        Camera mainCamera = Minecraft.getInstance().gameRenderer.getMainCamera();
+        Vec3 up = new Vec3(mainCamera.getUpVector());
+        Vec3 left = new Vec3(mainCamera.getLeftVector());
+        Vec3 forward = new Vec3(mainCamera.getLookVector());
+
+        Vec3 vertexA = center.add(forward.scale(forwardOffset)).add(up.scale(-size / 2)).add(left.scale(-size / 2));
+        Vec3 vertexB = center.add(forward.scale(forwardOffset)).add(up.scale(size / 2)).add(left.scale(-size / 2));
+        Vec3 vertexC = center.add(forward.scale(forwardOffset)).add(up.scale(size / 2)).add(left.scale(size / 2));
+        Vec3 vertexD = center.add(forward.scale(forwardOffset)).add(up.scale(-size / 2)).add(left.scale(size / 2));
+
+        RenderHelper.DoQuadWithColor(builder, matrix,
+                vertexA, vertexB, vertexC, vertexD,
+                new Vec2(maxU, maxV),
+                new Vec2(maxU, minV),
+                new Vec2(minU, minV),
+                new Vec2(minU, maxV),
+                combinedLight,
+                new Vector4f(1f, 1f, 1f, 1f));
     }
 
     public static void renderCuboid(Matrix4f matrix, VertexConsumer vertexBuilder, Vec3 pos, Vec3 size, float sizeShrink, float minU, float minV, float maxU, float maxV, int light, boolean drawInside)
