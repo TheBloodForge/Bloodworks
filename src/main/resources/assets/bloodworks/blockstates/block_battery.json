@@ -1,0 +1,48 @@
+{
+  "variants": {
+    "axis=y,pillar_pos=0": {
+      "model": "bloodworks:block/block_battery"
+    },
+    "axis=y,pillar_pos=1": {
+      "model": "bloodworks:block/block_battery_bottom"
+    },
+    "axis=y,pillar_pos=2": {
+      "model": "bloodworks:block/block_battery_middle"
+    },
+    "axis=y,pillar_pos=3": {
+      "model": "bloodworks:block/block_battery_top"
+    },
+    "axis=x,pillar_pos=0": {
+      "model": "bloodworks:block/block_battery",
+      "x": 90, "y": 90
+    },
+    "axis=x,pillar_pos=1": {
+      "model": "bloodworks:block/block_battery_bottom",
+      "x": 90, "y": 90
+    },
+    "axis=x,pillar_pos=2": {
+      "model": "bloodworks:block/block_battery_middle",
+      "x": 90, "y": 90
+    },
+    "axis=x,pillar_pos=3": {
+      "model": "bloodworks:block/block_battery_top",
+      "x": 90, "y": 90
+    },
+    "axis=z,pillar_pos=0": {
+      "model": "bloodworks:block/block_battery",
+      "x": 270
+    },
+    "axis=z,pillar_pos=1": {
+      "model": "bloodworks:block/block_battery_bottom",
+      "x": 270
+    },
+    "axis=z,pillar_pos=2": {
+      "model": "bloodworks:block/block_battery_middle",
+      "x": 270
+    },
+    "axis=z,pillar_pos=3": {
+      "model": "bloodworks:block/block_battery_top",
+      "x": 270
+    }
+  }
+}

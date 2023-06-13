@@ -55,6 +55,12 @@ public class BlockRegistry
     public static final RegistryPair BLOCK_AIRLOCK_DRAIN = createBlock("braincase_airlock_drain", () ->
             new GenericBlockBase(BlockBehaviour.Properties.of(Material.METAL).strength(3f, 7f).sound(SoundType.METAL)));
 
+    public static final BlockEntityRegister BLOCK_BATTERY = createBlockEntity(
+            "battery",
+            BlockBattery::new,
+            BE_Battery.class
+    );
+
     public static final BlockEntityRegister BLOCK_STIRLING_GENERATOR = createBlockEntity(
             "stirling_generator",
             BlockStirlingGenerator::new,

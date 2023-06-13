@@ -1,0 +1,47 @@
+{
+	"credit": "Made with Blockbench",
+	"render_type": "translucent",
+	"textures": {
+		"0": "bloodworks:blocks/block_battery_top",
+		"1": "bloodworks:blocks/block_battery_side",
+		"2": "bloodworks:blocks/block_battery_window",
+		"particle": "bloodworks:blocks/block_battery_top"
+	},
+	"elements": [
+		{
+			"name": "Bottom",
+			"from": [-0.05, 0, -0.05],
+			"to": [16.05, 2, 16.05],
+			"faces": {
+				"north": {"uv": [0, 14, 16, 16], "texture": "#0", "cullface": "north"},
+				"east": {"uv": [0, 14, 16, 16], "texture": "#0", "cullface": "east"},
+				"south": {"uv": [0, 14, 16, 16], "texture": "#0", "cullface": "south"},
+				"west": {"uv": [0, 14, 16, 16], "texture": "#0", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "down"}
+			}
+		},
+		{
+			"name": "Middle",
+			"from": [1, 2, 1],
+			"to": [15, 16, 15],
+			"faces": {
+				"north": {"uv": [1, 0, 15, 14], "texture": "#1"},
+				"east": {"uv": [1, 0, 15, 14], "texture": "#1"},
+				"south": {"uv": [1, 0, 15, 14], "texture": "#1"},
+				"west": {"uv": [1, 0, 15, 14], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Case",
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "west"}
+			}
+		}
+	]
+}
