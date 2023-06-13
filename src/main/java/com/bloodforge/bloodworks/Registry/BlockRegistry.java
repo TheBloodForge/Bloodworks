@@ -97,6 +97,12 @@ public class BlockRegistry
             BE_FluidPipe.class
     );
 
+    public static final BlockEntityRegister BLOCK_ENERGY_PIPE = createBlockEntity(
+            "energy_pipe",
+            BlockEnergyPipe::new,
+            BE_EnergyPipe.class
+    );
+
     public static final BlockEntityRegister BLOCK_MULTI_PIPE = createBlockEntity(
             "multi_pipe",
             BlockMultiPipe::new,
