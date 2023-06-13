@@ -34,7 +34,7 @@ public class BE_StirlingGenerator extends BlockEntity
     public BE_StirlingGenerator(BlockPos pos, BlockState blockState)
     {
         super(BlockRegistry.BLOCK_STIRLING_GENERATOR.blockEntity().get(), pos, blockState);
-        battery = new EnergyBattery(10000, 10000);
+        battery = new EnergyBattery(10000, 0, 10000);
         energy = LazyOptional.of(() -> battery);
     }
 
@@ -52,9 +52,8 @@ public class BE_StirlingGenerator extends BlockEntity
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-        if(cap == ForgeCapabilities.ENERGY && side == getBlockState().getValue(BlockMachineBase.FACING).getOpposite()) {
+        if (cap == ForgeCapabilities.ENERGY && side == getBlockState().getValue(BlockMachineBase.FACING))
             return energy.cast();
-        }
         return super.getCapability(cap, side);
     }
     @Override

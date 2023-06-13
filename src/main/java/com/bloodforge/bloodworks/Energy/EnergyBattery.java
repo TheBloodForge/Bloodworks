@@ -4,9 +4,8 @@ import net.minecraftforge.energy.EnergyStorage;
 
 public class EnergyBattery extends EnergyStorage {
 
-    public EnergyBattery(int maxTransfer, int capacity) {
-        super(capacity, maxTransfer);
-        this.maxReceive = 0;
+    public EnergyBattery(int capacity, int maxReceive, int maxExtract) {
+        super(capacity, maxReceive, maxExtract);
     }
 
     public void setEnergy(int energy) {

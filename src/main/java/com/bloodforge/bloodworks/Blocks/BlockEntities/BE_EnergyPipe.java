@@ -48,6 +48,7 @@ public class BE_EnergyPipe extends BlockEntity implements IEnergyStorage
     {
         for (Direction value : Direction.values())
         {
+            if (getLevel().getBlockEntity(getBlockPos().relative(value)) == null) continue;
             if (pipeModes[value.get3DDataValue()] == IOMode.INPUT)
             {
                 pullEnergy(value);
@@ -81,17 +82,22 @@ public class BE_EnergyPipe extends BlockEntity implements IEnergyStorage
 
     private void pullEnergy(Direction value)
     {
-        if (getLevel().getBlockEntity(getBlockPos().relative(value)) instanceof IEnergyStorage source)
+        if (getLevel().getBlockEntity(getBlockPos().relative(value)).getCapability(ForgeCapabilities.ENERGY, value.getOpposite()).isPresent())
         {
-            receiveEnergy(source.extractEnergy(Math.min(battery.getMaxEnergyStored() - battery.getEnergyStored(), 500), false), false);
+//            System.out.println("Pulling");
+            IEnergyStorage source = (IEnergyStorage) getLevel().getBlockEntity(getBlockPos().relative(value)).getCapability(ForgeCapabilities.ENERGY, value.getOpposite()).cast().resolve().get();
+            if (source.canExtract())
+                receiveEnergy(source.extractEnergy(Math.min(battery.getMaxEnergyStored() - battery.getEnergyStored(), 500), false), false);
         }
     }
 
     private void pushEnergy(Direction value)
     {
-        if (getLevel().getBlockEntity(getBlockPos().relative(value)) instanceof IEnergyStorage destination)
+        if (getLevel().getBlockEntity(getBlockPos().relative(value)).getCapability(ForgeCapabilities.ENERGY, value.getOpposite()).isPresent())
         {
-            destination.receiveEnergy(extractEnergy(500, false), false);
+            IEnergyStorage destination = (IEnergyStorage) getLevel().getBlockEntity(getBlockPos().relative(value)).getCapability(ForgeCapabilities.ENERGY, value.getOpposite()).cast().resolve().get();
+            if (destination.canReceive())
+                destination.receiveEnergy(extractEnergy(500, false), false);
         }
     }
 
