@@ -65,6 +65,12 @@ public class PacketManager
                 .encoder(NBTSyncS2CPacket::toBytes)
                 .consumerMainThread(NBTSyncS2CPacket::handle)
                 .add();
+
+        net.messageBuilder(SoundS2CPacket.class, id(), PAYLOAD_TO_CLIENT)
+                .decoder(SoundS2CPacket::new)
+                .encoder(SoundS2CPacket::toBytes)
+                .consumerMainThread(SoundS2CPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message)

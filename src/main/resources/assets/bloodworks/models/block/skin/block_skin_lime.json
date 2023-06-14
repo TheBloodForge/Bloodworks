@@ -1,0 +1,6 @@
+{
+  "parent": "bloodworks:block/skin/block_skin",
+  "textures": {
+    "all": "bloodworks:blocks/skin/block_skin7"
+  }
+}

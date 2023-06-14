@@ -1,6 +1,36 @@
 {
   "variants": {
-    "":
+    "growth_level=0":
+    [
+      {"model": "bloodworks:block/block_flesh_mesh"}
+    ],
+    "growth_level=1":
+    [
+      {"model": "bloodworks:block/block_flesh_raw_1", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_raw_1", "y":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_raw_1", "x":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_raw_1", "z":  90, "weight": 10},
+
+      {"model": "bloodworks:block/block_flesh_raw_2", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_raw_2", "y":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_raw_2", "x":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_raw_2", "z":  90, "weight": 10},
+
+      {"model": "bloodworks:block/block_flesh_raw_3", "y":  0 , "weight": 10},
+      {"model": "bloodworks:block/block_flesh_raw_3", "y":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_raw_3", "x":  90, "weight": 10},
+      {"model": "bloodworks:block/block_flesh_raw_3", "z":  90, "weight": 10},
+
+      {"model": "bloodworks:block/block_flesh_raw_with_polyp", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/block_flesh_raw_with_polyp", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/block_flesh_raw_with_polyp", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/block_flesh_raw_with_polyp", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/block_flesh_raw_with_polyp", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/block_flesh_raw_with_polyp", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/block_flesh_raw_with_polyp", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/block_flesh_raw_with_polyp", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=2":
     [
       {"model": "bloodworks:block/block_flesh_1", "y":  0 , "weight": 10},
       {"model": "bloodworks:block/block_flesh_1", "y":  90, "weight": 10},
@@ -25,6 +55,193 @@
       {"model": "bloodworks:block/block_flesh_with_polyp", "x":  270, "weight": 2},
       {"model": "bloodworks:block/block_flesh_with_polyp", "x":  90 , "y": 90, "weight": 2},
       {"model": "bloodworks:block/block_flesh_with_polyp", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=0":
+    [
+      {"model": "bloodworks:block/skin/block_skin", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=1":
+    [
+      {"model": "bloodworks:block/skin/block_skin_white", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_white", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_white", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_white", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_white", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_white", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_white", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_white", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=2":
+    [
+      {"model": "bloodworks:block/skin/block_skin_orange", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_orange", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_orange", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_orange", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_orange", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_orange", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_orange", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_orange", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=3":
+    [
+      {"model": "bloodworks:block/skin/block_skin_magenta", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_magenta", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_magenta", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_magenta", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_magenta", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_magenta", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_magenta", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_magenta", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=4":
+    [
+      {"model": "bloodworks:block/skin/block_skin_lightblue", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightblue", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightblue", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightblue", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightblue", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightblue", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightblue", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightblue", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=5":
+    [
+      {"model": "bloodworks:block/skin/block_skin_yellow", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_yellow", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_yellow", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_yellow", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_yellow", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_yellow", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_yellow", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_yellow", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=6":
+    [
+      {"model": "bloodworks:block/skin/block_skin_lime", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lime", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lime", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lime", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lime", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lime", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lime", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lime", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=7":
+    [
+      {"model": "bloodworks:block/skin/block_skin_pink", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_pink", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_pink", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_pink", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_pink", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_pink", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_pink", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_pink", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=8":
+    [
+      {"model": "bloodworks:block/skin/block_skin_gray", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_gray", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_gray", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_gray", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_gray", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_gray", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_gray", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_gray", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=9":
+    [
+      {"model": "bloodworks:block/skin/block_skin_lightgray", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightgray", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightgray", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightgray", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightgray", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightgray", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightgray", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_lightgray", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=10":
+    [
+      {"model": "bloodworks:block/skin/block_skin_cyan", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_cyan", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_cyan", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_cyan", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_cyan", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_cyan", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_cyan", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_cyan", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=11":
+    [
+      {"model": "bloodworks:block/skin/block_skin_purple", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_purple", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_purple", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_purple", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_purple", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_purple", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_purple", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_purple", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=12":
+    [
+      {"model": "bloodworks:block/skin/block_skin_blue", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_blue", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_blue", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_blue", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_blue", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_blue", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_blue", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_blue", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=13":
+    [
+      {"model": "bloodworks:block/skin/block_skin_brown", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_brown", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_brown", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_brown", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_brown", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_brown", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_brown", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_brown", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=14":
+    [
+      {"model": "bloodworks:block/skin/block_skin_green", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_green", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_green", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_green", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_green", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_green", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_green", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_green", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=15":
+    [
+      {"model": "bloodworks:block/skin/block_skin_red", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_red", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_red", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_red", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_red", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_red", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_red", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_red", "x":  270, "y": 90, "weight": 2}
+    ],
+    "growth_level=3,skin_color=16":
+    [
+      {"model": "bloodworks:block/skin/block_skin_black", "y":  0  , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_black", "y":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_black", "y":  180, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_black", "y":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_black", "x":  90 , "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_black", "x":  270, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_black", "x":  90 , "y": 90, "weight": 2},
+      {"model": "bloodworks:block/skin/block_skin_black", "x":  270, "y": 90, "weight": 2}
     ]
   }
 }

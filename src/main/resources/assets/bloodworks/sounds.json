@@ -49,5 +49,13 @@
 	{
 		"subtitle":"sounds.bloodworks.stirling.idle",
 		"sounds": [ "bloodworks:machines/stirling.idle" ]
+	},
+
+
+
+	"bloodworks.flesh.grow":
+	{
+		"subtitle":"sounds.bloodworks.flesh.grow",
+		"sounds": [ "bloodworks:block/flesh.grow" ]
 	}
 }

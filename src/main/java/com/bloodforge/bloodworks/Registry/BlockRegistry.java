@@ -40,7 +40,7 @@ public class BlockRegistry
     }
 
     public static final BlockFamily BLOCK_COAGULATED = registerAllTypes("coagulated_blood");
-    public static final BlockFamily BLOCK_FLESH = registerAllTypes("flesh");
+    public static final BlockFamily BLOCK_FLESH = registerAllFlesh();
 
     public static final RegistryPair BLOCK_FLESH_LIGHT = createBlock("flesh_light", () -> new BlockFleshLight(false));
     public static final RegistryPair BLOCK_FLESH_LIGHT_LARGE = createBlock("flesh_light_large", () -> new BlockFleshLight(true));
@@ -159,6 +159,14 @@ public class BlockRegistry
         RegistryPair blockStair = createBlock(name + "_stairs", BlockBloodyStairsBase::new);
         RegistryPair blockSlab = createBlock(name + "_slab", BlockBloodySlabBase::new);
         RegistryPair blockWall = createBlock(name + "_wall", BlockBloodyWallBase::new);
+        return new BlockFamily(block, blockStair, blockSlab, blockWall);
+    }
+    private static BlockFamily registerAllFlesh()
+    {
+        RegistryPair block = createBlock("flesh", BlockFlesh::new);
+        RegistryPair blockStair = createBlock("flesh_stairs", BlockBloodyStairsBase::new);
+        RegistryPair blockSlab = createBlock("flesh_slab", BlockBloodySlabBase::new);
+        RegistryPair blockWall = createBlock("flesh_wall", BlockBloodyWallBase::new);
         return new BlockFamily(block, blockStair, blockSlab, blockWall);
     }
 }

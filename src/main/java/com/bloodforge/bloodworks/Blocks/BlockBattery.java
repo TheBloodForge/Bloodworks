@@ -1,7 +1,6 @@
 package com.bloodforge.bloodworks.Blocks;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Battery;
-import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_StirlingGenerator;
 import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
@@ -51,7 +50,7 @@ public class BlockBattery extends BlockMachineBase
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return BlockRegistry.BLOCK_STIRLING_GENERATOR.blockEntity().get().create(pos, state);
+        return BlockRegistry.BLOCK_BATTERY.blockEntity().get().create(pos, state);
     }
 
     @Override
@@ -104,10 +103,10 @@ public class BlockBattery extends BlockMachineBase
         if (!level.isClientSide())
         {
             //todo: tell client gen stats
-            if(level.getBlockEntity(pos) instanceof BE_StirlingGenerator stirlingGenerator)
+            if(level.getBlockEntity(pos) instanceof BE_Battery battery)
             {
                 PacketManager.sendToPlayer(new MessageS2CPacket(Component.literal(
-                        stirlingGenerator.battery.getStored() + "/" + stirlingGenerator.battery.getCapacity() + " | +"+stirlingGenerator.energyGeneration+"FE/t"),false),
+                        battery.battery.getStored() + "/" + battery.battery.getCapacity()),false),
                         (ServerPlayer) player);
             }
             return super.use(cState, level, pos, player, interactionHand, blockHitResult);

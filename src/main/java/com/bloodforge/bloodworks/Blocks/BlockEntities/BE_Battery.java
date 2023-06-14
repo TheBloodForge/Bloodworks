@@ -27,7 +27,7 @@ public class BE_Battery extends BlockEntity
 
     public BE_Battery(BlockPos pos, BlockState blockState)
     {
-        super(BlockRegistry.BLOCK_STIRLING_GENERATOR.blockEntity().get(), pos, blockState);
+        super(BlockRegistry.BLOCK_BATTERY.blockEntity().get(), pos, blockState);
         battery = new EnergyBattery(10000, 1000, 1000);
         energy = LazyOptional.of(() -> battery);
     }

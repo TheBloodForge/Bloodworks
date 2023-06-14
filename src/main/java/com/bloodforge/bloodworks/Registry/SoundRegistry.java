@@ -12,6 +12,7 @@ public class SoundRegistry
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS.getRegistryName(), Globals.MODID);
 
     public static RegistryObject<SoundEvent> MUSIC_DISC_INDUSTRY = registerSoundEvent("bloodworks.music.industry");
+    public static RegistryObject<SoundEvent> FLESH_GROW = registerSoundEvent("bloodworks.flesh.grow");
 
 
 
