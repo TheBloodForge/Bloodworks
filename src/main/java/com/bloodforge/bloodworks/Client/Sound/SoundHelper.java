@@ -1,5 +1,6 @@
 package com.bloodforge.bloodworks.Client.Sound;
 
+import com.bloodforge.bloodworks.Client.Sound.SAM.ALRaw.ALSoundSource;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
@@ -17,6 +18,9 @@ import java.util.concurrent.CompletableFuture;
 
 public class SoundHelper
 {
+    public static ALSoundSource SAMSoundSource = new ALSoundSource(false, false, -1);
+    static {SAMSoundSource.setSampleRate(22050); SAMSoundSource.setHearing(32f, 1f);}
+
     public static SoundEngine soundEngine;
     private static final Long2ObjectMap<MachineTickableSoundInstance> playingBlockSounds = new Long2ObjectOpenHashMap<>();
 
