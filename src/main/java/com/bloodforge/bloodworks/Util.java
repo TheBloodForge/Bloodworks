@@ -1,7 +1,9 @@
 package com.bloodforge.bloodworks;
 
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -12,6 +14,11 @@ public class Util
     public static float Lerp(float a, float b, float interpolation)
     {
         return a + interpolation * (b - a);
+    }
+    public static Pair<Float, Float> SpringInterpolate(float a, float b, float velocity, float bounce, float tension)
+    {
+        velocity = Lerp(velocity, (b - a) * tension, 1.0f / bounce);
+        return Pair.of(a + velocity, velocity);
     }
 
     public static double Lerp(double a, double b, double interpolation)
@@ -24,6 +31,15 @@ public class Util
         return new Vec3(Lerp(a.x, b.x, interpolation), Lerp(a.y, b.y, interpolation), Lerp(a.z, b.z, interpolation));
     }
 
+    public static Vec2 Lerp(Vec2 a, Vec2 b, float interpolation)
+    {
+        return new Vec2(Lerp(a.x, b.x, interpolation), Lerp(a.y, b.y, interpolation));
+    }
+    public static Pair<Vec2, Vec2> SpringInterpolate(Vec2 a, Vec2 b, Vec2 velocity, float bounce, float tension)
+    {
+        velocity = Lerp(velocity, (b.add(a.scale(-1))).scale(tension), 1.0f / bounce);
+        return Pair.of(a.add(velocity), velocity);
+    }
 
     public static VoxelShape RotateVoxelShapeOnYAxis(Direction from, Direction to, VoxelShape shape)
     {
@@ -86,4 +102,5 @@ public class Util
                 return dir;
         return Direction.UP;
     }
+
 }

@@ -3,6 +3,7 @@ package com.bloodforge.bloodworks.Client;
 import com.bloodforge.bloodworks.Blocks.BlockEntities.*;
 import com.bloodforge.bloodworks.Client.BlockRenderers.*;
 import com.bloodforge.bloodworks.Client.Screens.InfusionChamberScreen;
+import com.bloodforge.bloodworks.Client.Screens.NeuronConnectionHudOverlay;
 import com.bloodforge.bloodworks.Client.Sound.SoundHelper;
 import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Particles.FleshStepParticle;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.client.event.sound.SoundEngineLoadEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,6 +40,12 @@ public class ClientProxy
             MenuScreens.register(MenuRegistry.INFUSION_CHAMBER.get(), InfusionChamberScreen::new);
             Globals.IS_CLIENT = true;
             MinecraftForge.EVENT_BUS.register(new ForgeClientEvents());
+        }
+
+        public static final NeuronConnectionHudOverlay NEURON_CONNECTION_HUD_OVERLAY = new NeuronConnectionHudOverlay();
+        @SubscribeEvent
+        public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
+            event.registerAboveAll("neuron_connection_hud", NEURON_CONNECTION_HUD_OVERLAY::render);
         }
 
         @SubscribeEvent
