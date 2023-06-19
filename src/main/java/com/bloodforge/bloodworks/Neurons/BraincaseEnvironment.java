@@ -6,4 +6,9 @@ import java.util.ArrayList;
 public class BraincaseEnvironment
 {
     public ArrayList<NeuronData> neurons;
+
+    public void AddNeuron(NeuronData neuron)
+    {
+
+    }
 }

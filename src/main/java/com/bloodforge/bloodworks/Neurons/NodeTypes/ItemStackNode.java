@@ -7,13 +7,14 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
 public class ItemStackNode extends NeuronIONode
 {
     public ItemStackNode()
     {
-
+        data = new ItemStack(Items.AIR, 0);
     }
 
     @Override

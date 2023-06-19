@@ -13,7 +13,13 @@ import net.minecraft.world.phys.Vec3;
 
 public class NeuronIONode
 {
-    Object data;
+    public static enum NEURON_IO_TYPES
+    {
+        UNKNOWN,
+        FLOAT,
+        ITEMSTACK
+    }
+    public Object data;
     NeuronIONode destination;
 
     public void drawContentsAt(PoseStack poseStack, MultiBufferSource bufferSource, Vec3 pos)
