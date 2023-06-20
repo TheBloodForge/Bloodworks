@@ -61,6 +61,12 @@ public class BlockRegistry
             BE_Battery.class
     );
 
+    public static final BlockEntityRegister BLOCK_BLOOD_DRAIN = createBlockEntity(
+            "blood_drain",
+            BlockBloodDrain::new,
+            BE_BloodDrain.class
+    );
+
     public static final BlockEntityRegister BLOCK_STIRLING_GENERATOR = createBlockEntity(
             "stirling_generator",
             BlockStirlingGenerator::new,

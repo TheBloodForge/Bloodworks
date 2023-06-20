@@ -1,13 +1,18 @@
 package com.bloodforge.bloodworks.Common;
 
+import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_BloodDrain;
 import com.bloodforge.bloodworks.Globals;
+import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.bloodforge.bloodworks.Registry.DataGen.BloodworksLangProvidor;
 import com.bloodforge.bloodworks.Registry.ItemProvidor;
 import com.bloodforge.bloodworks.Server.TankDataProxy;
+import net.minecraft.core.BlockPos;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -46,5 +51,23 @@ public class ForgeCommonEvents
     {
         if (!event.getEntity().level.isClientSide)
             TankDataProxy.syncTankDataWithPlayer((ServerPlayer) event.getEntity());
+    }
+
+    @SubscribeEvent
+    public void onLivingHurt(LivingDamageEvent event)
+    {
+        if(event.getEntity().level.isClientSide) return;
+        for(int i = 0; i < 2; i++)
+        {
+            BlockPos cPos = event.getEntity().blockPosition().below(i);
+            if(event.getEntity().level.getBlockState(cPos).is(BlockRegistry.BLOCK_BLOOD_DRAIN.block().get()))
+            {
+                BlockEntity be = event.getEntity().level.getBlockEntity(cPos);
+                if(be instanceof BE_BloodDrain drain)
+                {
+                    drain.collectEntityBlood(event.getEntity(), event.getAmount());
+                }
+            }
+        }
     }
 }

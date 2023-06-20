@@ -1,0 +1,101 @@
+{
+	"credit": "Made with Blockbench",
+	"render_type": "cutout",
+	"textures": {
+		"0": "bloodworks:blocks/block_blood_drain",
+		"1": "bloodworks:blocks/block_blood_drain_side",
+		"2": "bloodworks:blocks/block_blood_drain_maceration_wheel",
+		"particle": "bloodworks:blocks/block_blood_drain"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"north": {"uv": [0, 14, 16, 16], "texture": "#1", "cullface": "north"},
+				"east": {"uv": [0, 14, 16, 16], "texture": "#1", "cullface": "east"},
+				"south": {"uv": [0, 14, 16, 16], "texture": "#1", "cullface": "south"},
+				"west": {"uv": [0, 14, 16, 16], "texture": "#1", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "down"}
+			}
+		},
+		{
+			"name": "Interior",
+			"from": [16, 0.1, 0],
+			"to": [0, 1.9, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "texture": "#1", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 2], "texture": "#1", "cullface": "west"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#1", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 2], "texture": "#1", "cullface": "east"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#0"}
+			}
+		},
+		{
+			"name": "Macerator1",
+			"from": [14, 0, 3],
+			"to": [14, 6, 15],
+			"faces": {
+				"east": {"uv": [1, 0, 15, 6], "texture": "#2"},
+				"west": {"uv": [15, 0, 1, 6], "texture": "#2"}
+			}
+		},
+		{
+			"name": "Macerator2",
+			"from": [10, 0, 3],
+			"to": [10, 6, 15],
+			"faces": {
+				"east": {"uv": [1, 0, 15, 6], "texture": "#2"},
+				"west": {"uv": [15, 0, 1, 6], "texture": "#2"}
+			}
+		},
+		{
+			"name": "Macerator3",
+			"from": [6, 0, 3],
+			"to": [6, 6, 15],
+			"faces": {
+				"east": {"uv": [1, 0, 15, 6], "texture": "#2"},
+				"west": {"uv": [15, 0, 1, 6], "texture": "#2"}
+			}
+		},
+		{
+			"name": "Macerator4",
+			"from": [2, 0, 3],
+			"to": [2, 6, 15],
+			"faces": {
+				"east": {"uv": [1, 0, 15, 6], "texture": "#2"},
+				"west": {"uv": [15, 0, 1, 6], "texture": "#2"}
+			}
+		},
+		{
+			"name": "Macerator4",
+			"from": [4, 0, 1],
+			"to": [4, 6, 13],
+			"faces": {
+				"east": {"uv": [16, 1, 10, 15], "rotation": 90, "texture": "#2"},
+				"west": {"uv": [16, 15, 10, 1], "rotation": 90, "texture": "#2"}
+			}
+		},
+		{
+			"name": "Macerator3",
+			"from": [8, 0, 1],
+			"to": [8, 6, 13],
+			"faces": {
+				"east": {"uv": [16, 1, 10, 15], "rotation": 90, "texture": "#2"},
+				"west": {"uv": [16, 15, 10, 1], "rotation": 90, "texture": "#2"}
+			}
+		},
+		{
+			"name": "Macerator2",
+			"from": [12, 0, 1],
+			"to": [12, 6, 13],
+			"faces": {
+				"east": {"uv": [16, 1, 10, 15], "rotation": 90, "texture": "#2"},
+				"west": {"uv": [16, 15, 10, 1], "rotation": 90, "texture": "#2"}
+			}
+		}
+	]
+}

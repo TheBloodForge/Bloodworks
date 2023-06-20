@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "macerator_level=0": {
+      "model": "bloodworks:block/block_blood_drain"
+    },
+    "macerator_level=1": {
+      "model": "bloodworks:block/block_blood_drain_macerating"
+    }
+  }
+}

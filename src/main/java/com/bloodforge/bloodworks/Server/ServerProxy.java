@@ -22,4 +22,5 @@ public class ServerProxy
 
         MinecraftForge.EVENT_BUS.register(new ForgeServerEvents());
     }
+
 }
