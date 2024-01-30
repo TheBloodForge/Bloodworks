@@ -165,5 +165,7 @@
   "neuron.bloodworks.add": "Ⓜ Sum",
   "neuron.bloodworks.mul": "Ⓜ Multiply",
   "neuron.bloodworks.recip": "Ⓜ Reciprocal",
-  "neuron.bloodworks.rand": "Ⓜ Rand"
+  "neuron.bloodworks.rand": "Ⓜ Rand",
+
+  "ui.bloodworks.error.neuron_dry": "Neuron must be placed inside a Braincase."
 }

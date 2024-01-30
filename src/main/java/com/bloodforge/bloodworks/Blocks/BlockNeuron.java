@@ -2,6 +2,7 @@ package com.bloodforge.bloodworks.Blocks;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Neuron;
 import com.bloodforge.bloodworks.Globals;
+import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.bloodforge.bloodworks.Registry.ItemRegistry;
 import com.bloodforge.bloodworks.Server.PlayerSelectionHudTracker;
@@ -16,6 +17,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -58,6 +60,15 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock, 
     }
 
     @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState p_60569_, boolean p_60570_)
+    {
+        if (level.getBlockEntity(pos) instanceof BE_Neuron be_neuron)
+        {
+            be_neuron.isDry = !state.getValue(BlockBrainInteriorBase.WATERLOGGED);
+        }
+    }
+
+    @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos)
     {
         return 12;
@@ -67,6 +78,18 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock, 
     public float getShadeBrightness(BlockState state, BlockGetter blockGetter, BlockPos blockPos)
     {
         return 1F;
+    }
+
+    @Override
+    public void onBlockStateChange(LevelReader level, BlockPos pos, BlockState oldState, BlockState newState)
+    {
+        super.onBlockStateChange(level, pos, oldState, newState);
+
+        if (level.getBlockEntity(pos) instanceof BE_Neuron be_neuron)
+        {
+            be_neuron.isDry = !newState.getValue(BlockBrainInteriorBase.WATERLOGGED);
+        }
+
     }
 
     @Nullable
@@ -86,22 +109,26 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock, 
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState cState, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
-        if (!level.isClientSide())
-        {
-            if (player.getItemInHand(interactionHand).is(ItemRegistry.ITEM_NEURAL_CATALYST.get()))
-            {
-                if (level.getBlockEntity(pos) instanceof BE_Neuron)
-                {
-                    BE_Neuron.doConnection(pos, level);
-                }
-            }
-            else
-            {
-                if(!PlayerSelectionHudTracker.PlayerHasMenuOpen((ServerPlayer) player, pos))
-                {
+        if (level.isClientSide()) return super.use(cState, level, pos, player, interactionHand, blockHitResult);
 
-                    PlayerSelectionHudTracker.OpenAndTrackMenu((ServerPlayer) player, neuronTypeMenu, pos, 0, this);
-                }
+        if(!cState.getValue(BlockBrainInteriorBase.WATERLOGGED))
+        {
+            PacketManager.showErrorToClient(pos, Component.translatable("ui.bloodworks.error.neuron_dry"), (ServerPlayer) player);
+            return super.use(cState, level, pos, player, interactionHand, blockHitResult);
+        }
+        if (player.getItemInHand(interactionHand).is(ItemRegistry.ITEM_NEURAL_CATALYST.get()))
+        {
+            if (level.getBlockEntity(pos) instanceof BE_Neuron)
+            {
+                BE_Neuron.doConnection(pos, level);
+            }
+        }
+        else
+        {
+            if(!PlayerSelectionHudTracker.PlayerHasMenuOpen((ServerPlayer) player, pos))
+            {
+
+                PlayerSelectionHudTracker.OpenAndTrackMenu((ServerPlayer) player, neuronTypeMenu, pos, 0, this);
             }
         }
 

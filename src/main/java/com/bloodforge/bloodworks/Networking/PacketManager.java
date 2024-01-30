@@ -1,7 +1,9 @@
 package com.bloodforge.bloodworks.Networking;
 
 import com.bloodforge.bloodworks.Globals;
+import com.bloodforge.bloodworks.Registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -103,8 +105,15 @@ public class PacketManager
         INSTANCE.send(PacketDistributor.ALL.noArg(), message);
     }
 
+    //-------- UTILITY FUNCTIONS --------
     public static void playSoundToClients(RegistryObject<SoundEvent> sound, SoundSource soundSource, BlockPos position, float volume, float pitch)
     {
         PacketManager.sendToClients(new SoundS2CPacket(sound.get().getLocation(), soundSource, new Vec3(position.getX(), position.getY(), position.getZ()), volume, pitch));
+    }
+    public static void showErrorToClient(BlockPos position, Component message, ServerPlayer player)
+    {
+        sendToPlayer(new MessageS2CPacket(message, false), player);
+        //TODO: Make Error Sound
+        sendToPlayer(new SoundS2CPacket(SoundRegistry.WRENCH_LOOSEN.get().getLocation(), SoundSource.PLAYERS, new Vec3(position.getX(), position.getY(), position.getZ()), 1, 1), player);
     }
 }

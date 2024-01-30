@@ -16,6 +16,7 @@ public class BE_Neuron extends BlockEntity
 {
     List<BlockPos> neuronLocations = new ArrayList<>();
     private String NEURAL_ID;
+    public boolean isDry = false;
 
     public BE_Neuron(BlockPos pos, BlockState blockState)
     {
@@ -39,6 +40,7 @@ public class BE_Neuron extends BlockEntity
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, BE_Neuron entity)
     {
+        //entity.isDry = !blockState.getValue(BlockBrainInteriorBase.WATERLOGGED);
     }
 
     public HashMap<String, BlockPos> neuronMap = new HashMap<>();

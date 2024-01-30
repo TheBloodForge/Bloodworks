@@ -58,7 +58,7 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
         VertexConsumer buffer = RenderHelper.StartRenderingTranslucent(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_neuron.png"));
         poseStack.translate(0.5, 0.5, 0.5);
 
-        DrawNeuron(buffer, poseStack, totalTicks, combinedLight, blockPos);
+        DrawNeuron(buffer, poseStack, totalTicks, combinedLight, blockPos, ent.isDry);
         RenderHelper.FinishRendering(buffer);
 
         buffer = RenderHelper.StartRenderingTranslucent(bufferSource, new ResourceLocation(Globals.MODID, "textures/blocks/block_neuron_axon.png"));
@@ -81,9 +81,11 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
     }
 
 
-    private void DrawNeuron(VertexConsumer buffer, PoseStack poseStack, long animTime, int combinedLight, BlockPos center)
+    private void DrawNeuron(VertexConsumer buffer, PoseStack poseStack, long animTime, int combinedLight, BlockPos center, boolean dry)
     {
         int neuronFrame = (int) (animTime / 2f) % 4;
+        if(dry)
+            neuronFrame = 4 + (int) (animTime / 4f) % 2;
         poseStack.pushPose();
         Vec3 neuronCenter = Vec3.ZERO;//new Vec3(center.getX(), center.getY(), center.getZ()).add(0.5, 0.5, 0.5);
         Entity cameraEntity = Minecraft.getInstance().cameraEntity;
@@ -98,10 +100,10 @@ public class BER_Neuron implements BlockEntityRenderer<BE_Neuron>
 
         RenderHelper.DoQuadWithColor(buffer, poseStack.last().pose(),
                 vertexA, vertexB, vertexC, vertexD,
-                new Vec2(1, 0.25f * (neuronFrame + 1)),
-                new Vec2(1, 0.25f * neuronFrame),
-                new Vec2(0, 0.25f * neuronFrame),
-                new Vec2(0, 0.25f * (neuronFrame + 1)),
+                new Vec2(1, (1f/6f) * (neuronFrame + 1)),
+                new Vec2(1, (1f/6f) * neuronFrame),
+                new Vec2(0, (1f/6f) * neuronFrame),
+                new Vec2(0, (1f/6f) * (neuronFrame + 1)),
                 combinedLight,
                 new Vector4f(1f, 1f, 1f, 1f));
         poseStack.popPose();
