@@ -29,7 +29,7 @@ public class ForgeClientEvents
     @SubscribeEvent
     public void onMouseInput(InputEvent.InteractionKeyMappingTriggered event)
     {
-        boolean isMenuInControl = SelectionMenuHudOverlay.isMenuOpen;
+        boolean isMenuInControl = SelectionMenuHudOverlay.isMenuInControl();
         if(event.isUseItem())
         {
             SelectionMenuHudOverlay.HandleSelect();

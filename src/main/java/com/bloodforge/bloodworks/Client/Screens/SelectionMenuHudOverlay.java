@@ -34,6 +34,12 @@ public class SelectionMenuHudOverlay implements IGuiOverlay
     public static BlockPos targetBlock;
     public static int menuSelectionIndex = 0;
     public static int cMenuWidth = 100;
+    public static double menuCooldown = 0;
+
+    public static boolean isMenuInControl()
+    {
+        return isMenuOpen || menuCooldown > 0;
+    }
 
     public static void OpenMenu(SelectionMenuOptions menu, BlockPos position, int initialSelection)
     {
@@ -55,6 +61,7 @@ public class SelectionMenuHudOverlay implements IGuiOverlay
     public static int CloseMenu()
     {
         isMenuOpen = false;
+        menuCooldown = 5f;
         return menuSelectionIndex;
     }
 
@@ -104,9 +111,11 @@ public class SelectionMenuHudOverlay implements IGuiOverlay
     public void render(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight)
     {
         Pair<Vec2, Boolean> projected = HudUtils.projectToPlayerView(targetPosition.x, targetPosition.y, targetPosition.z, partialTick, screenWidth, screenHeight);
-
         boolean isMenuInRange = targetPosition.distanceTo(Minecraft.getInstance().player.position()) < 10;
         float dt = Minecraft.getInstance().getDeltaFrameTime();
+        if(menuCooldown > 0){
+            menuCooldown -= dt;
+        }
         Pair<Vec2, Vec2> springResult = Util.SpringInterpolate(lastScreenPos, new Vec2(projected.first().x + 10, projected.first().y + 10), menuVelocity, 2f / (dt), 0.5f * dt);
         Vec2 targetPos = springResult.first();
         menuVelocity = springResult.second();
