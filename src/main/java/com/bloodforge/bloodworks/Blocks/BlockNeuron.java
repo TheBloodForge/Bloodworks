@@ -1,9 +1,15 @@
 package com.bloodforge.bloodworks.Blocks;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Neuron;
+import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
 import com.bloodforge.bloodworks.Registry.ItemRegistry;
+import com.bloodforge.bloodworks.Server.PlayerSelectionHudTracker;
+import com.bloodforge.bloodworks.Util.ISelectionMenuResponder;
+import com.bloodforge.bloodworks.Util.SelectionMenuOptions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +26,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock
+public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock, ISelectionMenuResponder
 {
     protected VoxelShape BLOCK_SHAPE = box(4, 4, 4, 12, 12, 12);
 
@@ -69,20 +75,39 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState cState, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult)
     {
-        if (level.isClientSide())
+        if (!level.isClientSide())
         {
-            System.out.println(cState.getValue(WATERLOGGED));
-            return super.use(cState, level, pos, player, interactionHand, blockHitResult);
-        }
-        if (player.getItemInHand(interactionHand).is(ItemRegistry.ITEM_NEURAL_CATALYST.get()))
-        {
-            if (level.getBlockEntity(pos) instanceof BE_Neuron)
+            if (player.getItemInHand(interactionHand).is(ItemRegistry.ITEM_NEURAL_CATALYST.get()))
             {
-                BE_Neuron.doConnection(pos, level);
+                if (level.getBlockEntity(pos) instanceof BE_Neuron)
+                {
+                    BE_Neuron.doConnection(pos, level);
+                }
+            }
+            else
+            {
+                if(!PlayerSelectionHudTracker.PlayerHasMenuOpen((ServerPlayer) player, pos))
+                {
+                    SelectionMenuOptions opt = new SelectionMenuOptions(Component.literal("Gamer Menu"))
+                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.translatable("block.bloodworks.block_fluid_pipe")))
+                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.literal("Gloop")))
+                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.literal("Blerp")))
+                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.literal("Jerma's mom")))
+                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.literal("aeaeaeaea")))
+                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.literal("Don't")));
+                    PlayerSelectionHudTracker.OpenAndTrackMenu((ServerPlayer) player, opt, pos, 0, this);
+                }
             }
         }
 
+
         return super.use(cState, level, pos, player, interactionHand, blockHitResult);
         //return InteractionResult.sidedSuccess(!level.isClientSide());
+    }
+
+    @Override
+    public void ReceiveSelection(BlockPos pos, SelectionMenuOptions menu, int selection, boolean isFinalSelection, boolean isCancelled)
+    {
+        Globals.LogDebug("PLAYER SELECTED " + selection + " IN MENU! FINAL:"+isFinalSelection+" CANCEL:"+isCancelled, false);
     }
 }

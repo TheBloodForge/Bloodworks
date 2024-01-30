@@ -88,6 +88,14 @@
   "block.bloodworks.block_fluid_pipe.selfquote": "A pipe, for fluids!",
   "block.bloodworks.block_fluid_pipe.use": "[⚗] Transports fluids",
 
+  "block.bloodworks.block_stirling_generator": "Stirling Generator",
+  "block.bloodworks.block_stirling_generator.selfquote": "Hot stuff goes on the bottom; Cold stuff goes on the sides!",
+  "block.bloodworks.block_stirling_generator.use": "[⚡] Generator",
+
+  "block.bloodworks.block_battery": "Buffer Battery",
+  "block.bloodworks.block_battery.selfquote": "Truly a marvel of engineering! Can be stacked into longer cells.",
+  "block.bloodworks.block_battery.use": "[⚡] Power Storage",
+
 
   "_comment": "-------------------------------------------ITEMS----------------------------------------------------",
   "item.bloodworks.item_stabilizer": "Stabilizer",
@@ -122,6 +130,14 @@
 
   "_comment": "-------------------------------------------SOUNDS---------------------------------------------------",
 
+  "music.bloodworks.industry": "wiggle1000 - Industry",
+  "sounds.bloodworks.braincase.idle": "Braincase Humming",
+  "sounds.bloodworks.stirling.idle": "Stirling Engine Chooching",
+  "sounds.bloodworks.blood_infuser.idle": "Machine Humming",
+
+  "sounds.bloodworks.tool.wrench.tighten": "Wrench Tightening",
+  "sounds.bloodworks.tool.wrench.loosen": "Wrench Loosening",
+
   "_comment": "--------------------------------------------MISC----------------------------------------------------",
   "itemGroup.bloodworks": "Bloodworks",
   "bloodworks.blood_tank.info.capacity": "Capacity",
@@ -129,8 +145,10 @@
 
   "death.bloodworks.macerator": "%1$s was ground into a bloody paste. Yum!",
 
-  "music.bloodworks.industry": "wiggle1000 - Industry",
-  "sounds.bloodworks.braincase.idle": "Braincase Humming",
-  "sounds.bloodworks.stirling.idle": "Stirling Engine Chooching",
-  "sounds.bloodworks.blood_infuser.idle": "Machine Humming"
+  "ui.bloodworks.currently_generating": "Generating",
+  "ui.bloodworks.temp_difference": "Temp Difference",
+  "ui.bloodworks.stored_energy": "Stored Energy",
+
+  "ui.bloodworks.set_to_input": "Set to Input",
+  "ui.bloodworks.set_to_output": "Set to Output"
 }

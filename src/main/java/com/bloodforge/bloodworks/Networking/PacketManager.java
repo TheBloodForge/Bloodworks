@@ -1,12 +1,17 @@
 package com.bloodforge.bloodworks.Networking;
 
 import com.bloodforge.bloodworks.Globals;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.registries.RegistryObject;
 
 @SuppressWarnings("unused")
 public class PacketManager
@@ -71,6 +76,16 @@ public class PacketManager
                 .encoder(SoundS2CPacket::toBytes)
                 .consumerMainThread(SoundS2CPacket::handle)
                 .add();
+        net.messageBuilder(SelectionMenuS2CPacket.class, id(), PAYLOAD_TO_CLIENT)
+                .decoder(SelectionMenuS2CPacket::new)
+                .encoder(SelectionMenuS2CPacket::toBytes)
+                .consumerMainThread(SelectionMenuS2CPacket::handle)
+                .add();
+        net.messageBuilder(SelectionMenuC2SPacket.class, id(), PAYLOAD_TO_SERVER)
+                .decoder(SelectionMenuC2SPacket::new)
+                .encoder(SelectionMenuC2SPacket::toBytes)
+                .consumerMainThread(SelectionMenuC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message)
@@ -86,5 +101,10 @@ public class PacketManager
     public static <MSG> void sendToClients(MSG message)
     {
         INSTANCE.send(PacketDistributor.ALL.noArg(), message);
+    }
+
+    public static void playSoundToClients(RegistryObject<SoundEvent> sound, SoundSource soundSource, BlockPos position, float volume, float pitch)
+    {
+        PacketManager.sendToClients(new SoundS2CPacket(sound.get().getLocation(), soundSource, new Vec3(position.getX(), position.getY(), position.getZ()), volume, pitch));
     }
 }

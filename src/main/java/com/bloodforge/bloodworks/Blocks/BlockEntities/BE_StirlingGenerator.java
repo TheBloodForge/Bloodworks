@@ -6,7 +6,7 @@ import com.bloodforge.bloodworks.Energy.EnergyBattery;
 import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
-import com.bloodforge.bloodworks.Util;
+import com.bloodforge.bloodworks.Util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +27,7 @@ public class BE_StirlingGenerator extends BlockEntity
 
     public int targetEnergyGeneration;
     public int energyGeneration;
+    public float currentTempDiffCelsius = 0; //used for information
     public float energyGenerationF; //used to smoothly change energy level, using the int version causes lerp to stop short :(
     private final LazyOptional<IEnergyStorage> energy;
     public final EnergyBattery battery;
@@ -48,6 +49,24 @@ public class BE_StirlingGenerator extends BlockEntity
         updateTag.putFloat("energyGenF", gen.energyGenerationF);
         updateTag.put("energy", gen.battery.serializeNBT());
         PacketManager.sendToClients(new NBTSyncS2CPacket(blockPos, updateTag));
+        gen.distributeEnergy();
+    }
+
+    public void distributeEnergy()
+    {
+        if(level == null) return;
+        Direction outputDir = getBlockState().getValue(BlockMachineBase.FACING);
+        BlockEntity powerOutputBE = level.getBlockEntity(getBlockPos().relative(outputDir));
+        if(powerOutputBE == null) return;
+        powerOutputBE.getCapability(ForgeCapabilities.ENERGY, outputDir.getOpposite()).map(e->
+        {
+            if(!e.canReceive()) return 0;
+            int maxReceivable = e.receiveEnergy(battery.getStored(), true);
+            int extracted = battery.extractEnergy(maxReceivable, false);
+            e.receiveEnergy(extracted, false);
+            setChanged();
+            return 0;
+        });
     }
 
     @Override
@@ -94,15 +113,21 @@ public class BE_StirlingGenerator extends BlockEntity
         if(nbt.get("energyGenF") != null) energyGenerationF = nbt.getFloat("energyGenF");
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
+    public void DoEnergyRecalculation()
+    {
         if(level.isClientSide()) return;
         BlockState below = level.getBlockState(getBlockPos().below());
         BlockState n     = level.getBlockState(getBlockPos().north());
         BlockState e     = level.getBlockState(getBlockPos().east());
         BlockState s     = level.getBlockState(getBlockPos().south());
         BlockState w     = level.getBlockState(getBlockPos().west());
-        updateEnergyProduction(BlockStirlingGenerator.GetGenerationFromBlocks(below, n, e, s, w));
+        currentTempDiffCelsius = BlockStirlingGenerator.GetTempDiffFromBlocks(below, n, e, s, w);
+        updateEnergyProduction(BlockStirlingGenerator.GetGenerationFromTempDiff(currentTempDiffCelsius));
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        DoEnergyRecalculation();
     }
 }

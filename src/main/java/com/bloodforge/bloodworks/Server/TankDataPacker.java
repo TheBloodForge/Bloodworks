@@ -1,7 +1,7 @@
 package com.bloodforge.bloodworks.Server;
 
 import com.bloodforge.bloodworks.Globals;
-import com.bloodforge.bloodworks.Util;
+import com.bloodforge.bloodworks.Util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.capability.templates.FluidTank;

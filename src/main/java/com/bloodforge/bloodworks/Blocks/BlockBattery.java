@@ -4,10 +4,13 @@ import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Battery;
 import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
+import com.bloodforge.bloodworks.Registry.SoundRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
@@ -33,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 public class BlockBattery extends BlockMachineBase
 {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
+    public static final BooleanProperty IS_OUTPUT = BooleanProperty.create("is_output");
     //0 = standalone
     //1 = bottom
     //2 = middle
@@ -55,14 +60,20 @@ public class BlockBattery extends BlockMachineBase
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_55933_) {
-        p_55933_.add(AXIS).add(PILLAR_POS);
+        p_55933_.add(AXIS).add(PILLAR_POS).add(IS_OUTPUT);
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext placeContext)
     {
         Direction.Axis axis = placeContext.getClickedFace().getAxis();
         int pillarPos = getPillarPos(placeContext.getLevel(), placeContext.getClickedPos(), axis);
-        return this.defaultBlockState().setValue(AXIS, axis).setValue(PILLAR_POS, pillarPos);
+        BlockState placedOff = placeContext.getLevel().getBlockState(placeContext.getClickedPos().relative(placeContext.getClickedFace().getOpposite()));
+        boolean isOutput = placeContext.getClickedFace().getAxisDirection() == Direction.AxisDirection.POSITIVE;
+        if(placedOff.getBlock() == BlockRegistry.BLOCK_BATTERY.block().get())
+        {
+            isOutput = true;
+        }
+        return this.defaultBlockState().setValue(AXIS, axis).setValue(PILLAR_POS, pillarPos).setValue(IS_OUTPUT, isOutput);
     }
 
     private int getPillarPos(Level level, BlockPos pos, Direction.Axis axis)
@@ -102,14 +113,30 @@ public class BlockBattery extends BlockMachineBase
     {
         if (!level.isClientSide())
         {
-            //todo: tell client gen stats
-            if(level.getBlockEntity(pos) instanceof BE_Battery battery)
+
+            if(player.isCrouching())
+            {
+                BlockState newBlockState = cState.getBlock().defaultBlockState().setValue(AXIS, cState.getValue(AXIS)).setValue(PILLAR_POS, cState.getValue(PILLAR_POS)).setValue(IS_OUTPUT, !cState.getValue(IS_OUTPUT));
+                level.setBlockAndUpdate(pos, newBlockState);
+                if(newBlockState.getValue(IS_OUTPUT))
+                {
+                    PacketManager.playSoundToClients(SoundRegistry.WRENCH_TIGHTEN, SoundSource.PLAYERS, pos, 1.0F, 1.0F);
+                    PacketManager.sendToPlayer(new MessageS2CPacket(Component.translatable("ui.bloodworks.set_to_output").withStyle(ChatFormatting.RED),false), (ServerPlayer) player);
+                }
+                else
+                {
+                    PacketManager.playSoundToClients(SoundRegistry.WRENCH_LOOSEN, SoundSource.PLAYERS, pos, 1.0F, 1.0F);
+                    PacketManager.sendToPlayer(new MessageS2CPacket(Component.translatable("ui.bloodworks.set_to_input").withStyle(ChatFormatting.BLUE),false), (ServerPlayer) player);
+                }
+                return InteractionResult.sidedSuccess(!level.isClientSide());
+            }
+            else if(level.getBlockEntity(pos) instanceof BE_Battery battery)
             {
                 PacketManager.sendToPlayer(new MessageS2CPacket(Component.literal(
-                        battery.battery.getStored() + "/" + battery.battery.getCapacity()),false),
+                        battery.battery.getStored() + "/" + battery.battery.getCapacity() + " RF"),false),
                         (ServerPlayer) player);
+                return InteractionResult.PASS;
             }
-            return super.use(cState, level, pos, player, interactionHand, blockHitResult);
         }
 
         return InteractionResult.sidedSuccess(!level.isClientSide());
@@ -124,7 +151,12 @@ public class BlockBattery extends BlockMachineBase
         int pillarPos = getPillarPos(level, pos, state.getValue(AXIS));
         if (pillarPos != state.getValue(PILLAR_POS))
         {
-            BlockState newBlockState = state.getBlock().defaultBlockState().setValue(AXIS, state.getValue(AXIS)).setValue(PILLAR_POS, pillarPos);
+            boolean isOut = state.getValue(IS_OUTPUT);
+            if(state.getValue(PILLAR_POS) == 0) //if was single battery
+            {
+                isOut = false; //fixes placement of multiple batteries causing inconsistent result based on direction of placement
+            }
+            BlockState newBlockState = state.getBlock().defaultBlockState().setValue(AXIS, state.getValue(AXIS)).setValue(PILLAR_POS, pillarPos).setValue(IS_OUTPUT, isOut);
             level.setBlockAndUpdate(pos, newBlockState);
         }
     }

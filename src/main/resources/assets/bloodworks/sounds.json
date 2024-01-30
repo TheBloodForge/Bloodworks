@@ -57,5 +57,16 @@
 	{
 		"subtitle":"sounds.bloodworks.flesh.grow",
 		"sounds": [ "bloodworks:block/flesh.grow" ]
+	},
+
+	"bloodworks.tool.wrench.tighten":
+	{
+		"subtitle":"sounds.bloodworks.tool.wrench.tighten",
+		"sounds": [ "bloodworks:tool/wrench.tighten" ]
+	},
+	"bloodworks.tool.wrench.loosen":
+	{
+		"subtitle":"sounds.bloodworks.tool.wrench.loosen",
+		"sounds": [ "bloodworks:tool/wrench.loosen" ]
 	}
 }

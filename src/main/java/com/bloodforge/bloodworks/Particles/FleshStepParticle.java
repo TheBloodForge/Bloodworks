@@ -1,7 +1,7 @@
 package com.bloodforge.bloodworks.Particles;
 
 import com.bloodforge.bloodworks.Globals;
-import com.bloodforge.bloodworks.Util;
+import com.bloodforge.bloodworks.Util.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;

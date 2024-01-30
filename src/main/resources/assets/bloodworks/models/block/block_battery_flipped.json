@@ -6,8 +6,8 @@
 		"1": "bloodworks:blocks/block_battery_side",
 		"2": "bloodworks:blocks/block_battery_window",
 		"3": "bloodworks:blocks/block_battery_top_out",
-		"4": "bloodworks:blocks/block_battery_edge_out",
-		"5": "bloodworks:blocks/block_battery_edge",
+		"4": "bloodworks:blocks/block_battery_edge",
+		"5": "bloodworks:blocks/block_battery_edge_out",
 		"particle": "bloodworks:blocks/block_battery_top"
 	},
 	"elements": [
@@ -20,8 +20,8 @@
 				"east": {"uv": [0, 14, 16, 16], "texture": "#4", "cullface": "east"},
 				"south": {"uv": [0, 14, 16, 16], "texture": "#4", "cullface": "south"},
 				"west": {"uv": [0, 14, 16, 16], "texture": "#4", "cullface": "west"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#3"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "down"}
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "down"}
 			}
 		},
 		{
@@ -33,8 +33,8 @@
 				"east": {"uv": [0, 0, 16, 2], "texture": "#5", "cullface": "east"},
 				"south": {"uv": [0, 0, 16, 2], "texture": "#5", "cullface": "south"},
 				"west": {"uv": [0, 0, 16, 2], "texture": "#5", "cullface": "west"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "up"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+				"up": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#3"}
 			}
 		},
 		{

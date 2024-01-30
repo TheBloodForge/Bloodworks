@@ -3,7 +3,7 @@ package com.bloodforge.bloodworks.Client;
 import com.bloodforge.bloodworks.Blocks.BlockEntities.*;
 import com.bloodforge.bloodworks.Client.BlockRenderers.*;
 import com.bloodforge.bloodworks.Client.Screens.InfusionChamberScreen;
-import com.bloodforge.bloodworks.Client.Screens.NeuronConnectionHudOverlay;
+import com.bloodforge.bloodworks.Client.Screens.SelectionMenuHudOverlay;
 import com.bloodforge.bloodworks.Client.Sound.SoundHelper;
 import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Particles.FleshStepParticle;
@@ -42,7 +42,7 @@ public class ClientProxy
             MinecraftForge.EVENT_BUS.register(new ForgeClientEvents());
         }
 
-        public static final NeuronConnectionHudOverlay NEURON_CONNECTION_HUD_OVERLAY = new NeuronConnectionHudOverlay();
+        public static final SelectionMenuHudOverlay NEURON_CONNECTION_HUD_OVERLAY = new SelectionMenuHudOverlay();
         @SubscribeEvent
         public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
             event.registerAboveAll("neuron_connection_hud", NEURON_CONNECTION_HUD_OVERLAY::render);

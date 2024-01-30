@@ -4,7 +4,6 @@ import com.bloodforge.bloodworks.Common.CommonProxy;
 import com.bloodforge.bloodworks.Common.Compatability.OneProbeCompat;
 import com.bloodforge.bloodworks.Common.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Registry.*;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -25,7 +24,8 @@ public class BloodworksMod
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modEventBus.addListener(CommonProxy::commonSetup);
-        MinecraftForge.EVENT_BUS.register(this);
+        modEventBus.addListener(this::onInterModEnqueue);
+        modEventBus.addListener(this::InterModResponses);
 
         // -------- Register DeferredRegistries --------
         BlockRegistry.BLOCKS.register(modEventBus);
@@ -62,5 +62,6 @@ public class BloodworksMod
     public void onInterModEnqueue(InterModEnqueueEvent event)
     {
         InterModComms.sendTo("theoneprobe", "getTheOneProbe", OneProbeCompat::new);
+        Globals.LogInfo("Registered TheOneProbe Compatability.");
     }
 }

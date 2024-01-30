@@ -3,7 +3,7 @@ package com.bloodforge.bloodworks.Blocks.BlockEntities;
 import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
-import com.bloodforge.bloodworks.Util;
+import com.bloodforge.bloodworks.Util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;

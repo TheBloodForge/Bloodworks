@@ -148,16 +148,20 @@ public class BlockStirlingGenerator extends BlockMachineBase
         return 20; //TODO: make this ambient temperature based on biome, height, etc
     }
 
-    public static int GetGenerationFromBlocks(BlockState blockBelow, BlockState blockN, BlockState blockE, BlockState blockS, BlockState blockW)
+    public static float GetTempDiffFromBlocks(BlockState blockBelow, BlockState blockN, BlockState blockE, BlockState blockS, BlockState blockW)
     {
         float tempDiff = TryGetTempForBlockState(blockBelow)*4f -
-            (TryGetTempForBlockState(blockN) +
-             TryGetTempForBlockState(blockE) +
-             TryGetTempForBlockState(blockS) +
-             TryGetTempForBlockState(blockW));
+                (TryGetTempForBlockState(blockN) +
+                        TryGetTempForBlockState(blockE) +
+                        TryGetTempForBlockState(blockS) +
+                        TryGetTempForBlockState(blockW));
+        return tempDiff;
+    }
+    public static int GetGenerationFromTempDiff(float tempDiffIn)
+    {
+        float tempDiff = tempDiffIn;
         tempDiff /= BloodworksCommonConfig.STIRLING_GENERATOR_GENERATION_MOD.get(); //FE/t/C
         if(tempDiff < 0) tempDiff = 0;
-        System.out.println("Total temperature diff: " + tempDiff);
         return (int)Math.floor(tempDiff);
     }
 
@@ -168,12 +172,7 @@ public class BlockStirlingGenerator extends BlockMachineBase
         if(level.isClientSide()) return;
         if(level.getBlockEntity(pos) instanceof BE_StirlingGenerator stirlingGenerator)
         {
-            BlockState below = level.getBlockState(pos.below());
-            BlockState n = level.getBlockState(pos.north());
-            BlockState e = level.getBlockState(pos.east());
-            BlockState s = level.getBlockState(pos.south());
-            BlockState w = level.getBlockState(pos.west());
-            stirlingGenerator.updateEnergyProduction(GetGenerationFromBlocks(below, n, e, s, w));
+            stirlingGenerator.DoEnergyRecalculation();
         }
     }
 

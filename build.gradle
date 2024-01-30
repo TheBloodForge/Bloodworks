@@ -35,7 +35,8 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-
+            it.property 'mixin.env.remapRefMap', 'true'
+            it.property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
             // "SCAN": For mods scan.
@@ -60,6 +61,8 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
+            it.property 'mixin.env.remapRefMap', 'true'
+            it.property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             property 'forge.logging.markers', 'REGISTRIES'
 
@@ -79,6 +82,8 @@ minecraft {
         // The gametest system is also enabled by default for other run configs under the /test command.
         gameTestServer {
             workingDirectory project.file('run')
+            it.property 'mixin.env.remapRefMap', 'true'
+            it.property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             property 'forge.logging.markers', 'REGISTRIES'
 
@@ -130,6 +135,12 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        url "https://modmaven.dev"
+        content {
+            includeGroup "mcjty.theoneprobe"
+        }
+    }
 }
 
 dependencies {
@@ -150,6 +161,14 @@ dependencies {
 
     compileOnly fg.deobf("curse.maven:ctm-267602:4393695")
     runtimeOnly fg.deobf("curse.maven:ctm-267602:4393695")
+
+    implementation fg.deobf("mcjty.theoneprobe:theoneprobe:1.19-6.2.0-6:api"){
+        transitive = false
+    }
+    runtimeOnly fg.deobf("curse.maven:the-one-probe-245211:3965693")
+
+    //compileOnly fg.deobf("curse.maven:mekanism-268560:4644795")
+    runtimeOnly fg.deobf("curse.maven:mekanism-268560:4644795")
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

@@ -2,7 +2,7 @@ package com.bloodforge.bloodworks.Client.BlockRenderers;
 
 import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Tank;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
-import com.bloodforge.bloodworks.Util;
+import com.bloodforge.bloodworks.Util.Util;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;

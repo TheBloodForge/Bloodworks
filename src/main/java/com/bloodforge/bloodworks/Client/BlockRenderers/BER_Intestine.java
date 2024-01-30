@@ -4,7 +4,7 @@ import com.bloodforge.bloodworks.Blocks.BlockEntities.BE_Intestine;
 import com.bloodforge.bloodworks.Blocks.BlockIntestine;
 import com.bloodforge.bloodworks.Common.Config.BloodworksCommonConfig;
 import com.bloodforge.bloodworks.Globals;
-import com.bloodforge.bloodworks.Util;
+import com.bloodforge.bloodworks.Util.Util;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;

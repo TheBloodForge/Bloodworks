@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "bloodworks:block_flesh_wall",
+    "bloodworks:block_coagulated_blood_wall"
+  ]
+}

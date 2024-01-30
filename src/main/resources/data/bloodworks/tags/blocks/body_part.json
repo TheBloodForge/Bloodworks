@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "bloodworks:block_flesh",
+    "bloodworks:block_flesh_slab",
+    "bloodworks:block_flesh_stairs",
+    "bloodworks:block_flesh_wall"
+  ]
+}

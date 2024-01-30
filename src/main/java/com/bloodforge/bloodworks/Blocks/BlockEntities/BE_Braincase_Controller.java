@@ -5,7 +5,7 @@ import com.bloodforge.bloodworks.Multiblock.Structures.MultiblockBraincase;
 import com.bloodforge.bloodworks.Networking.MessageS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
-import com.bloodforge.bloodworks.Util;
+import com.bloodforge.bloodworks.Util.Util;
 import com.ibm.icu.impl.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;

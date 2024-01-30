@@ -2,11 +2,11 @@
 	"credit": "Made with Blockbench",
 	"render_type": "translucent",
 	"textures": {
-		"0": "bloodworks:blocks/block_battery_top",
+		"0": "bloodworks:blocks/block_battery_top_out",
 		"1": "bloodworks:blocks/block_battery_side",
 		"2": "bloodworks:blocks/block_battery_window",
-		"3": "bloodworks:blocks/block_battery_edge",
-		"particle": "bloodworks:blocks/block_battery_top"
+		"3": "bloodworks:blocks/block_battery_edge_out",
+		"particle": "bloodworks:blocks/block_battery_top_out"
 	},
 	"elements": [
 		{

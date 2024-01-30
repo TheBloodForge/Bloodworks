@@ -1,5 +1,6 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
+import com.bloodforge.bloodworks.Blocks.BlockBattery;
 import com.bloodforge.bloodworks.Energy.EnergyBattery;
 import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
@@ -34,6 +35,7 @@ public class BE_Battery extends BlockEntity
 
     public static void tickServer(Level level, BlockPos blockPos, BlockState blockState, BE_Battery gen)
     {
+        gen.distributeEnergy();
         if (gen.battery.getStored() != gen.lastStoredEnergy)
         {
             CompoundTag updateTag = new CompoundTag();
@@ -43,6 +45,94 @@ public class BE_Battery extends BlockEntity
         }
     }
 
+    public void distributeEnergy()
+    {
+        if(level == null) return;
+        Direction batteryAxis = Direction.fromAxisAndDirection(getBlockState().getValue(BlockBattery.AXIS), Direction.AxisDirection.POSITIVE);;
+        BlockEntity powerOutputP = level.getBlockEntity(getBlockPos().relative(batteryAxis));
+        if(powerOutputP != null)
+        {
+            powerOutputP.getCapability(ForgeCapabilities.ENERGY, batteryAxis.getOpposite()).map(e->
+            {
+                //if is battery
+                if(level.getBlockState(getBlockPos().relative(batteryAxis)).getBlock() == (BlockRegistry.BLOCK_BATTERY.block().get()))
+                {
+                    EqualizeTo(e);
+                    powerOutputP.setChanged();
+                }
+                else if(getBlockState().getValue(BlockBattery.PILLAR_POS) == 0) //single block battery
+                {
+                    //if is_output false, output faces negative on one block battery
+                    if(!getBlockState().getValue(BlockBattery.IS_OUTPUT))
+                    {
+                        SendPowerTo(e);
+                        powerOutputP.setChanged();
+                    }
+                }
+                else if(getBlockState().getValue(BlockBattery.IS_OUTPUT))
+                {
+                    SendPowerTo(e);
+                    powerOutputP.setChanged();
+                }
+                return 0;
+            });
+        }
+        BlockEntity powerOutputN = level.getBlockEntity(getBlockPos().relative(batteryAxis.getOpposite()));
+        if(powerOutputN != null)
+        {
+            powerOutputN.getCapability(ForgeCapabilities.ENERGY, batteryAxis).map(e->
+            {
+                //if is battery
+                if(level.getBlockState(getBlockPos().relative(batteryAxis.getOpposite())).getBlock() == (BlockRegistry.BLOCK_BATTERY.block().get()))
+                {
+                    EqualizeTo(e);
+                    powerOutputN.setChanged();
+                }
+                else if(getBlockState().getValue(BlockBattery.PILLAR_POS) == 0) //single block battery
+                {
+                    //if is_output true, output faces positive on one block battery
+                    if(!getBlockState().getValue(BlockBattery.IS_OUTPUT))
+                    {
+                        SendPowerTo(e);
+                        powerOutputN.setChanged();
+                    }
+                }
+                else if(getBlockState().getValue(BlockBattery.IS_OUTPUT))
+                {
+                    SendPowerTo(e);
+                    powerOutputN.setChanged();
+                }
+                return 0;
+            });
+        }
+    }
+
+    public void EqualizeTo(IEnergyStorage e)
+    {
+        if(!e.canReceive()) return;
+        int equalizeAmt = battery.getEnergyStored() - e.getEnergyStored();
+        if(equalizeAmt <= 0) return;
+        if(equalizeAmt <= 1000)
+        {
+            equalizeAmt /= 2; //prevents passing back and forth
+        }
+        if(equalizeAmt < 2)
+        {
+            equalizeAmt = level.random.nextBoolean()?1:0; //prevents passing back and forth
+        }
+        int maxReceivable = e.receiveEnergy(equalizeAmt, true);
+        int extracted = battery.extractEnergy(maxReceivable, false);
+        e.receiveEnergy(extracted, false);
+        setChanged();
+    }
+    public void SendPowerTo(IEnergyStorage e)
+    {
+        if(!e.canReceive()) return;
+        int maxReceivable = e.receiveEnergy(battery.getStored(), true);
+        int extracted = battery.extractEnergy(maxReceivable, false);
+        e.receiveEnergy(extracted, false);
+        setChanged();
+    }
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
         if (cap == ForgeCapabilities.ENERGY && (side == Direction.UP || side == Direction.DOWN))

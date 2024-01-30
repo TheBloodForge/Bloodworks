@@ -13,6 +13,8 @@ public class SoundRegistry
 
     public static RegistryObject<SoundEvent> MUSIC_DISC_INDUSTRY = registerSoundEvent("bloodworks.music.industry");
     public static RegistryObject<SoundEvent> FLESH_GROW = registerSoundEvent("bloodworks.flesh.grow");
+    public static RegistryObject<SoundEvent> WRENCH_TIGHTEN = registerSoundEvent("bloodworks.tool.wrench.tighten");
+    public static RegistryObject<SoundEvent> WRENCH_LOOSEN = registerSoundEvent("bloodworks.tool.wrench.loosen");
 
 
 

@@ -2,7 +2,7 @@ package com.bloodforge.bloodworks.Blocks;
 
 import com.bloodforge.bloodworks.Particles.ParticleHelper;
 import com.bloodforge.bloodworks.Registry.ParticleRegistry;
-import com.bloodforge.bloodworks.Util;
+import com.bloodforge.bloodworks.Util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 

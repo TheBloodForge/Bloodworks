@@ -1,5 +1,6 @@
-package com.bloodforge.bloodworks;
+package com.bloodforge.bloodworks.Util;
 
+import com.bloodforge.bloodworks.Globals;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
