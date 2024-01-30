@@ -7,6 +7,7 @@ import com.bloodforge.bloodworks.Registry.ItemRegistry;
 import com.bloodforge.bloodworks.Server.PlayerSelectionHudTracker;
 import com.bloodforge.bloodworks.Util.ISelectionMenuResponder;
 import com.bloodforge.bloodworks.Util.SelectionMenuOptions;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,6 +33,16 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock, 
 
     //    public static final BlockShape SHAPE = BlockShape.createBlockShape(2.5, 0, 2.5, 13.5, 16, 13.5);
     public static final BooleanProperty OUTPUT = BooleanProperty.create("output");
+
+    public static SelectionMenuOptions neuronTypeMenu = new SelectionMenuOptions(Component.translatable("neuron.bloodworks.title"))
+            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.translatable("neuron.bloodworks.and")))
+            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.translatable("neuron.bloodworks.or")))
+            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.translatable("neuron.bloodworks.xor")))
+            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.translatable("neuron.bloodworks.not")))
+            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.translatable("neuron.bloodworks.add").withStyle(ChatFormatting.AQUA)))
+            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.translatable("neuron.bloodworks.mul").withStyle(ChatFormatting.AQUA)))
+            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.translatable("neuron.bloodworks.recip").withStyle(ChatFormatting.AQUA)))
+            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.translatable("neuron.bloodworks.rand").withStyle(ChatFormatting.GREEN)));
 
     public BlockNeuron()
     {
@@ -88,14 +99,8 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock, 
             {
                 if(!PlayerSelectionHudTracker.PlayerHasMenuOpen((ServerPlayer) player, pos))
                 {
-                    SelectionMenuOptions opt = new SelectionMenuOptions(Component.literal("Gamer Menu"))
-                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.translatable("block.bloodworks.block_fluid_pipe")))
-                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.literal("Gloop")))
-                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.literal("Blerp")))
-                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.literal("Jerma's mom")))
-                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.literal("aeaeaeaea")))
-                            .withEntry(new SelectionMenuOptions.SelectionMenuEntry(Component.literal("Don't")));
-                    PlayerSelectionHudTracker.OpenAndTrackMenu((ServerPlayer) player, opt, pos, 0, this);
+
+                    PlayerSelectionHudTracker.OpenAndTrackMenu((ServerPlayer) player, neuronTypeMenu, pos, 0, this);
                 }
             }
         }

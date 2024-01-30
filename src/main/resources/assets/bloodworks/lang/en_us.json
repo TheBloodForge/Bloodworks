@@ -138,6 +138,11 @@
   "sounds.bloodworks.tool.wrench.tighten": "Wrench Tightening",
   "sounds.bloodworks.tool.wrench.loosen": "Wrench Loosening",
 
+  "sounds.bloodworks.ui.selector.open": "Selector Open",
+  "sounds.bloodworks.ui.selector.pip": "Selector Pip",
+  "sounds.bloodworks.ui.selector.write": "Selector Write",
+  "sounds.bloodworks.ui.selector.cancel": "Selector Cancel",
+
   "_comment": "--------------------------------------------MISC----------------------------------------------------",
   "itemGroup.bloodworks": "Bloodworks",
   "bloodworks.blood_tank.info.capacity": "Capacity",
@@ -150,5 +155,15 @@
   "ui.bloodworks.stored_energy": "Stored Energy",
 
   "ui.bloodworks.set_to_input": "Set to Input",
-  "ui.bloodworks.set_to_output": "Set to Output"
+  "ui.bloodworks.set_to_output": "Set to Output",
+
+  "neuron.bloodworks.title": "Select Neuron Type",
+  "neuron.bloodworks.and": "☯ And",
+  "neuron.bloodworks.or": "☯ Or",
+  "neuron.bloodworks.xor": "☯ Xor",
+  "neuron.bloodworks.not": "☯ Not",
+  "neuron.bloodworks.add": "Ⓜ Sum",
+  "neuron.bloodworks.mul": "Ⓜ Multiply",
+  "neuron.bloodworks.recip": "Ⓜ Reciprocal",
+  "neuron.bloodworks.rand": "Ⓜ Rand"
 }

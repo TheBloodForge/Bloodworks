@@ -16,6 +16,11 @@ public class SoundRegistry
     public static RegistryObject<SoundEvent> WRENCH_TIGHTEN = registerSoundEvent("bloodworks.tool.wrench.tighten");
     public static RegistryObject<SoundEvent> WRENCH_LOOSEN = registerSoundEvent("bloodworks.tool.wrench.loosen");
 
+    public static RegistryObject<SoundEvent> SELECTOR_OPEN = registerSoundEvent("bloodworks.ui.selector.open");
+    public static RegistryObject<SoundEvent> SELECTOR_PIP = registerSoundEvent("bloodworks.ui.selector.pip");
+    public static RegistryObject<SoundEvent> SELECTOR_CANCEL = registerSoundEvent("bloodworks.ui.selector.cancel");
+    public static RegistryObject<SoundEvent> SELECTOR_WRITE = registerSoundEvent("bloodworks.ui.selector.write");
+
 
 
 

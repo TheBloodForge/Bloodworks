@@ -3,14 +3,18 @@ package com.bloodforge.bloodworks.Client.Screens;
 import com.bloodforge.bloodworks.Globals;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Networking.SelectionMenuC2SPacket;
+import com.bloodforge.bloodworks.Registry.SoundRegistry;
 import com.bloodforge.bloodworks.Util.SelectionMenuOptions;
 import com.bloodforge.bloodworks.Util.Util;
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.Pair;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -61,6 +65,7 @@ public class SelectionMenuHudOverlay implements IGuiOverlay
         menuSelectionIndex = Math.floorMod((int)(menuSelectionIndex-delta),cMenu.entries.size());
         if(prevIndex != menuSelectionIndex)
         {
+            Minecraft.getInstance().level.playLocalSound(targetBlock, SoundRegistry.SELECTOR_PIP.get(), SoundSource.PLAYERS, 1, 1, false);
             PacketManager.sendToServer(new SelectionMenuC2SPacket(menuSelectionIndex, false, false, targetBlock));
         }
         return isMenuOpen;
@@ -81,7 +86,13 @@ public class SelectionMenuHudOverlay implements IGuiOverlay
     {
         if(selected)
         {
-            Minecraft.getInstance().font.draw(poseStack, component, x + 10, y+1 * cMenuSizeScale, 0xFF222233);
+            TextColor c = component.getStyle().getColor();
+            int selectColor = 0xFF00FFAA;
+            if(c != null)
+                selectColor = c.getValue()|0xFF000000;//HudUtils.blendARGB8Colors(c.getValue(), 0xFF222233, 0.9F);
+            //selection bg
+            HudUtils.DrawNineSlice(poseStack, MENU_BG_IMAGE, new Vec2(64, 64), new Vec2(x, y).add(new Vec2(5, 0)), new Vec2(cMenuWidth-10, 10).scale(cMenuSizeScale), new Vec2(5, 4), new Vec2(3, 33), new Vec2(3+26, 33+8), selectColor);
+            Minecraft.getInstance().font.draw(poseStack, component.copy().withStyle(ChatFormatting.RESET), x + 10, y+1 * cMenuSizeScale, 0xFF222233);
         }
         else
         {
@@ -108,8 +119,6 @@ public class SelectionMenuHudOverlay implements IGuiOverlay
             Vec2 intTargetPos = new Vec2((int)targetPos.x, (int)targetPos.y);
             HudUtils.drawColoredLine(poseStack.last().pose(), projected.first().x, projected.first().y, intTargetPos.x + 2, intTargetPos.y + 2, 0.2f, 0.8f, 0xFF00FFAA);
             HudUtils.DrawNineSlice(poseStack, MENU_BG_IMAGE, new Vec2(64, 64), intTargetPos, new Vec2(cMenuWidth, menuHeight).scale(cMenuSizeScale), new Vec2(5, 5), new Vec2(0, 0), new Vec2(32, 32), 0xDDFFFFFF);
-            //selection bg
-            HudUtils.DrawNineSlice(poseStack, MENU_BG_IMAGE, new Vec2(64, 64), intTargetPos.add(new Vec2(5, 4 + menuSelectionIndex*10)), new Vec2(cMenuWidth-10, 10).scale(cMenuSizeScale), new Vec2(5, 4), new Vec2(3, 33), new Vec2(3+26, 33+8), 0xFFFFFFFF);
             //Minecraft.getInstance().font.drawShadow(poseStack, Component.literal("balls"), intTargetPos.x + 10, intTargetPos.y + 6, 0xFFAA55FF);
             if(cMenuSizeScale > 0.5)
             {

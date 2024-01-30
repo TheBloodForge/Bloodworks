@@ -68,5 +68,27 @@
 	{
 		"subtitle":"sounds.bloodworks.tool.wrench.loosen",
 		"sounds": [ "bloodworks:tool/wrench.loosen" ]
+	},
+
+
+	"bloodworks.ui.selector.open":
+	{
+		"subtitle":"sounds.bloodworks.ui.selector.open",
+		"sounds": [ "bloodworks:ui/selector.open" ]
+	},
+	"bloodworks.ui.selector.pip":
+	{
+		"subtitle":"sounds.bloodworks.ui.selector.pip",
+		"sounds": [ "bloodworks:ui/selector.pip" ]
+	},
+	"bloodworks.ui.selector.write":
+	{
+		"subtitle":"sounds.bloodworks.ui.selector.write",
+		"sounds": [ "bloodworks:ui/selector.write" ]
+	},
+	"bloodworks.ui.selector.cancel":
+	{
+		"subtitle":"sounds.bloodworks.ui.selector.cancel",
+		"sounds": [ "bloodworks:ui/selector.cancel" ]
 	}
 }
