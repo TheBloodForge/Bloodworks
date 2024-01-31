@@ -21,6 +21,7 @@ public class SoundRegistry
     public static RegistryObject<SoundEvent> SELECTOR_CANCEL = registerSoundEvent("bloodworks.ui.selector.cancel");
     public static RegistryObject<SoundEvent> SELECTOR_WRITE = registerSoundEvent("bloodworks.ui.selector.write");
 
+    public static RegistryObject<SoundEvent> ERROR = registerSoundEvent("bloodworks.ui.error");
 
 
 

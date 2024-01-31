@@ -113,7 +113,6 @@ public class PacketManager
     public static void showErrorToClient(BlockPos position, Component message, ServerPlayer player)
     {
         sendToPlayer(new MessageS2CPacket(message, false), player);
-        //TODO: Make Error Sound
-        sendToPlayer(new SoundS2CPacket(SoundRegistry.WRENCH_LOOSEN.get().getLocation(), SoundSource.PLAYERS, new Vec3(position.getX(), position.getY(), position.getZ()), 1, 1), player);
+        sendToPlayer(new SoundS2CPacket(SoundRegistry.ERROR.get().getLocation(), SoundSource.PLAYERS, new Vec3(position.getX(), position.getY(), position.getZ()), 1, 1), player);
     }
 }

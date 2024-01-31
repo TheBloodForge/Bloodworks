@@ -90,5 +90,10 @@
 	{
 		"subtitle":"sounds.bloodworks.ui.selector.cancel",
 		"sounds": [ "bloodworks:ui/selector.cancel" ]
+	},
+	"bloodworks.ui.error":
+	{
+		"subtitle":"sounds.bloodworks.ui.error",
+		"sounds": [ "bloodworks:ui/error" ]
 	}
 }
