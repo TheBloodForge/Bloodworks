@@ -58,16 +58,6 @@ public class BlockNeuron extends BlockBrainInteriorBase implements EntityBlock, 
     {
         return BlockRegistry.BLOCK_NEURON.blockEntity().get().create(pos, state);
     }
-
-    @Override
-    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState p_60569_, boolean p_60570_)
-    {
-        if (level.getBlockEntity(pos) instanceof BE_Neuron be_neuron)
-        {
-            be_neuron.isDry = !state.getValue(BlockBrainInteriorBase.WATERLOGGED);
-        }
-    }
-
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos)
     {

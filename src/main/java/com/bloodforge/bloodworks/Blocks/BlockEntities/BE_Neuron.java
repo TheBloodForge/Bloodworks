@@ -1,5 +1,6 @@
 package com.bloodforge.bloodworks.Blocks.BlockEntities;
 
+import com.bloodforge.bloodworks.Blocks.BlockBrainInteriorBase;
 import com.bloodforge.bloodworks.Networking.NBTSyncS2CPacket;
 import com.bloodforge.bloodworks.Networking.PacketManager;
 import com.bloodforge.bloodworks.Registry.BlockRegistry;
@@ -16,7 +17,7 @@ public class BE_Neuron extends BlockEntity
 {
     List<BlockPos> neuronLocations = new ArrayList<>();
     private String NEURAL_ID;
-    public boolean isDry = false;
+    public boolean isDry = false; //doesn't need to be saved into NBT, based on blockstate.
 
     public BE_Neuron(BlockPos pos, BlockState blockState)
     {
@@ -53,6 +54,12 @@ public class BE_Neuron extends BlockEntity
         super.saveAdditional(nbt);
     }
 
+    @Override
+    public void onLoad()
+    {
+        super.onLoad();
+        isDry = !getBlockState().getValue(BlockBrainInteriorBase.WATERLOGGED);
+    }
 
     @Override
     public void load(CompoundTag nbt)
