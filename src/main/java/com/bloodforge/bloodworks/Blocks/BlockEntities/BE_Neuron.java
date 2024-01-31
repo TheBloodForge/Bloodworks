@@ -68,7 +68,7 @@ public class BE_Neuron extends BlockEntity
         unwrapNBT(nbt.getCompound("NeuronPositions"));
         super.load(nbt);
         if(level == null || level.isClientSide) return;
-            syncNeuron();
+        syncNeuron();
     }
 
     private static BlockPos firstNeuronPos = null;
